@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavTab, ScientificPaper, SimulationMission } from '../types/polaris';
-import { HOTSPOT_DATA, SCIENTIFIC_PAPERS, SIMULATION_MISSIONS } from '../data/polarisData';
+import { usePolarisData } from '../context/PolarisDataContext';
+import { api } from '../lib/api';
 
 interface BharatiStationViewProps {
   onNavigate: (tab: NavTab) => void;
@@ -19,6 +20,8 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
   onOpenDataset,
   onShowToast,
 }) => {
+  const { hotspots, papers, simulations } = usePolarisData();
+  const lidarPaper = papers.find((p) => p.id === 'paper-4') ?? papers[0];
   const [selectedHotspotId, setSelectedHotspotId] = useState<number>(1);
   const [activeRailTab, setActiveRailTab] = useState<'3d' | 'payloads' | 'expeditions' | 'datasets' | 'skycam'>('3d');
   const [thermalMode, setThermalMode] = useState(false);
@@ -28,7 +31,23 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
   const [azimuth, setAzimuth] = useState(142);
   const [elevation, setElevation] = useState(24);
 
-  const activeHotspot = HOTSPOT_DATA[selectedHotspotId] || HOTSPOT_DATA[1];
+  const activeHotspot = hotspots[selectedHotspotId] || hotspots[1];
+
+  const showKnowledgeGraph = async () => {
+    try {
+      const ds = await api.dataset(activeHotspot.datasetTitle);
+      const linked = ds.links.map((l) => `${l.title} (${l.type})`).join('; ');
+      onShowToast?.(
+        linked
+          ? `${activeHotspot.id} dataset ${ds.id} is linked to: ${linked}.`
+          : `${activeHotspot.id} dataset ${ds.id} has no linked records yet.`,
+        'KNOWLEDGE GRAPH',
+        'info'
+      );
+    } catch {
+      onShowToast?.('Knowledge graph is unavailable while the POLARIS API is offline.', 'KNOWLEDGE GRAPH', 'warning');
+    }
+  };
 
   const handleShare = () => {
     if (navigator.clipboard) {
@@ -640,7 +659,7 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
 
                 {/* Linked Academy Simulation */}
                 <div
-                  onClick={() => onOpenSimulation(SIMULATION_MISSIONS[1])}
+                  onClick={() => onOpenSimulation(simulations[1] ?? simulations[0])}
                   className="p-2.5 rounded-xl bg-[#eff4ff] dark:bg-slate-900 hover:bg-[#dce9ff] dark:hover:bg-slate-800 transition-all flex items-start gap-3 cursor-pointer group"
                 >
                   <div className="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-[#8b5cf6] shrink-0 group-hover:scale-105 transition-transform">
@@ -679,7 +698,7 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
                     VIEW ON MAP
                   </button>
                   <button
-                    onClick={() => onShowToast?.(`Knowledge Graph Matrix: Station Payload ${activeHotspot.id} connected to 8 peer-reviewed journal articles, 4 ISEA cruises, and ISRO NRSC satellite links.`, 'KNOWLEDGE GRAPH FABRIC', 'info')}
+                    onClick={showKnowledgeGraph}
                     className="py-2 px-2 rounded-xl bg-white dark:bg-slate-800 shadow-sm hover:bg-[#eff4ff] dark:hover:bg-slate-700 text-[#0b1c30] dark:text-slate-200 font-semibold flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-700 transition-all"
                   >
                     <span className="material-symbols-outlined text-[16px]">hub</span>
@@ -898,7 +917,7 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
                   </span>
                 </div>
                 <h4
-                  onClick={() => onOpenPaper(SCIENTIFIC_PAPERS[3])}
+                  onClick={() => onOpenPaper(lidarPaper)}
                   className="font-['Space_Grotesk'] text-sm font-bold text-[#0b1c30] dark:text-white leading-snug cursor-pointer hover:text-[#00b4d8]"
                 >
                   Atmospheric Boundary Layer dynamics in East Antarctic coastal oasis
@@ -918,7 +937,7 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
               <div className="pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between font-['JetBrains_Mono'] text-xs">
                 <span className="text-slate-400">Lead: NCPOR Goa</span>
                 <button
-                  onClick={() => onOpenPaper(SCIENTIFIC_PAPERS[3])}
+                  onClick={() => onOpenPaper(lidarPaper)}
                   className="text-[#00677d] dark:text-[#4cd6fb] font-bold hover:underline flex items-center gap-1"
                 >
                   PDF <span className="material-symbols-outlined text-[14px]">download</span>

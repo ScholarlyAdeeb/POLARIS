@@ -1,5 +1,7 @@
 import React from 'react';
 import { ScientificPaper } from '../../types/polaris';
+import { download, downloadUrls } from '../../lib/api';
+import { OutreachPanel } from './OutreachPanel';
 
 interface PaperModalProps {
   paper: ScientificPaper | null;
@@ -10,22 +12,7 @@ interface PaperModalProps {
 export const PaperModal: React.FC<PaperModalProps> = ({ paper, onClose, onOpenDataset }) => {
   if (!paper) return null;
 
-  const downloadBibtex = () => {
-    const bibtex = `@article{ncpor_${paper.id},
-  title = {${paper.title}},
-  author = {${paper.authors}},
-  journal = {${paper.journal}},
-  year = {2024},
-${paper.doi ? `  doi = {${paper.doi}},
-` : ''}  publisher = {Ministry of Earth Sciences, Govt of India}
-}`;
-    const blob = new Blob([bibtex], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `citation-${paper.id}.bib`;
-    a.click();
-  };
+  const downloadBibtex = () => download(downloadUrls.citation(paper.id));
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
@@ -100,6 +87,8 @@ ${paper.doi ? `  doi = {${paper.doi}},
               Inspect Data
             </button>
           </div>
+
+          <OutreachPanel key={paper.id} itemId={paper.id} />
         </div>
 
         {/* Footer */}
@@ -113,11 +102,12 @@ ${paper.doi ? `  doi = {${paper.doi}},
           </button>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => alert(`Simulated downloading full text PDF for "${paper.title}"`)}
+              onClick={() => download(downloadUrls.metadata(paper.id))}
+              title="ISO 19115 metadata record (JSON). Full text is not held in this archive."
               className="px-4 py-2 rounded-xl bg-[#00677d] hover:bg-[#004e5f] text-white font-['JetBrains_Mono'] text-xs font-bold flex items-center gap-1.5"
             >
-              <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
-              <span>Download PDF</span>
+              <span className="material-symbols-outlined text-[16px]">data_object</span>
+              <span>Download Metadata</span>
             </button>
             <button
               onClick={onClose}

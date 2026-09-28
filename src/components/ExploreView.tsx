@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavTab, ScientificPaper, SimulationMission } from '../types/polaris';
-import { STATIONS_DATA, EXPEDITION_MILESTONES, SCIENTIFIC_PAPERS, SIMULATION_MISSIONS, VALUE_GRAPH_STEPS } from '../data/polarisData';
+import { usePolarisData } from '../context/PolarisDataContext';
+import { api, type SearchResponse, type SearchResult } from '../lib/api';
 
 interface ExploreViewProps {
   onNavigate: (tab: NavTab) => void;
@@ -10,7 +11,37 @@ interface ExploreViewProps {
   onOpenSkycam: () => void;
   onOpenProposal: () => void;
   onOpenDataset: (name: string) => void;
+  onOpenRecord: (id: string) => void;
+  onOpenMediaGallery: () => void;
   onShowToast?: (message: string, title?: string, type?: 'info' | 'success' | 'warning') => void;
+}
+
+const RESULT_ICON: Record<string, string> = {
+  expedition: 'route',
+  report: 'description',
+  dataset: 'database',
+  publication: 'article',
+  photo: 'photo_library',
+  video: 'movie',
+  activity: 'campaign',
+};
+
+/** Render the server's [highlighted] snippet markers as <mark>. */
+function Snippet({ text }: { text: string }) {
+  const parts = text.split(/(\[[^\]]*\])/g);
+  return (
+    <>
+      {parts.map((p, i) =>
+        p.startsWith('[') && p.endsWith(']') ? (
+          <mark key={i} className="bg-[#00b4d8]/20 text-inherit rounded px-0.5">
+            {p.slice(1, -1)}
+          </mark>
+        ) : (
+          <React.Fragment key={i}>{p}</React.Fragment>
+        )
+      )}
+    </>
+  );
 }
 
 export const ExploreView: React.FC<ExploreViewProps> = ({
@@ -21,13 +52,39 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   onOpenSkycam,
   onOpenProposal,
   onOpenDataset,
+  onOpenRecord,
+  onOpenMediaGallery,
   onShowToast,
 }) => {
+  const { milestones, papers, simulations, valueGraph } = usePolarisData();
   const [utcTime, setUtcTime] = useState('11:42:09 UTC');
   const [searchQuery, setSearchQuery] = useState('What atmospheric studies were conducted at Maitri in 2023?');
   const [activeGradeFilter, setActiveGradeFilter] = useState('All Tracks');
   const [activeLayer, setActiveLayer] = useState<'stations' | 'expeditions' | 'datasets' | 'atmospheric'>('stations');
   const [selectedMilestone, setSelectedMilestone] = useState(2026);
+  const [searchResults, setSearchResults] = useState<SearchResponse | null>(null);
+  const [searching, setSearching] = useState(false);
+
+  const runSearch = async (query = searchQuery) => {
+    if (!query.trim()) return;
+    setSearching(true);
+    try {
+      setSearchResults(await api.search(query, 12));
+    } catch {
+      onShowToast?.('Archive search is unavailable while the POLARIS API is offline.', 'POLAR ARCHIVE SEARCH', 'warning');
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const openResult = (r: SearchResult) => {
+    if (r.type === 'publication') {
+      const paper = papers.find((p) => p.id === r.id);
+      if (paper) return onOpenPaper(paper);
+    }
+    if (r.type === 'dataset') return onOpenDataset(r.id);
+    onOpenRecord(r.id);
+  };
 
   useEffect(() => {
     const updateTime = () => {
@@ -617,7 +674,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
               {/* Timeline Rail */}
               <div className="relative w-full flex items-center justify-between pt-1">
                 <div className="absolute left-0 right-0 h-1 bg-slate-200 dark:bg-slate-700 -z-0"></div>
-                {EXPEDITION_MILESTONES.map((m) => {
+                {milestones.map((m) => {
                   const isSelected = selectedMilestone === m.year;
                   return (
                     <button
@@ -663,7 +720,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-            {VALUE_GRAPH_STEPS.map((step) => (
+            {valueGraph.map((step) => (
               <div
                 key={step.step}
                 className="p-5 rounded-2xl bg-white dark:bg-slate-800 shadow-[-3px_-3px_10px_rgba(255,255,255,0.9),3px_3px_10px_rgba(148,163,184,0.15)] flex flex-col justify-between border border-slate-100 dark:border-slate-700"
@@ -717,6 +774,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && runSearch()}
                     placeholder="Search by keyword, coordinates, ice core sample ID, or expedition..."
                     className="bg-transparent w-full text-[#0b132b] dark:text-white font-['Inter'] text-sm focus:outline-none"
                   />
@@ -737,10 +795,11 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                     <span className="material-symbols-outlined text-[20px]">pin_drop</span>
                   </button>
                   <button
-                    onClick={() => onNavigate('knowledge')}
-                    className="px-5 py-2.5 rounded-xl bg-[#00b4d8] hover:bg-[#0077b6] text-white font-['JetBrains_Mono'] text-xs font-bold flex items-center gap-1.5 shadow-sm whitespace-nowrap"
+                    onClick={() => runSearch()}
+                    disabled={searching}
+                    className="px-5 py-2.5 rounded-xl bg-[#00b4d8] hover:bg-[#0077b6] disabled:opacity-60 text-white font-['JetBrains_Mono'] text-xs font-bold flex items-center gap-1.5 shadow-sm whitespace-nowrap"
                   >
-                    <span>SEARCH</span>
+                    <span>{searching ? 'SEARCHING…' : 'SEARCH'}</span>
                     <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                   </button>
                 </div>
@@ -755,7 +814,10 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
               {samplePrompts.map((p, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setSearchQuery(p)}
+                  onClick={() => {
+                    setSearchQuery(p);
+                    runSearch(p);
+                  }}
                   className="px-3 py-1 rounded-full bg-white dark:bg-slate-700 hover:bg-[#e5eeff] dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-['JetBrains_Mono'] text-[11px] shadow-sm flex items-center gap-1.5 border border-slate-200 dark:border-slate-600 transition-colors"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00b4d8]"></span>
@@ -764,7 +826,82 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
               ))}
             </div>
 
-            {/* Linked Records Preview */}
+            {/* Search results (replaces the linked-records preview once a search has run) */}
+            {searchResults ? (
+              <div className="p-5 rounded-2xl bg-[#eff4ff] dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="material-symbols-outlined text-[#00677d] dark:text-[#4cd6fb] text-[18px]">manage_search</span>
+                    <span className="font-['JetBrains_Mono'] text-xs font-bold text-[#00677d] dark:text-[#4cd6fb] truncate">
+                      {searchResults.total} RECORD{searchResults.total === 1 ? '' : 'S'} • “{searchResults.query}”
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setSearchResults(null)}
+                    className="font-['JetBrains_Mono'] text-[11px] text-slate-400 hover:text-[#00b4d8] shrink-0"
+                  >
+                    CLEAR
+                  </button>
+                </div>
+
+                {!searchResults.matchedAllTerms && searchResults.total > 0 && (
+                  <p className="font-['Inter'] text-xs text-slate-500 mb-3">
+                    No record matched every term; showing the closest matches.
+                  </p>
+                )}
+
+                {searchResults.stations.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {searchResults.stations.map((s) => (
+                      <button
+                        key={s.id}
+                        onClick={() => {
+                          onNavigate('stations');
+                          onSelectStation(s.id);
+                        }}
+                        className="px-3 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-['JetBrains_Mono'] text-[11px] text-[#00677d] dark:text-[#4cd6fb] font-bold flex items-center gap-1 hover:border-[#00b4d8]"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">home_pin</span>
+                        {s.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {searchResults.total === 0 ? (
+                  <p className="font-['Inter'] text-sm text-slate-500 py-6 text-center">
+                    No records found. Try a station name, a year, or a topic such as “lidar” or “glacier”.
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {searchResults.results.map((r) => (
+                      <div
+                        key={r.id}
+                        onClick={() => openResult(r)}
+                        className="p-3 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-start gap-2.5 cursor-pointer hover:border-[#00b4d8] border border-transparent transition-all"
+                      >
+                        <span className="material-symbols-outlined text-[#00677d] dark:text-[#4cd6fb] text-[20px]">
+                          {RESULT_ICON[r.type] ?? 'description'}
+                        </span>
+                        <div className="min-w-0">
+                          <span className="font-['Space_Grotesk'] text-[9px] text-slate-400 uppercase font-bold block">
+                            {r.type}
+                            {r.year ? ` • ${r.year}` : ''}
+                            {r.meta?.sample ? ' • sample' : ''}
+                          </span>
+                          <span className="font-['JetBrains_Mono'] text-xs font-bold text-slate-800 dark:text-white block truncate">
+                            {r.title}
+                          </span>
+                          <span className="font-['Inter'] text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
+                            <Snippet text={r.snippet || r.summary} />
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
             <div className="p-5 rounded-2xl bg-[#eff4ff] dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200/80 dark:border-slate-800">
                 <div className="flex items-center gap-2">
@@ -780,7 +917,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div
-                  onClick={() => onOpenPaper(SCIENTIFIC_PAPERS[0])}
+                  onClick={() => onOpenRecord('RPT-ISEA42-ATMOS')}
                   className="p-3 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-start gap-2.5 cursor-pointer hover:border-[#00b4d8] border border-transparent transition-all"
                 >
                   <span className="material-symbols-outlined text-[#00677d] text-[20px]">description</span>
@@ -816,7 +953,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 </div>
 
                 <div
-                  onClick={() => onShowToast?.('Archival expedition logbook opened: 42nd ISEA voyage manifests (sample record).', 'ARCHIVAL EXPEDITION LOG', 'success')}
+                  onClick={() => onOpenRecord('LOG-ISEA42-VOYAGE')}
                   className="p-3 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-start gap-2.5 cursor-pointer hover:border-[#00b4d8] border border-transparent transition-all"
                 >
                   <span className="material-symbols-outlined text-[#545d7c] text-[20px]">photo_library</span>
@@ -834,6 +971,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 </div>
               </div>
             </div>
+            )}
           </div>
         </div>
       </section>
@@ -873,7 +1011,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {SIMULATION_MISSIONS.map((mission) => (
+            {simulations.map((mission) => (
               <div
                 key={mission.id}
                 className="group rounded-3xl overflow-hidden bg-white dark:bg-slate-800 shadow-[-5px_-5px_15px_rgba(255,255,255,0.9),5px_5px_15px_rgba(148,163,184,0.18)] flex flex-col justify-between border border-slate-100 dark:border-slate-700 transition-all hover:scale-[1.01]"
@@ -951,7 +1089,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left Papers (7 cols) */}
             <div className="lg:col-span-7 flex flex-col gap-4">
-              {SCIENTIFIC_PAPERS.slice(0, 3).map((paper) => (
+              {papers.slice(0, 3).map((paper) => (
                 <div
                   key={paper.id}
                   className="p-5 rounded-2xl bg-white dark:bg-slate-800 shadow-[-3px_-3px_10px_rgba(255,255,255,0.9),3px_3px_10px_rgba(148,163,184,0.18)] hover:shadow-[-4px_-4px_12px_rgba(255,255,255,1),4px_4px_14px_rgba(0,180,216,0.18)] transition-all border border-slate-100 dark:border-slate-700 flex flex-col justify-between"
@@ -1026,7 +1164,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 <div className="p-3 flex items-center justify-between font-['JetBrains_Mono'] text-xs">
                   <span className="text-slate-400">1,840 Archival Photos Online</span>
                   <button
-                    onClick={() => onShowToast?.('NCPOR Archival Photo Vault: 1,840 digitized high-resolution photographic plates from 1981–2026 loaded.', 'NCPOR PHOTO VAULT', 'info')}
+                    onClick={onOpenMediaGallery}
                     className="text-[#00677d] dark:text-[#4cd6fb] font-bold hover:underline"
                   >
                     Browse Gallery →

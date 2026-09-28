@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavTab, StationData } from '../types/polaris';
-import { STATIONS_DATA, EXPEDITION_MILESTONES } from '../data/polarisData';
+import { usePolarisData } from '../context/PolarisDataContext';
+import { download, downloadUrls } from '../lib/api';
 
 interface PolarMapViewProps {
   onNavigate: (tab: NavTab) => void;
@@ -15,6 +16,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
   selectedStationId = 'bharati',
   onShowToast,
 }) => {
+  const { stations, milestones } = usePolarisData();
   const [activeRegion, setActiveRegion] = useState<'ANTARCTICA' | 'ARCTIC' | 'HIMALAYAS' | 'SOUTHERN_OCEAN'>('ANTARCTICA');
   const [rasterMode, setRasterMode] = useState<'topo' | 'bed' | 'ice' | 'grav'>('topo');
   const [showGraticule, setShowGraticule] = useState(true);
@@ -22,7 +24,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
   const [showWeatherRadar, setShowWeatherRadar] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [activeStation, setActiveStation] = useState<StationData>(
-    STATIONS_DATA.find((s) => s.id === selectedStationId) || STATIONS_DATA[0]
+    stations.find((s) => s.id === selectedStationId) || stations[0]
   );
   const [mapZoom, setMapZoom] = useState(1);
   const [mapCenterOffset, setMapCenterOffset] = useState({ x: 0, y: 0 });
@@ -59,7 +61,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
   }, [isPlayingTimeline, playbackSpeed]);
 
   const selectStationPin = (stationId: string) => {
-    const st = STATIONS_DATA.find((s) => s.id === stationId);
+    const st = stations.find((s) => s.id === stationId);
     if (st) {
       setActiveStation(st);
       setDrawerOpen(true);
@@ -723,7 +725,10 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                   </button>
 
                   <button
-                    onClick={() => onShowToast?.(`Exporting hourly surface meteorological and radiometric synoptic records for ${activeStation.name} (CSV format, WMO format compliant).`, 'SYNOPTIC EXPORT ENGINE', 'success')}
+                    onClick={() => {
+                      download(downloadUrls.synoptic(activeStation.id));
+                      onShowToast?.(`Downloading the last 72 h of hourly surface records for ${activeStation.name} (CSV, sample values).`, 'SYNOPTIC EXPORT', 'success');
+                    }}
                     className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-[#00677d] dark:text-[#4cd6fb] hover:bg-[#eff4ff] dark:hover:bg-slate-800 transition-colors font-semibold"
                   >
                     <span className="material-symbols-outlined text-[16px]">download</span>
@@ -891,7 +896,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
 
           {/* Milestones along track */}
           <div className="relative w-full flex justify-between items-start mt-2">
-            {EXPEDITION_MILESTONES.map((m) => {
+            {milestones.map((m) => {
               const isSelected = currentTimelineYear === m.year;
               return (
                 <div

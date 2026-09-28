@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { NavTab } from '../../types/polaris';
+import { api, type SearchResult } from '../../lib/api';
 
 interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
   onNavigate: (tab: NavTab) => void;
   onSelectStation: (stationId: string) => void;
+  onOpenResult: (result: SearchResult) => void;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
@@ -13,8 +15,29 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   onClose,
   onNavigate,
   onSelectStation,
+  onOpenResult,
 }) => {
   const [query, setQuery] = useState('');
+  const [archiveResults, setArchiveResults] = useState<SearchResult[]>([]);
+
+  // Debounced full-text search across the archive
+  useEffect(() => {
+    if (!isOpen || query.trim().length < 2) {
+      setArchiveResults([]);
+      return;
+    }
+    let cancelled = false;
+    const t = setTimeout(() => {
+      api
+        .search(query, 8)
+        .then((r) => !cancelled && setArchiveResults(r.results))
+        .catch(() => !cancelled && setArchiveResults([]));
+    }, 200);
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
+  }, [query, isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -47,10 +70,21 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     { title: 'Chhota Shigri Glacier Mass Balance Deficit Study', category: 'Publications', action: () => { onNavigate('knowledge'); onClose(); } },
   ];
 
-  const filtered = items.filter((item) =>
+  const navMatches = items.filter((item) =>
     item.title.toLowerCase().includes(query.toLowerCase()) ||
     item.category.toLowerCase().includes(query.toLowerCase())
   );
+  const filtered = [
+    ...navMatches,
+    ...archiveResults.map((r) => ({
+      title: r.title,
+      category: `Archive · ${r.type}`,
+      action: () => {
+        onOpenResult(r);
+        onClose();
+      },
+    })),
+  ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 p-4 bg-black/60 backdrop-blur-sm animate-fade-in">

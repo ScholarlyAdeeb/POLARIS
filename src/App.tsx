@@ -18,7 +18,26 @@ import { PaperModal } from './components/modals/PaperModal';
 import { DatasetModal } from './components/modals/DatasetModal';
 import { CommandPalette } from './components/modals/CommandPalette';
 import { ProposalModal } from './components/modals/ProposalModal';
+import { RecordModal } from './components/modals/RecordModal';
+import { MediaGalleryModal } from './components/modals/MediaGalleryModal';
 import { Toast, ToastMessage } from './components/Toast';
+import { usePolarisData } from './context/PolarisDataContext';
+import { api, type ArchiveItem } from './lib/api';
+
+function recordToPaper(r: ArchiveItem): ScientificPaper {
+  return {
+    id: r.id,
+    title: r.title,
+    domain: r.domain,
+    journal: r.meta.journal ?? '',
+    acceptedDate: r.meta.acceptedDate ?? String(r.year ?? ''),
+    abstract: r.summary,
+    authors: r.meta.authors ?? '',
+    doi: r.doi ?? '',
+    dataFile: r.meta.dataFile ?? '',
+    fileSize: r.meta.fileSize ?? '',
+  };
+}
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('explore');
@@ -36,6 +55,9 @@ export default function App() {
   const [skycamOpen, setSkycamOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [proposalModalOpen, setProposalModalOpen] = useState(false);
+  const [activeRecordId, setActiveRecordId] = useState<string | null>(null);
+  const [mediaGalleryOpen, setMediaGalleryOpen] = useState(false);
+  const { papers } = usePolarisData();
 
   // Selected station
   const [selectedStationId, setSelectedStationId] = useState('bharati');
@@ -60,6 +82,29 @@ export default function App() {
   const handleOpenDataset = (datasetName: string) => {
     setActiveDataset(datasetName);
   };
+
+  /** Open any archive record in the most specific viewer available. */
+  const openArchiveRecord = (r: ArchiveItem) => {
+    if (r.type === 'publication') return setActivePaper(papers.find((p) => p.id === r.id) ?? recordToPaper(r));
+    if (r.type === 'dataset') return setActiveDataset(r.id);
+    setActiveRecordId(r.id);
+  };
+
+  const handleOpenRecord = (id: string) => {
+    setActivePaper(null);
+    setActiveDataset(null);
+    setMediaGalleryOpen(false);
+    api
+      .record(id)
+      .then(openArchiveRecord)
+      .catch(() => setActiveRecordId(id)); // RecordModal shows the error state
+  };
+
+  // Deep links from generated outreach posts: /?record=<id>
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('record');
+    if (id) handleOpenRecord(id);
+  }, []);
 
   const handleShowToast = (message: string, title?: string, type?: 'info' | 'success' | 'warning') => {
     const newToast: ToastMessage = {
@@ -107,6 +152,8 @@ export default function App() {
             onOpenSkycam={() => setSkycamOpen(true)}
             onOpenProposal={() => setProposalModalOpen(true)}
             onOpenDataset={handleOpenDataset}
+            onOpenRecord={handleOpenRecord}
+            onOpenMediaGallery={() => setMediaGalleryOpen(true)}
             onShowToast={handleShowToast}
           />
         )}
@@ -143,6 +190,8 @@ export default function App() {
             onOpenSkycam={() => setSkycamOpen(true)}
             onOpenProposal={() => setProposalModalOpen(true)}
             onOpenDataset={handleOpenDataset}
+            onOpenRecord={handleOpenRecord}
+            onOpenMediaGallery={() => setMediaGalleryOpen(true)}
             onShowToast={handleShowToast}
           />
         )}
@@ -179,6 +228,8 @@ export default function App() {
             onOpenSkycam={() => setSkycamOpen(true)}
             onOpenProposal={() => setProposalModalOpen(true)}
             onOpenDataset={handleOpenDataset}
+            onOpenRecord={handleOpenRecord}
+            onOpenMediaGallery={() => setMediaGalleryOpen(true)}
             onShowToast={handleShowToast}
           />
         )}
@@ -213,6 +264,7 @@ export default function App() {
       <DatasetModal
         datasetName={activeDataset}
         onClose={() => setActiveDataset(null)}
+        onOpenRecord={handleOpenRecord}
       />
 
       <CommandPalette
@@ -220,11 +272,24 @@ export default function App() {
         onClose={() => setCommandPaletteOpen(false)}
         onNavigate={setActiveTab}
         onSelectStation={(id) => setSelectedStationId(id)}
+        onOpenResult={openArchiveRecord}
       />
 
       <ProposalModal
         isOpen={proposalModalOpen}
         onClose={() => setProposalModalOpen(false)}
+      />
+
+      <RecordModal
+        recordId={activeRecordId}
+        onClose={() => setActiveRecordId(null)}
+        onOpenRecord={handleOpenRecord}
+      />
+
+      <MediaGalleryModal
+        isOpen={mediaGalleryOpen}
+        onClose={() => setMediaGalleryOpen(false)}
+        onOpenRecord={handleOpenRecord}
       />
 
       {/* Non-intrusive Scientific Toast HUD */}
