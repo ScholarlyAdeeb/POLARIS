@@ -1,4 +1,6 @@
 <img width="1024" height="1024" alt="screen" src="https://github.com/user-attachments/assets/f0631941-3035-4093-ac92-dded5c24846d" />
+
+
 # POLARIS — Integrated Polar Science Outreach, Knowledge Repository & Media Dissemination Portal
 
 **SIH 2026 · Problem Statement 26063** · Ministry of Earth Sciences (MoES) · National Centre for Polar and Ocean Research (NCPOR) · Theme: Smart Education
