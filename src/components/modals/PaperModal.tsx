@@ -16,8 +16,8 @@ export const PaperModal: React.FC<PaperModalProps> = ({ paper, onClose, onOpenDa
   author = {${paper.authors}},
   journal = {${paper.journal}},
   year = {2024},
-  doi = {${paper.doi}},
-  publisher = {Ministry of Earth Sciences, Govt of India}
+${paper.doi ? `  doi = {${paper.doi}},
+` : ''}  publisher = {Ministry of Earth Sciences, Govt of India}
 }`;
     const blob = new Blob([bibtex], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -66,7 +66,7 @@ export const PaperModal: React.FC<PaperModalProps> = ({ paper, onClose, onOpenDa
           </div>
 
           <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 font-['JetBrains_Mono'] text-xs text-[#00677d] dark:text-[#4cd6fb] flex items-center justify-between">
-            <span>DOI: https://doi.org/{paper.doi}</span>
+            <span>{paper.doi ? `DOI: https://doi.org/${paper.doi}` : 'Sample record — DOI will be assigned on publication'}</span>
             <span className="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">
               OPEN ACCESS
             </span>

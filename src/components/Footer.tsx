@@ -124,7 +124,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onSelectStation }) =
         {/* Bottom Strip */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 font-['JetBrains_Mono'] text-xs text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-3 flex-wrap">
-            <span>© 2025 National Centre for Polar and Oceanic Research (NCPOR), MoES, Govt. of India.</span>
+            <span>© 2026 National Centre for Polar and Oceanic Research (NCPOR), MoES, Govt. of India.</span>
             <span className="hidden md:inline">|</span>
             <span className="hidden md:inline">All Datasets CC-BY 4.0 International</span>
           </div>

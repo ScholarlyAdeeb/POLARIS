@@ -10,7 +10,6 @@ interface HeaderProps {
   setIsPolarNight: (val: boolean) => void;
   language: 'EN' | 'HI';
   setLanguage: (lang: 'EN' | 'HI') => void;
-  onOpenAI: () => void;
   onOpenCommandPalette: () => void;
 }
 
@@ -23,7 +22,6 @@ export const Header: React.FC<HeaderProps> = ({
   setIsPolarNight,
   language,
   setLanguage,
-  onOpenAI,
   onOpenCommandPalette,
 }) => {
   const [quickSearch, setQuickSearch] = useState('');
@@ -43,7 +41,6 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'data', label: 'DATA', hindiLabel: 'डेटा' },
     { id: 'media', label: 'MEDIA', hindiLabel: 'मीडिया' },
     { id: 'learn', label: 'LEARN (POLAR ACADEMY)', hindiLabel: 'ध्रुवीय अकादमी' },
-    { id: 'ai-assistant', label: 'AI ASSISTANT', hindiLabel: 'एआई सहायक' },
   ];
 
   const domains: DomainType[] = [
@@ -104,14 +101,6 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Quick action buttons */}
             <div className="flex items-center gap-2">
-              <button 
-                onClick={onOpenAI}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 shadow-[-2px_-2px_6px_rgba(255,255,255,0.9),2px_2px_6px_rgba(148,163,184,0.2)] text-[#8b5cf6] hover:bg-[#eff4ff] dark:hover:bg-slate-700 transition-all text-xs font-['JetBrains_Mono'] font-bold shrink-0"
-              >
-                <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
-                <span className="hidden sm:inline">Ask Polar AI</span>
-              </button>
-
               {/* Language Switcher */}
               <div className="flex items-center rounded-lg bg-[#eff4ff] dark:bg-slate-800 p-0.5 text-xs font-['JetBrains_Mono']">
                 <button 
@@ -168,13 +157,7 @@ export const Header: React.FC<HeaderProps> = ({
               return (
                 <button
                   key={item.id}
-                  onClick={() => {
-                    if (item.id === 'ai-assistant') {
-                      onOpenAI();
-                    } else {
-                      setActiveTab(item.id);
-                    }
-                  }}
+                  onClick={() => setActiveTab(item.id)}
                   className={`font-['JetBrains_Mono'] text-xs font-semibold whitespace-nowrap transition-all px-2.5 py-1 rounded-lg ${
                     isActive 
                       ? 'text-[#00677d] dark:text-[#4cd6fb] font-bold bg-[#eff4ff] dark:bg-slate-800/80 shadow-xs' 

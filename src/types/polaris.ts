@@ -8,8 +8,7 @@ export type NavTab =
   | 'knowledge'
   | 'data'
   | 'media'
-  | 'learn'
-  | 'ai-assistant';
+  | 'learn';
 
 export interface HotspotInfo {
   id: string;

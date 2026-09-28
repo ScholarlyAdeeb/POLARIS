@@ -6,7 +6,6 @@ interface CommandPaletteProps {
   onClose: () => void;
   onNavigate: (tab: NavTab) => void;
   onSelectStation: (stationId: string) => void;
-  onOpenAIWithQuery: (q: string) => void;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
@@ -14,7 +13,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   onClose,
   onNavigate,
   onSelectStation,
-  onOpenAIWithQuery,
 }) => {
   const [query, setQuery] = useState('');
 
@@ -43,11 +41,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     { title: 'Himadri Research Station (Ny-Ålesund, Arctic)', category: 'Stations', action: () => { onNavigate('stations'); onSelectStation('himadri'); onClose(); } },
     { title: 'Himansh Observatory (Spiti, Himalayas)', category: 'Stations', action: () => { onNavigate('stations'); onSelectStation('himansh'); onClose(); } },
     { title: 'Polar Stereographic Knowledge Map (EPSG:3031)', category: 'GIS & Maps', action: () => { onNavigate('map'); onClose(); } },
-    { title: '44th Indian Scientific Expedition to Antarctica (ISEA)', category: 'Expeditions', action: () => { onNavigate('expeditions'); onClose(); } },
+    { title: '45th Indian Scientific Expedition to Antarctica (ISEA)', category: 'Expeditions', action: () => { onNavigate('expeditions'); onClose(); } },
     { title: 'Mission: Survive a Week at Maitri Station', category: 'Polar Academy', action: () => { onNavigate('learn'); onClose(); } },
     { title: 'Become a Polar Glaciologist: Ice Core Analysis', category: 'Polar Academy', action: () => { onNavigate('learn'); onClose(); } },
-    { title: 'Ask Polar AI: "What atmospheric studies at Maitri in 2023?"', category: 'AI Assistant', action: () => { onOpenAIWithQuery('What atmospheric studies were conducted at Maitri in 2023?'); onClose(); } },
-    { title: 'Ask Polar AI: "Bharati station heat-recovery and MBR"', category: 'AI Assistant', action: () => { onOpenAIWithQuery('Bharati station architectural heat-recovery efficiency'); onClose(); } },
     { title: 'Chhota Shigri Glacier Mass Balance Deficit Study', category: 'Publications', action: () => { onNavigate('knowledge'); onClose(); } },
   ];
 

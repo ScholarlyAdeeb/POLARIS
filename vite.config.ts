@@ -12,10 +12,9 @@ export default defineConfig(() => {
       },
     },
     server: {
-      // HMR can be disabled with the DISABLE_HMR env var.
-      // Do not modify—file watching is disabled to prevent flickering during agent edits.
+      // Set DISABLE_HMR=true to turn off hot module reload.
       hmr: process.env.DISABLE_HMR !== 'true',
-      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
+      // File watching is also disabled when DISABLE_HMR is true.
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
     },
   };

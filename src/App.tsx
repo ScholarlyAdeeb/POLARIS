@@ -12,7 +12,6 @@ import { PolarMapView } from './components/PolarMapView';
 import { Footer } from './components/Footer';
 
 // Modals
-import { PolarAIModal } from './components/modals/PolarAIModal';
 import { SimulationModal } from './components/modals/SimulationModal';
 import { SkycamModal } from './components/modals/SkycamModal';
 import { PaperModal } from './components/modals/PaperModal';
@@ -31,10 +30,6 @@ export default function App() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   // Modals state
-  const [aiModalOpen, setAiModalOpen] = useState(false);
-  const [aiQuery, setAiQuery] = useState('');
-  const [aiStationContext, setAiStationContext] = useState('Bharati & Maitri');
-
   const [activeSimulation, setActiveSimulation] = useState<SimulationMission | null>(null);
   const [activePaper, setActivePaper] = useState<ScientificPaper | null>(null);
   const [activeDataset, setActiveDataset] = useState<string | null>(null);
@@ -53,12 +48,6 @@ export default function App() {
       document.documentElement.classList.remove('dark', 'polar-night');
     }
   }, [isPolarNight]);
-
-  const handleOpenAI = (initialQuery?: string, station?: string) => {
-    if (initialQuery) setAiQuery(initialQuery);
-    if (station) setAiStationContext(station);
-    setAiModalOpen(true);
-  };
 
   const handleOpenSimulation = (mission: SimulationMission) => {
     setActiveSimulation(mission);
@@ -101,7 +90,6 @@ export default function App() {
         setIsPolarNight={setIsPolarNight}
         language={language}
         setLanguage={setLanguage}
-        onOpenAI={() => handleOpenAI()}
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
       />
 
@@ -114,7 +102,6 @@ export default function App() {
               setSelectedStationId(id);
               setActiveTab('stations');
             }}
-            onOpenAI={handleOpenAI}
             onOpenSimulation={handleOpenSimulation}
             onOpenPaper={handleOpenPaper}
             onOpenSkycam={() => setSkycamOpen(true)}
@@ -127,7 +114,6 @@ export default function App() {
         {activeTab === 'stations' && (
           <BharatiStationView
             onNavigate={setActiveTab}
-            onOpenAI={handleOpenAI}
             onOpenSimulation={handleOpenSimulation}
             onOpenPaper={handleOpenPaper}
             onOpenSkycam={() => setSkycamOpen(true)}
@@ -140,7 +126,6 @@ export default function App() {
           <PolarMapView
             onNavigate={setActiveTab}
             onSelectStation={(id) => setSelectedStationId(id)}
-            onOpenAI={handleOpenAI}
             selectedStationId={selectedStationId}
             onShowToast={handleShowToast}
           />
@@ -153,7 +138,6 @@ export default function App() {
               setSelectedStationId(id);
               setActiveTab('stations');
             }}
-            onOpenAI={handleOpenAI}
             onOpenSimulation={handleOpenSimulation}
             onOpenPaper={handleOpenPaper}
             onOpenSkycam={() => setSkycamOpen(true)}
@@ -167,7 +151,6 @@ export default function App() {
           <PolarMapView
             onNavigate={setActiveTab}
             onSelectStation={(id) => setSelectedStationId(id)}
-            onOpenAI={handleOpenAI}
             selectedStationId={selectedStationId}
             onShowToast={handleShowToast}
           />
@@ -176,7 +159,6 @@ export default function App() {
         {activeTab === 'media' && (
           <BharatiStationView
             onNavigate={setActiveTab}
-            onOpenAI={handleOpenAI}
             onOpenSimulation={handleOpenSimulation}
             onOpenPaper={handleOpenPaper}
             onOpenSkycam={() => setSkycamOpen(true)}
@@ -192,7 +174,6 @@ export default function App() {
               setSelectedStationId(id);
               setActiveTab('stations');
             }}
-            onOpenAI={handleOpenAI}
             onOpenSimulation={handleOpenSimulation}
             onOpenPaper={handleOpenPaper}
             onOpenSkycam={() => setSkycamOpen(true)}
@@ -213,13 +194,6 @@ export default function App() {
       />
 
       {/* Interactive Global Modals */}
-      <PolarAIModal
-        isOpen={aiModalOpen}
-        onClose={() => setAiModalOpen(false)}
-        initialQuery={aiQuery}
-        stationContext={aiStationContext}
-      />
-
       <SimulationModal
         mission={activeSimulation}
         onClose={() => setActiveSimulation(null)}
@@ -246,7 +220,6 @@ export default function App() {
         onClose={() => setCommandPaletteOpen(false)}
         onNavigate={setActiveTab}
         onSelectStation={(id) => setSelectedStationId(id)}
-        onOpenAIWithQuery={(q) => handleOpenAI(q)}
       />
 
       <ProposalModal

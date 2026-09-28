@@ -108,7 +108,7 @@ export const SkycamModal: React.FC<SkycamModalProps> = ({ isOpen, onClose }) => 
                   {isPlaying ? 'pause' : 'play_arrow'}
                 </span>
               </button>
-              <span className="text-slate-300">UTC: 2025-01-14T11:42:09Z</span>
+              <span className="text-slate-300">UTC: 2026-01-14T11:42:09Z</span>
               <span className="hidden sm:inline text-slate-400">• SURFACE TEMP: -14.2°C • WIND: 18.4 KTS</span>
             </div>
 

@@ -5,7 +5,6 @@ import { STATIONS_DATA, EXPEDITION_MILESTONES } from '../data/polarisData';
 interface PolarMapViewProps {
   onNavigate: (tab: NavTab) => void;
   onSelectStation: (stationId: string) => void;
-  onOpenAI: (query?: string, station?: string) => void;
   selectedStationId?: string;
   onShowToast?: (message: string, title?: string, type?: 'info' | 'success' | 'warning') => void;
 }
@@ -13,7 +12,6 @@ interface PolarMapViewProps {
 export const PolarMapView: React.FC<PolarMapViewProps> = ({
   onNavigate,
   onSelectStation,
-  onOpenAI,
   selectedStationId = 'bharati',
   onShowToast,
 }) => {
@@ -30,7 +28,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
   const [mapCenterOffset, setMapCenterOffset] = useState({ x: 0, y: 0 });
   const [searchFilter, setSearchFilter] = useState('Bharati Station');
   const [isPlayingTimeline, setIsPlayingTimeline] = useState(false);
-  const [currentTimelineYear, setCurrentTimelineYear] = useState(2025);
+  const [currentTimelineYear, setCurrentTimelineYear] = useState(2026);
   const [playbackSpeed, setPlaybackSpeed] = useState<1 | 5 | 10>(1);
 
   // Layer filters
@@ -48,7 +46,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
     if (isPlayingTimeline) {
       timer = setInterval(() => {
         setCurrentTimelineYear((prev) => {
-          const years = [1981, 1983, 1989, 2008, 2010, 2012, 2014, 2025];
+          const years = [1981, 1983, 1989, 2008, 2010, 2012, 2016, 2026];
           const currIdx = years.indexOf(prev);
           if (currIdx === -1 || currIdx === years.length - 1) {
             return years[0];
@@ -177,7 +175,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
               type="text"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              placeholder="Search 44 Expeditions, 4 Stations, 1,420 Datasets, Mooring Buoys..."
+              placeholder="Search 45 Expeditions, 4 Stations, 1,420 Datasets, Mooring Buoys..."
               className="w-full bg-transparent text-[#0b1c30] dark:text-white font-['Inter'] text-xs focus:outline-none"
             />
             <button
@@ -308,7 +306,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                 </>
               )}
 
-              {/* 44th ISEA track */}
+              {/* 45th ISEA track */}
               {layerExpeditions && (
                 <>
                   <path d="M680,60 C640,110 590,190 535,278" stroke="#00b4d8" strokeDasharray="6 6" strokeLinecap="round" strokeWidth="3" />
@@ -497,7 +495,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                   onChange={(e) => setLayerExpeditions(e.target.checked)}
                   className="w-4 h-4 accent-[#00b4d8] rounded"
                 />
-                <span className="font-medium">Active Expeditions (44th ISEA)</span>
+                <span className="font-medium">Recent Expedition (45th ISEA)</span>
               </div>
               <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></span>
             </label>
@@ -555,16 +553,6 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             </label>
           </div>
 
-          {/* AI Geospatial Insight */}
-          <div className="p-3 rounded-2xl bg-[#eff4ff] dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col gap-1">
-            <div className="flex items-center gap-1.5 text-[#8b5cf6] font-['Space_Grotesk'] text-xs font-bold">
-              <span className="material-symbols-outlined text-[16px]">psychology</span>
-              <span>Polar AI Geospatial Insight</span>
-            </div>
-            <p className="font-['Inter'] text-[11px] text-slate-600 dark:text-slate-300 leading-snug">
-              Larsemann Hills coastal melt-pond formation in 2024-25 is 12.4% below 10-year decadal median.
-            </p>
-          </div>
         </div>
 
         {/* MAP CONTROLS DOCK (BOTTOM-LEFT) */}
@@ -727,11 +715,11 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
 
                 <div className="grid grid-cols-2 gap-2 font-['JetBrains_Mono'] text-xs">
                   <button
-                    onClick={() => onOpenAI(`Give me full sensor status and overview of ${activeStation.name}`, activeStation.name)}
-                    className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-[#8b5cf6] hover:bg-[#eff4ff] dark:hover:bg-slate-800 transition-colors font-semibold"
+                    onClick={() => onNavigate('data')}
+                    className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-[#00677d] dark:text-[#4cd6fb] hover:bg-[#eff4ff] dark:hover:bg-slate-800 transition-colors font-semibold"
                   >
-                    <span className="material-symbols-outlined text-[16px]">smart_toy</span>
-                    <span>Ask Station AI</span>
+                    <span className="material-symbols-outlined text-[16px]">database</span>
+                    <span>Station Datasets</span>
                   </button>
 
                   <button
@@ -799,21 +787,19 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                 <div className="p-3.5 rounded-2xl bg-[#eff4ff] dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col gap-2">
                   <div className="flex items-center justify-between font-['JetBrains_Mono'] text-xs">
                     <span className="font-bold text-[#00677d] dark:text-[#4cd6fb]">12 EXPEDITIONS ANCHORED</span>
-                    <span className="text-slate-400">33rd – 44th ISEA</span>
+                    <span className="text-slate-400">31st – 45th ISEA</span>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-['Inter']">
                     {activeStation.description}
                   </p>
                   <div className="pt-1">
-                    <a
-                      href="https://doi.org/10.5194/tc-bharati-2024"
-                      target="_blank"
-                      rel="noreferrer"
+                    <button
+                      onClick={() => onNavigate('knowledge')}
                       className="font-['JetBrains_Mono'] text-xs text-[#00b4d8] font-bold hover:underline flex items-center gap-1"
                     >
-                      <span>doi:10.5194/tc-bharati-2024</span>
-                      <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                    </a>
+                      <span>View station publications</span>
+                      <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -822,7 +808,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
         )}
       </div>
 
-      {/* BOTTOM MASTER EXPEDITION TIMELINE SCRUBBER (1981 - 2025) */}
+      {/* BOTTOM MASTER EXPEDITION TIMELINE SCRUBBER (1981 - 2026) */}
       <div className="w-full bg-white dark:bg-[#0b132b] shadow-md border-t border-slate-200 dark:border-slate-800 px-4 md:px-8 py-4 z-30 flex flex-col gap-3">
         {/* Scrubber Controls */}
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -855,11 +841,11 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                   INDIAN POLAR VOYAGES CHRONOLOGY
                 </span>
                 <span className="font-['JetBrains_Mono'] text-xs px-2 py-0.5 rounded-full bg-[#e5eeff] dark:bg-slate-700 text-[#00677d] dark:text-[#4cd6fb] font-bold">
-                  1981 — 2025
+                  1981 — 2026
                 </span>
               </div>
               <span className="font-['JetBrains_Mono'] text-xs text-slate-500">
-                44 Antarctic • 18 Arctic (Ny-Ålesund) • 10 Southern Ocean Expeditions
+                45 Antarctic Expeditions • Arctic (Ny-Ålesund) • Southern Ocean Cruises
               </span>
             </div>
           </div>
@@ -885,7 +871,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             <div className="flex items-center gap-1.5 font-['JetBrains_Mono'] text-xs text-[#00677d] dark:text-[#4cd6fb] font-bold">
               <span className="material-symbols-outlined text-[18px]">history_edu</span>
               <span>
-                CURRENT ERA: {currentTimelineYear === 2025 ? '44th ISEA (2024-25)' : `Year ${currentTimelineYear}`}
+                CURRENT ERA: {currentTimelineYear === 2026 ? '45th ISEA (2025-26)' : `Year ${currentTimelineYear}`}
               </span>
             </div>
           </div>
@@ -898,7 +884,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             <div
               className="h-full bg-gradient-to-r from-[#00677d] via-[#00b4d8] to-[#10b981] rounded-full transition-all duration-300"
               style={{
-                width: `${((currentTimelineYear - 1981) / (2025 - 1981)) * 100}%`,
+                width: `${((currentTimelineYear - 1981) / (2026 - 1981)) * 100}%`,
               }}
             ></div>
           </div>

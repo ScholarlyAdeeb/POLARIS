@@ -47,7 +47,7 @@ RESEARCH PROPOSAL TEMPLATE - 45TH ISEA & 19TH ARCTIC EXPEDITION
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'NCPOR_45th_ISEA_Proposal_Template.txt';
+    a.download = 'NCPOR_46th_ISEA_Proposal_Template.txt';
     a.click();
   };
 
@@ -65,7 +65,7 @@ RESEARCH PROPOSAL TEMPLATE - 45TH ISEA & 19TH ARCTIC EXPEDITION
                 OPEN CALL FOR PROPOSALS
               </span>
               <h3 className="font-['Space_Grotesk'] font-bold text-base text-[#0b1c30] dark:text-white mt-0.5">
-                45th ISEA & 19th Arctic Expedition
+                46th ISEA & Upcoming Arctic Season
               </h3>
             </div>
           </div>
@@ -86,15 +86,15 @@ RESEARCH PROPOSAL TEMPLATE - 45TH ISEA & 19TH ARCTIC EXPEDITION
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-['JetBrains_Mono'] text-xs space-y-2">
             <div className="flex justify-between">
               <span className="text-slate-500">Proposal Portal Opens:</span>
-              <span className="font-bold text-[#00677d] dark:text-[#4cd6fb]">01 January 2025</span>
+              <span className="font-bold text-[#00677d] dark:text-[#4cd6fb]">To be announced</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Final Submission Deadline:</span>
-              <span className="font-bold text-red-600 dark:text-red-400">30 June 2025 (23:59 IST)</span>
+              <span className="font-bold text-red-600 dark:text-red-400">To be announced</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Medical & Pre-Antarctic Training:</span>
-              <span className="font-bold">ITBP Auli (Uttarakhand) • September 2025</span>
+              <span className="font-bold">ITBP Auli (Uttarakhand) • dates TBA</span>
             </div>
           </div>
 

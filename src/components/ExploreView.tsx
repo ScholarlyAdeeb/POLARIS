@@ -5,7 +5,6 @@ import { STATIONS_DATA, EXPEDITION_MILESTONES, SCIENTIFIC_PAPERS, SIMULATION_MIS
 interface ExploreViewProps {
   onNavigate: (tab: NavTab) => void;
   onSelectStation: (stationId: string) => void;
-  onOpenAI: (initialQuery?: string) => void;
   onOpenSimulation: (mission: SimulationMission) => void;
   onOpenPaper: (paper: ScientificPaper) => void;
   onOpenSkycam: () => void;
@@ -17,7 +16,6 @@ interface ExploreViewProps {
 export const ExploreView: React.FC<ExploreViewProps> = ({
   onNavigate,
   onSelectStation,
-  onOpenAI,
   onOpenSimulation,
   onOpenPaper,
   onOpenSkycam,
@@ -29,7 +27,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   const [searchQuery, setSearchQuery] = useState('What atmospheric studies were conducted at Maitri in 2023?');
   const [activeGradeFilter, setActiveGradeFilter] = useState('All Tracks');
   const [activeLayer, setActiveLayer] = useState<'stations' | 'expeditions' | 'datasets' | 'atmospheric'>('stations');
-  const [selectedMilestone, setSelectedMilestone] = useState(2025);
+  const [selectedMilestone, setSelectedMilestone] = useState(2026);
 
   useEffect(() => {
     const updateTime = () => {
@@ -133,13 +131,6 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   <span>START A VIRTUAL EXPEDITION</span>
                 </button>
 
-                <button
-                  onClick={() => onOpenAI()}
-                  className="flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white dark:bg-slate-800 shadow-[-3px_-3px_8px_rgba(255,255,255,0.9),3px_3px_9px_rgba(139,92,246,0.2)] text-[#8b5cf6] hover:bg-purple-50 dark:hover:bg-purple-950/30 font-['JetBrains_Mono'] text-xs font-bold transition-all"
-                >
-                  <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
-                  <span>ASK POLAR AI</span>
-                </button>
               </div>
 
               {/* Live Coordinate Footprint Badges */}
@@ -220,7 +211,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                       <span>LIVE SKYCAM • BHARATI BASE</span>
                     </button>
                     <span className="px-3 py-1 rounded-full bg-white/90 dark:bg-slate-800/90 text-[#0b132b] dark:text-white font-['JetBrains_Mono'] text-xs font-bold">
-                      44th ISEA ACTIVE
+                      45th ISEA WINTER TEAM
                     </span>
                   </div>
 
@@ -313,7 +304,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   Maitri & Bharati
                 </h3>
                 <p className="font-['Inter'] text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed line-clamp-2">
-                  44th Indian Scientific Expedition to Antarctica (ISEA) underway. Paleoclimatology & geomagnetic surveys.
+                  45th Indian Scientific Expedition to Antarctica (ISEA) underway. Paleoclimatology & geomagnetic surveys.
                 </p>
               </div>
 
@@ -350,7 +341,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   Himadri Base
                 </h3>
                 <p className="font-['Inter'] text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed line-clamp-2">
-                  Ny-Ålesund, Svalbard. 18th Arctic expedition investigating fjord hydrography & atmospheric aerosol loading.
+                  Ny-Ålesund, Svalbard. Arctic expeditions investigating fjord hydrography & atmospheric aerosol loading.
                 </p>
               </div>
 
@@ -619,7 +610,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   FOUR DECADES OF INDIAN POLAR DISCOVERY TIMELINE
                 </span>
                 <span className="font-['JetBrains_Mono'] text-xs font-bold text-[#00677d] dark:text-[#4cd6fb]">
-                  1981 — 2025 (44 Consecutive Expeditions)
+                  1981 — 2026 (45 Antarctic Expeditions)
                 </span>
               </div>
 
@@ -700,20 +691,20 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
         </div>
       </section>
 
-      {/* SECTION 5: MULTIMODAL SCIENTIFIC DISCOVERY INGESTION ENGINE */}
+      {/* SECTION 5: POLAR ARCHIVE SEARCH */}
       <section className="w-full bg-[#eff4ff] dark:bg-[#0c162c] py-12 transition-colors">
         <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
           <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-800 shadow-[-8px_-8px_24px_rgba(255,255,255,0.95),8px_8px_24px_rgba(148,163,184,0.22)] border border-slate-100 dark:border-slate-700">
             <div className="max-w-2xl mb-6">
               <div className="inline-flex items-center gap-1.5 font-['Space_Grotesk'] text-[11px] text-[#8b5cf6] font-bold mb-1">
-                <span className="material-symbols-outlined text-[16px]">psychology</span>
-                MULTIMODAL POLAR INGESTION ENGINE
+                <span className="material-symbols-outlined text-[16px]">manage_search</span>
+                POLAR ARCHIVE SEARCH
               </div>
               <h2 className="font-['Space_Grotesk'] text-2xl md:text-3xl text-[#0b132b] dark:text-white font-bold">
-                Ask Questions Across 40+ Years of Polar Data
+                Search Across 40+ Years of Polar Data
               </h2>
               <p className="font-['Inter'] text-sm text-slate-600 dark:text-slate-300">
-                Query across meteorological records, benthic cores, satellite imagery, expedition journals, and station logs.
+                Search meteorological records, sediment cores, satellite imagery, expedition journals, and station logs by keyword, place, or year.
               </p>
             </div>
 
@@ -726,7 +717,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Query by text, coordinates, ice core sample ID, or satellite image..."
+                    placeholder="Search by keyword, coordinates, ice core sample ID, or expedition..."
                     className="bg-transparent w-full text-[#0b132b] dark:text-white font-['Inter'] text-sm focus:outline-none"
                   />
                 </div>
@@ -746,10 +737,10 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                     <span className="material-symbols-outlined text-[20px]">pin_drop</span>
                   </button>
                   <button
-                    onClick={() => onOpenAI(searchQuery)}
+                    onClick={() => onNavigate('knowledge')}
                     className="px-5 py-2.5 rounded-xl bg-[#00b4d8] hover:bg-[#0077b6] text-white font-['JetBrains_Mono'] text-xs font-bold flex items-center gap-1.5 shadow-sm whitespace-nowrap"
                   >
-                    <span>SYNTHESIZE</span>
+                    <span>SEARCH</span>
                     <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                   </button>
                 </div>
@@ -759,12 +750,12 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
             {/* Sample Prompts */}
             <div className="flex flex-wrap items-center gap-2 mb-6">
               <span className="font-['Space_Grotesk'] text-[10px] text-slate-400 uppercase font-bold mr-1">
-                SUGGESTED INVESTIGATIONS:
+                SUGGESTED SEARCHES:
               </span>
               {samplePrompts.map((p, idx) => (
                 <button
                   key={idx}
-                  onClick={() => onOpenAI(p)}
+                  onClick={() => setSearchQuery(p)}
                   className="px-3 py-1 rounded-full bg-white dark:bg-slate-700 hover:bg-[#e5eeff] dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-['JetBrains_Mono'] text-[11px] shadow-sm flex items-center gap-1.5 border border-slate-200 dark:border-slate-600 transition-colors"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00b4d8]"></span>
@@ -773,23 +764,19 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
               ))}
             </div>
 
-            {/* AI Synthesis Panel Preview */}
+            {/* Linked Records Preview */}
             <div className="p-5 rounded-2xl bg-[#eff4ff] dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200/80 dark:border-slate-800">
+              <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200/80 dark:border-slate-800">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#8b5cf6] text-[18px]">auto_awesome</span>
-                  <span className="font-['JetBrains_Mono'] text-xs font-bold text-[#8b5cf6]">
-                    POLAR AI SYNTHESIS RESULT (GROUNDED ON NCPOR REPOSITORIES)
+                  <span className="material-symbols-outlined text-[#00677d] dark:text-[#4cd6fb] text-[18px]">link</span>
+                  <span className="font-['JetBrains_Mono'] text-xs font-bold text-[#00677d] dark:text-[#4cd6fb]">
+                    LINKED RECORDS • MAITRI STATION • 2023
                   </span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-slate-400">
-                  CONFIDENCE: 98.4% • 6 CITATIONS
+                  SAMPLE RECORDS
                 </span>
               </div>
-
-              <p className="font-['Inter'] text-sm text-[#0b1c30] dark:text-slate-200 leading-relaxed mb-4">
-                During the 2023 calendar period at Maitri Station (70°45′57″S, 11°44′09″E), atmospheric investigations concentrated on three interrelated domains: (1) Continuous total column ozone and UV-B radiometric measurements using Brewer Spectrophotometers, recording minimum total ozone of 132 DU during early October; (2) Aerosol optical depth (AOD) profiling under the Indian Space Research Organisation (ISRO) Geosphere-Biosphere Programme; and (3) Boundary-layer greenhouse gas monitoring (CO2 and CH4) with cavity ring-down spectrometers.
-              </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div
@@ -799,13 +786,13 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   <span className="material-symbols-outlined text-[#00677d] text-[20px]">description</span>
                   <div className="min-w-0">
                     <span className="font-['Space_Grotesk'] text-[9px] text-slate-400 uppercase font-bold block">
-                      PEER-REVIEWED PAPER
+                      EXPEDITION REPORT
                     </span>
                     <span className="font-['JetBrains_Mono'] text-xs font-bold text-slate-800 dark:text-white block truncate">
-                      ISEA-42 Atmos Bulletin
+                      ISEA-42 Atmospheric Bulletin
                     </span>
                     <span className="font-['JetBrains_Mono'] text-[10px] text-[#00b4d8]">
-                      doi:10.1016/j.polar.2023
+                      Sample record
                     </span>
                   </div>
                 </div>
@@ -829,7 +816,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 </div>
 
                 <div
-                  onClick={() => onShowToast?.('Archival expedition logbook loaded from MoES Vault: Dr. Rajesh Kumar 42nd ISEA voyage manifests.', 'ARCHIVAL EXPEDITION LOG', 'success')}
+                  onClick={() => onShowToast?.('Archival expedition logbook opened: 42nd ISEA voyage manifests (sample record).', 'ARCHIVAL EXPEDITION LOG', 'success')}
                   className="p-3 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-start gap-2.5 cursor-pointer hover:border-[#00b4d8] border border-transparent transition-all"
                 >
                   <span className="material-symbols-outlined text-[#545d7c] text-[20px]">photo_library</span>
@@ -838,7 +825,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                       ARCHIVAL EXPEDITION LOG
                     </span>
                     <span className="font-['JetBrains_Mono'] text-xs font-bold text-slate-800 dark:text-white block truncate">
-                      Dr. Rajesh Kumar Logbook
+                      42nd ISEA Voyage Logbook
                     </span>
                     <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">
                       MoES Expedition Vault
@@ -925,7 +912,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
                   <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-700/60">
                     <span className="font-['JetBrains_Mono'] text-xs text-[#00b4d8] font-bold">
-                      {mission.rating} ({mission.studentsCount})
+                      {mission.rating} • {mission.studentsCount}
                     </span>
                     <button
                       onClick={() => onOpenSimulation(mission)}
@@ -1000,7 +987,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                         onClick={() => onOpenPaper(paper)}
                         className="text-[#00b4d8] font-bold hover:underline"
                       >
-                        doi:{paper.doi}
+                        {paper.doi ? `doi:${paper.doi}` : 'View record'}
                       </button>
                       <button
                         onClick={() => onOpenDataset(paper.dataFile)}
@@ -1039,7 +1026,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 <div className="p-3 flex items-center justify-between font-['JetBrains_Mono'] text-xs">
                   <span className="text-slate-400">1,840 Archival Photos Online</span>
                   <button
-                    onClick={() => onShowToast?.('NCPOR Archival Photo Vault: 1,840 digitized high-resolution photographic plates from 1981–2025 loaded.', 'NCPOR PHOTO VAULT', 'info')}
+                    onClick={() => onShowToast?.('NCPOR Archival Photo Vault: 1,840 digitized high-resolution photographic plates from 1981–2026 loaded.', 'NCPOR PHOTO VAULT', 'info')}
                     className="text-[#00677d] dark:text-[#4cd6fb] font-bold hover:underline"
                   >
                     Browse Gallery →
@@ -1095,7 +1082,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
             <div className="relative z-10 max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md font-['Space_Grotesk'] text-xs mb-4">
                 <span className="material-symbols-outlined text-[#10b981] text-[16px]">verified</span>
-                <span>CALL FOR RESEARCH PROPOSALS • 45th ISEA & 19th ARCTIC EXPEDITION</span>
+                <span>CALL FOR RESEARCH PROPOSALS • 46th ISEA & UPCOMING ARCTIC SEASON</span>
               </div>
 
               <h2 className="font-['Space_Grotesk'] text-2xl md:text-3xl font-bold mb-3 leading-tight">
@@ -1120,7 +1107,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   PORTAL PERMIT GUIDELINES
                 </button>
                 <span className="font-['JetBrains_Mono'] text-xs text-[#4cd6fb]">
-                  DEADLINE: 30 JUNE 2025
+                  DEADLINE: TO BE ANNOUNCED
                 </span>
               </div>
             </div>

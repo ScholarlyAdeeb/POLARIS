@@ -4,7 +4,6 @@ import { HOTSPOT_DATA, SCIENTIFIC_PAPERS, SIMULATION_MISSIONS } from '../data/po
 
 interface BharatiStationViewProps {
   onNavigate: (tab: NavTab) => void;
-  onOpenAI: (query?: string, station?: string) => void;
   onOpenSimulation: (mission: SimulationMission) => void;
   onOpenPaper: (paper: ScientificPaper) => void;
   onOpenSkycam: () => void;
@@ -14,7 +13,6 @@ interface BharatiStationViewProps {
 
 export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
   onNavigate,
-  onOpenAI,
   onOpenSimulation,
   onOpenPaper,
   onOpenSkycam,
@@ -87,7 +85,7 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
                   NCPOR-STN-03 • OPERATIONAL
                 </span>
                 <span className="px-2.5 py-0.5 rounded bg-[#e5eeff] dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] font-['Space_Grotesk'] text-[10px] uppercase font-bold tracking-wider">
-                  33rd ISEA • Commissioned Mar 18, 2012
+                  31st ISEA • Commissioned Mar 18, 2012
                 </span>
               </div>
 
@@ -184,7 +182,7 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
               className="px-4 py-2 rounded-xl bg-[#f4f7fb] dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white font-['JetBrains_Mono'] text-xs transition-all flex items-center gap-1.5"
             >
               <span className="material-symbols-outlined text-[17px]">flag</span>
-              ISEA EXPEDITIONS (31st–44th)
+              ISEA EXPEDITIONS (31st–45th)
             </button>
 
             <button
@@ -201,14 +199,6 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
             >
               <span className="material-symbols-outlined text-[17px]">videocam</span>
               SKYCAM & ARCHIVAL
-            </button>
-
-            <button
-              onClick={() => onOpenAI('Summarize all research and structural capabilities of Bharati Research Station', 'Bharati (NCPOR-STN-03)')}
-              className="px-4 py-2 rounded-xl bg-[#eff4ff] dark:bg-purple-950/40 text-[#8b5cf6] hover:bg-[#dce9ff] transition-all font-['JetBrains_Mono'] text-xs font-semibold flex items-center gap-1.5 ml-auto border border-purple-200/50 dark:border-purple-800"
-            >
-              <span className="material-symbols-outlined text-[17px]">auto_awesome</span>
-              BHARATI AGENT AI
             </button>
           </div>
         </div>
@@ -622,7 +612,7 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
                       {activeHotspot.datasetTitle}
                     </span>
                     <span className="font-['JetBrains_Mono'] text-[10px] text-slate-500">
-                      DOI: {activeHotspot.datasetDoi}
+                      {activeHotspot.datasetDoi ? `DOI: ${activeHotspot.datasetDoi}` : 'Sample dataset record'}
                     </span>
                   </div>
                 </div>
@@ -682,11 +672,11 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
 
                 <div className="grid grid-cols-2 gap-2 font-['JetBrains_Mono'] text-xs">
                   <button
-                    onClick={() => onOpenAI(`Explain how ${activeHotspot.title} at Bharati validates satellite data.`, 'Bharati Base')}
-                    className="py-2 px-2 rounded-xl bg-white dark:bg-slate-800 shadow-sm hover:bg-[#eff4ff] dark:hover:bg-slate-700 text-[#8b5cf6] font-semibold flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-700 transition-all"
+                    onClick={() => onNavigate('map')}
+                    className="py-2 px-2 rounded-xl bg-white dark:bg-slate-800 shadow-sm hover:bg-[#eff4ff] dark:hover:bg-slate-700 text-[#00677d] dark:text-[#4cd6fb] font-semibold flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-700 transition-all"
                   >
-                    <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
-                    QUERY POLAR AI
+                    <span className="material-symbols-outlined text-[16px]">map</span>
+                    VIEW ON MAP
                   </button>
                   <button
                     onClick={() => onShowToast?.(`Knowledge Graph Matrix: Station Payload ${activeHotspot.id} connected to 8 peer-reviewed journal articles, 4 ISEA cruises, and ISRO NRSC satellite links.`, 'KNOWLEDGE GRAPH FABRIC', 'info')}
@@ -820,16 +810,16 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Card 1: 44th ISEA Winter Team Field Log */}
+            {/* Card 1: 45th ISEA Winter Team Field Log */}
             <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-[-4px_-4px_10px_rgba(255,255,255,0.85),4px_4px_12px_rgba(148,163,184,0.18)] overflow-hidden flex flex-col justify-between border border-slate-100 dark:border-slate-700 group">
               <div className="h-44 w-full relative overflow-hidden">
                 <img
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZw2qSKyLTDjQhM3MeqLGbJLO7RE-trWbPShMLEeMiTKnjFtNv-8KKNLNULK6-CdhVAG4lrlUXIfgOfHfFYE1dKGj63HPkqP-b_JQdXnRc-63yHM2LAFqx22Fk2WBaJIluNDge9ZzYKLwDUcGKiAXE2-1E1NdoUqlti79v2Qbz49--KK10BfiryWRVn97wbyK2FCFdQx7jH6E5oSZfk7QqL9YJ15LASjX9wPnK_8EjGB0Axm-rM6MLoQ"
-                  alt="44th ISEA Winter Team"
+                  alt="45th ISEA Winter Team"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <span className="absolute top-2 left-2 px-2.5 py-0.5 rounded bg-[#0b132b]/80 backdrop-blur-sm text-white font-['JetBrains_Mono'] text-[10px] font-bold">
-                  44TH ISEA • 2024–2025
+                  45TH ISEA • 2025–2026
                 </span>
               </div>
               <div className="p-4 flex flex-col gap-1.5 flex-1 justify-between">
@@ -838,16 +828,16 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
                     FIELD EXPEDITION LOG
                   </span>
                   <h4 className="font-['Space_Grotesk'] text-sm font-bold text-[#0b1c30] dark:text-white line-clamp-2 mt-0.5">
-                    44th ISEA Winter Team Takes Over Full Physical Station Command
+                    45th ISEA Winter Team at Bharati Station (Sample Log)
                   </h4>
                   <p className="font-['Inter'] text-xs text-slate-500 line-clamp-2 mt-1">
-                    24 scientists and logistical engineers under Leader Dr. Anand Sharma initiate winter aerosol and ice core monitoring.
+                    Winter-over scientists and engineers continue aerosol and ice core monitoring through the polar night.
                   </p>
                 </div>
                 <div className="pt-2 flex items-center justify-between text-slate-400 font-['JetBrains_Mono'] text-xs border-t border-slate-100 dark:border-slate-700/60">
-                  <span>NCPOR REPO: EXP-44</span>
+                  <span>NCPOR REPO: EXP-45</span>
                   <button
-                    onClick={() => onShowToast?.('Logbook EXP-44: 24 winter crew muster rolls and daily science manifest loaded.', '44TH ISEA FIELD LOGBOOK', 'success')}
+                    onClick={() => onShowToast?.('Logbook EXP-45: winter crew roster and daily science manifest (sample record).', '45TH ISEA FIELD LOGBOOK', 'success')}
                     className="text-[#00b4d8] font-bold flex items-center gap-0.5 hover:underline"
                   >
                     READ <span className="material-symbols-outlined text-[14px]">chevron_right</span>
@@ -914,11 +904,11 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
                   Atmospheric Boundary Layer dynamics in East Antarctic coastal oasis
                 </h4>
                 <p className="font-['Inter'] text-xs text-slate-500 line-clamp-3 leading-relaxed">
-                  Journal of Geophysical Research: Atmospheres (2024). Ground-based lidar & micro-radiometer telemetry from Bharati Station validating katabatic wind patterns.
+                  Sample publication record. Ground-based lidar & micro-radiometer telemetry from Bharati Station validating katabatic wind patterns.
                 </p>
                 <div className="flex flex-wrap gap-1 pt-1 font-['JetBrains_Mono'] text-[10px]">
                   <span className="px-2 py-0.5 rounded bg-[#e5eeff] dark:bg-slate-700 text-[#0b1c30] dark:text-slate-200">
-                    DOI: 10.1029/2024JD0412
+                    SAMPLE RECORD
                   </span>
                   <span className="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">
                     OPEN ACCESS
@@ -936,32 +926,29 @@ export const BharatiStationView: React.FC<BharatiStationViewProps> = ({
               </div>
             </div>
 
-            {/* Card 4: Ask Polar AI */}
-            <div className="rounded-3xl bg-[#dce9ff]/50 dark:bg-slate-800/80 shadow-[-4px_-4px_10px_rgba(255,255,255,0.85),4px_4px_12px_rgba(148,163,184,0.18)] p-5 flex flex-col justify-between border border-purple-200/60 dark:border-purple-900/60 group">
+            {/* Card 4: Station Archive */}
+            <div className="rounded-3xl bg-[#dce9ff]/50 dark:bg-slate-800/80 shadow-[-4px_-4px_10px_rgba(255,255,255,0.85),4px_4px_12px_rgba(148,163,184,0.18)] p-5 flex flex-col justify-between border border-slate-200/60 dark:border-slate-700/60 group">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-['Space_Grotesk'] text-[10px] text-[#8b5cf6] font-bold uppercase">
-                    POLAR AI SYNTHESIS
+                  <span className="font-['Space_Grotesk'] text-[10px] text-[#00677d] dark:text-[#4cd6fb] font-bold uppercase">
+                    STATION ARCHIVE
                   </span>
-                  <span className="material-symbols-outlined text-[#8b5cf6] text-[18px]">auto_awesome</span>
+                  <span className="material-symbols-outlined text-[#00677d] dark:text-[#4cd6fb] text-[18px]">inventory_2</span>
                 </div>
                 <h4 className="font-['Space_Grotesk'] text-sm font-bold text-[#0b1c30] dark:text-white">
-                  Ask Polar AI About Bharati Station Systems
+                  Browse Bharati Station Records
                 </h4>
                 <p className="font-['Inter'] text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Run natural language queries across 12 years of Bharati meteorological archives, structural blueprints, expedition logs, and satellite links.
+                  Filter 12 years of Bharati meteorological archives, structural blueprints, expedition logs, and satellite links by year and instrument.
                 </p>
-                <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 font-['JetBrains_Mono'] text-[11px] text-slate-500 shadow-xs border border-slate-100 dark:border-slate-800">
-                  &gt; "Compare 2024 Prydz Bay sea-ice anomaly with 2018 winter averages..."
-                </div>
               </div>
               <div className="pt-3">
                 <button
-                  onClick={() => onOpenAI('Compare 2024 Prydz Bay sea-ice anomaly with 2018 winter averages', 'Bharati Base')}
-                  className="w-full py-2.5 rounded-xl bg-[#8b5cf6] hover:bg-[#6d3bd7] text-white font-['JetBrains_Mono'] text-xs font-bold flex items-center justify-center gap-1.5 shadow-md transition-all"
+                  onClick={() => onNavigate('data')}
+                  className="w-full py-2.5 rounded-xl bg-[#00b4d8] hover:bg-[#0077b6] text-white font-['JetBrains_Mono'] text-xs font-bold flex items-center justify-center gap-1.5 shadow-md transition-all"
                 >
-                  <span className="material-symbols-outlined text-[16px]">chat</span>
-                  LAUNCH AI AGENT
+                  <span className="material-symbols-outlined text-[16px]">folder_open</span>
+                  OPEN STATION DATASETS
                 </button>
               </div>
             </div>
