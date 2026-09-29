@@ -1,4 +1,3 @@
-export type DomainType = 'ANTARCTICA' | 'ARCTIC' | 'HIMALAYAS / THIRD POLE' | 'SOUTHERN OCEAN';
 
 export type NavTab = 
   | 'explore'

@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { DomainType, NavTab, ScientificPaper, SimulationMission } from './types/polaris';
+import { NavTab, ScientificPaper, SimulationMission } from './types/polaris';
 import { Header } from './components/Header';
 import { ExploreView } from './components/ExploreView';
 import { BharatiStationView } from './components/BharatiStationView';
@@ -52,7 +52,6 @@ const VIEW_FOR_TAB: Record<NavTab, 'explore' | 'station' | 'map'> = {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('explore');
-  const [activeDomain, setActiveDomain] = useState<DomainType>('ANTARCTICA');
   const [isPolarNight, setIsPolarNight] = useState(false);
   const [language, setLanguage] = useState<'EN' | 'HI'>('EN');
 
@@ -142,8 +141,6 @@ export default function App() {
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        activeDomain={activeDomain}
-        setActiveDomain={setActiveDomain}
         isPolarNight={isPolarNight}
         setIsPolarNight={setIsPolarNight}
         language={language}

@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { DomainType, NavTab } from '../types/polaris';
+import { NavTab } from '../types/polaris';
 
 interface HeaderProps {
   activeTab: NavTab;
   setActiveTab: (tab: NavTab) => void;
-  activeDomain: DomainType;
-  setActiveDomain: (domain: DomainType) => void;
   isPolarNight: boolean;
   setIsPolarNight: (val: boolean) => void;
   language: 'EN' | 'HI';
@@ -16,8 +14,6 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   activeTab,
   setActiveTab,
-  activeDomain,
-  setActiveDomain,
   isPolarNight,
   setIsPolarNight,
   language,
@@ -32,25 +28,19 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const navItems: { id: NavTab; label: string; hindiLabel: string }[] = [
-    { id: 'explore', label: 'EXPLORE', hindiLabel: 'अन्वेषण' },
-    { id: 'expeditions', label: 'EXPEDITIONS', hindiLabel: 'अभियान' },
-    { id: 'stations', label: 'STATIONS', hindiLabel: 'अनुसंधान केंद्र' },
-    { id: 'map', label: 'MAP & GIS', hindiLabel: 'मानचित्र' },
-    { id: 'knowledge', label: 'KNOWLEDGE', hindiLabel: 'ज्ञानकोश' },
-    { id: 'data', label: 'DATA', hindiLabel: 'डेटा' },
-    { id: 'media', label: 'MEDIA', hindiLabel: 'मीडिया' },
-    { id: 'learn', label: 'LEARN (POLAR ACADEMY)', hindiLabel: 'ध्रुवीय अकादमी' },
+    { id: 'explore', label: 'Explore', hindiLabel: 'अन्वेषण' },
+    { id: 'expeditions', label: 'Expeditions', hindiLabel: 'अभियान' },
+    { id: 'stations', label: 'Stations', hindiLabel: 'अनुसंधान केंद्र' },
+    { id: 'map', label: 'Map', hindiLabel: 'मानचित्र' },
+    { id: 'knowledge', label: 'Knowledge', hindiLabel: 'ज्ञानकोश' },
+    { id: 'data', label: 'Data', hindiLabel: 'डेटा' },
+    { id: 'media', label: 'Media', hindiLabel: 'मीडिया' },
+    { id: 'learn', label: 'Polar Academy', hindiLabel: 'ध्रुवीय अकादमी' },
   ];
-
-  const domains: DomainType[] = [
-    'ANTARCTICA',
-    'ARCTIC',
-    'HIMALAYAS / THIRD POLE',
-    'SOUTHERN OCEAN',
-  ];
+  const shortcut = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘K' : 'Ctrl K';
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-[#ffffff]/90 dark:bg-[#0b132b]/95 backdrop-blur-xl border-b border-[#e2e8f0]/60 dark:border-slate-800 shadow-[0_1px_8px_rgba(0,0,0,0.04)] transition-colors">
+    <header className="fixed top-0 w-full z-50 bg-[#ffffff]/90 dark:bg-[#0b132b]/95 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 transition-colors">
       <div className="w-full px-4 md:px-8 py-2.5 flex flex-col justify-between gap-2 max-w-[1440px] mx-auto">
         {/* Tier 1: Main Header Bar */}
         <div className="flex items-center justify-between gap-4">
@@ -67,13 +57,13 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="font-['Space_Grotesk'] text-lg md:text-xl tracking-tight text-[#0b1c30] dark:text-white font-bold leading-none">
                   POLARIS
                 </span>
-                <span className="hidden sm:inline font-['Space_Grotesk'] text-[10px] px-2 py-0.5 rounded-full bg-[#e5eeff] dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] font-bold tracking-wider border border-[#b3ebff]/50 dark:border-slate-700">
-                  SIH 2026 PROTOTYPE
+                <span className="hidden sm:inline text-[11px] px-2 py-0.5 rounded-full bg-[#e5eeff] dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] font-semibold">
+                  SIH 2026 prototype
                 </span>
               </div>
-              <span className="font-['JetBrains_Mono'] text-[11px] text-[#3d494d] dark:text-slate-400 truncate max-w-xs md:max-w-xl hidden sm:inline mt-0.5">
+              <span className="text-xs text-[#3d494d] dark:text-slate-400 truncate max-w-xs md:max-w-xl hidden sm:inline mt-0.5">
                 {language === 'EN' 
-                  ? 'Indian Polar Science Knowledge Platform | Built for MoES / NCPOR'
+                  ? 'Indian Polar Science Knowledge Platform · built for MoES / NCPOR'
                   : 'भारतीय ध्रुवीय विज्ञान ज्ञान मंच | एमओईएस / एनसीपीओआर के लिए निर्मित'}
               </span>
             </div>
@@ -93,31 +83,30 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Quick Search trigger */}
             <div 
               onClick={onOpenCommandPalette}
-              className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#f4f7fb] dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-[inset_1px_1px_3px_rgba(148,163,184,0.15)] w-72 xl:w-96 cursor-pointer hover:border-[#00b4d8]/60 transition-all"
+              className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#f4f7fb] dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-72 xl:w-96 cursor-pointer hover:border-[#00b4d8]/60 transition-all"
             >
               <span className="material-symbols-outlined text-[#64748b] text-[18px]">search</span>
               <span className="w-full text-[#64748b] text-xs font-['Inter']">
-                {language === 'EN' ? 'Search expeditions, datasets, stations, coords...' : 'अभियान, डेटासेट, केंद्र खोजें...'}
+                {language === 'EN' ? 'Search expeditions, datasets, stations…' : 'अभियान, डेटासेट, केंद्र खोजें…'}
               </span>
-              <span className="material-symbols-outlined text-[#64748b] text-[17px] hover:text-[#00b4d8]">document_scanner</span>
-              <kbd className="font-['JetBrains_Mono'] text-[10px] px-1.5 py-0.5 rounded bg-[#d3e4fe] dark:bg-slate-800 text-[#0b1c30] dark:text-slate-300 font-semibold">
-                ⌘K
+              <kbd className="text-[11px] px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-700 text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                {shortcut}
               </kbd>
             </div>
 
             {/* Quick action buttons */}
             <div className="flex items-center gap-1.5 sm:gap-2">
               {/* Language Switcher */}
-              <div className="flex items-center rounded-lg bg-[#eff4ff] dark:bg-slate-800 p-0.5 text-xs font-['JetBrains_Mono']">
+              <div className="flex items-center rounded-lg bg-[#eff4ff] dark:bg-slate-800 p-0.5 text-xs">
                 <button 
                   onClick={() => setLanguage('EN')}
-                  className={`px-2 py-0.5 rounded font-semibold transition-all ${language === 'EN' ? 'bg-white dark:bg-slate-700 text-[#0b1c30] dark:text-white shadow-xs' : 'text-[#64748b] hover:text-black dark:hover:text-white'}`}
+                  className={`px-2 py-0.5 rounded font-semibold transition-all ${language === 'EN' ? 'bg-white dark:bg-slate-700 text-[#0b1c30] dark:text-white' : 'text-[#64748b] hover:text-black dark:hover:text-white'}`}
                 >
                   EN
                 </button>
                 <button 
                   onClick={() => setLanguage('HI')}
-                  className={`px-2 py-0.5 rounded font-semibold transition-all ${language === 'HI' ? 'bg-white dark:bg-slate-700 text-[#0b1c30] dark:text-white shadow-xs' : 'text-[#64748b] hover:text-black dark:hover:text-white'}`}
+                  className={`px-2 py-0.5 rounded font-semibold transition-all ${language === 'HI' ? 'bg-white dark:bg-slate-700 text-[#0b1c30] dark:text-white' : 'text-[#64748b] hover:text-black dark:hover:text-white'}`}
                 >
                   हिंदी
                 </button>
@@ -127,7 +116,8 @@ export const Header: React.FC<HeaderProps> = ({
               <button 
                 onClick={toggleContrast}
                 className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${highContrast ? 'bg-[#00677d] text-white' : 'bg-[#eff4ff] dark:bg-slate-800 text-[#3d494d] dark:text-slate-300 hover:text-black'}`}
-                title="Toggle High Contrast"
+                title="High contrast"
+                aria-label="High contrast"
               >
                 <span className="material-symbols-outlined text-[18px]">accessibility_new</span>
               </button>
@@ -136,7 +126,8 @@ export const Header: React.FC<HeaderProps> = ({
               <button 
                 onClick={() => setIsPolarNight(!isPolarNight)}
                 className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${isPolarNight ? 'bg-[#8b5cf6] text-white' : 'bg-[#eff4ff] dark:bg-slate-800 text-[#3d494d] dark:text-slate-300 hover:text-black'}`}
-                title={isPolarNight ? "Switch to Polar Daylight" : "Switch to Polar Night"}
+                title={isPolarNight ? 'Light mode' : 'Dark mode'}
+                aria-label={isPolarNight ? 'Light mode' : 'Dark mode'}
               >
                 <span className="material-symbols-outlined text-[18px]">
                   {isPolarNight ? 'nights_stay' : 'wb_sunny'}
@@ -146,8 +137,8 @@ export const Header: React.FC<HeaderProps> = ({
               {/* User Avatar */}
               <div 
                 onClick={() => alert('Guest session (demo). Sign-in is not part of this prototype.')}
-                className="w-8 h-8 rounded-full bg-[#00677d] text-white hidden min-[380px]:flex items-center justify-center shadow-[-2px_-2px_6px_rgba(255,255,255,0.9),2px_2px_6px_rgba(148,163,184,0.25)] cursor-pointer hover:scale-105 transition-transform"
-                title="Polar Researcher Account"
+                className="w-8 h-8 rounded-full bg-[#00677d] text-white hidden min-[380px]:flex items-center justify-center cursor-pointer"
+                title="Guest session"
               >
                 <span className="material-symbols-outlined text-[18px]">person</span>
               </div>
@@ -156,17 +147,17 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Tier 2: Navigation Links & Domain Filters */}
-        <div className="flex items-center justify-between border-t border-[#e2e8f0]/80 dark:border-slate-800/80 pt-1.5 overflow-x-auto scrollbar-none">
-          <nav className="flex items-center gap-2 md:gap-4 shrink-0">
+        <div className="-mx-4 px-4 md:mx-0 md:px-0 border-t border-slate-200 dark:border-slate-800 pt-1.5 overflow-x-auto scrollbar-none">
+          <nav className="flex items-center gap-1 md:gap-2 w-max">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`font-['JetBrains_Mono'] text-xs font-semibold whitespace-nowrap transition-all px-2.5 py-1 rounded-lg ${
-                    isActive 
-                      ? 'text-[#00677d] dark:text-[#4cd6fb] font-bold bg-[#eff4ff] dark:bg-slate-800/80 shadow-xs' 
+                  className={`text-sm whitespace-nowrap transition-colors px-3 py-1.5 rounded-lg ${
+                    isActive
+                      ? 'text-[#00677d] dark:text-[#4cd6fb] font-semibold bg-[#eff4ff] dark:bg-slate-800/80' 
                       : 'text-slate-600 dark:text-slate-400 hover:text-[#0b1c30] dark:hover:text-white hover:bg-slate-100/60 dark:hover:bg-slate-800/40'
                   }`}
                 >
@@ -176,26 +167,6 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </nav>
 
-          {/* Domain Quick Filters */}
-          <div className="hidden xl:flex items-center gap-1.5 font-['Space_Grotesk'] text-[11px] font-bold text-[#3d494d] dark:text-slate-400 shrink-0 ml-4 pl-4 border-l border-slate-200/80 dark:border-slate-800">
-            <span className="text-[#64748b] text-[10px] uppercase tracking-wider mr-1">DOMAIN:</span>
-            {domains.map((dom) => {
-              const isDomActive = activeDomain === dom;
-              return (
-                <button
-                  key={dom}
-                  onClick={() => setActiveDomain(dom)}
-                  className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition-all ${
-                    isDomActive
-                      ? 'bg-[#00677d] text-white shadow-xs font-bold'
-                      : 'bg-[#f4f7fb] dark:bg-slate-800 hover:bg-[#dce9ff] dark:hover:bg-slate-700 text-[#0b1c30] dark:text-slate-300'
-                  }`}
-                >
-                  {dom}
-                </button>
-              );
-            })}
-          </div>
         </div>
       </div>
     </header>

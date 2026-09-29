@@ -22,11 +22,14 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
   const [showGraticule, setShowGraticule] = useState(true);
   const [showBathymetry, setShowBathymetry] = useState(true);
   const [showWeatherRadar, setShowWeatherRadar] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(true);
+  const isPhone = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [drawerOpen, setDrawerOpen] = useState(!isPhone);
+  const [layersOpen, setLayersOpen] = useState(!isPhone);
   const [activeStation, setActiveStation] = useState<StationData>(
     stations.find((s) => s.id === selectedStationId) || stations[0]
   );
-  const [mapZoom, setMapZoom] = useState(1);
+  const initialZoom = isPhone ? 0.4 : 1;
+  const [mapZoom, setMapZoom] = useState(initialZoom);
   const [mapCenterOffset, setMapCenterOffset] = useState({ x: 0, y: 0 });
   const [searchFilter, setSearchFilter] = useState('Bharati Station');
   const [isPlayingTimeline, setIsPlayingTimeline] = useState(false);
@@ -72,56 +75,56 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
   return (
     <div className="w-full flex flex-col font-['Inter'] bg-[#f4f7fb] dark:bg-[#070c18] transition-colors">
       {/* TOP MAP CHROME BAR */}
-      <div className="w-full bg-white dark:bg-[#0b132b] shadow-sm border-b border-slate-200 dark:border-slate-800 z-30 px-4 md:px-8 py-3 flex flex-col gap-3">
+      <div className="w-full bg-white dark:bg-[#0b132b] border-b border-slate-200 dark:border-slate-800 z-30 px-4 md:px-8 py-3 flex flex-col gap-3">
         {/* Tier 1: Region Projections & Metadata */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:flex-wrap md:items-center justify-between gap-3">
           {/* Region Projections Pill Selector */}
           <div className="flex items-center p-1 rounded-xl bg-[#eff4ff] dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 gap-1 overflow-x-auto">
             <button
               onClick={() => setActiveRegion('ANTARCTICA')}
               className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-['Space_Grotesk'] text-xs font-bold transition-all ${
                 activeRegion === 'ANTARCTICA'
-                  ? 'bg-white dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] shadow-sm'
+                  ? 'bg-white dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb]'
                   : 'text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white'
               }`}
             >
               <span className="w-2 h-2 rounded-full bg-[#00b4d8]"></span>
-              <span>ANTARCTICA (SOUTH POLAR)</span>
+              <span>Antarctica</span>
             </button>
             <button
               onClick={() => setActiveRegion('ARCTIC')}
               className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-['JetBrains_Mono'] text-xs transition-all ${
                 activeRegion === 'ARCTIC'
-                  ? 'bg-white dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] shadow-sm font-bold'
+                  ? 'bg-white dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] font-bold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white'
               }`}
             >
-              <span>ARCTIC (NORTH POLAR)</span>
+              <span>Arctic</span>
             </button>
             <button
               onClick={() => setActiveRegion('HIMALAYAS')}
               className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-['JetBrains_Mono'] text-xs transition-all ${
                 activeRegion === 'HIMALAYAS'
-                  ? 'bg-white dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] shadow-sm font-bold'
+                  ? 'bg-white dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] font-bold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white'
               }`}
             >
-              <span>HIMALAYAS / THIRD POLE</span>
+              <span>Himalayas</span>
             </button>
             <button
               onClick={() => setActiveRegion('SOUTHERN_OCEAN')}
               className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-['JetBrains_Mono'] text-xs transition-all ${
                 activeRegion === 'SOUTHERN_OCEAN'
-                  ? 'bg-white dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] shadow-sm font-bold'
+                  ? 'bg-white dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] font-bold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white'
               }`}
             >
-              <span>SOUTHERN OCEAN TRANSECTS</span>
+              <span>Southern Ocean</span>
             </button>
           </div>
 
           {/* Projection & Scale Metadata */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#e5eeff] dark:bg-slate-800 font-['JetBrains_Mono'] text-xs text-[#0b1c30] dark:text-slate-300">
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#e5eeff] dark:bg-slate-800 font-['JetBrains_Mono'] text-xs text-[#0b1c30] dark:text-slate-300">
             <span className="material-symbols-outlined text-[16px] text-[#0077b6] dark:text-[#4cd6fb]">public</span>
             <span className="font-semibold">EPSG:3031 (Antarctic Polar Stereographic)</span>
             <span className="text-slate-400">•</span>
@@ -131,8 +134,8 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
           </div>
 
           {/* Quick Toggles */}
-          <div className="flex items-center gap-2 font-['JetBrains_Mono'] text-xs text-slate-600 dark:text-slate-300">
-            <label className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer">
+          <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 overflow-x-auto scrollbar-none -mx-4 px-4 md:mx-0 md:px-0">
+            <label className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer whitespace-nowrap shrink-0">
               <input
                 type="checkbox"
                 checked={showGraticule}
@@ -142,7 +145,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
               <span>Graticule (10° Lat)</span>
             </label>
 
-            <label className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer">
+            <label className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer whitespace-nowrap shrink-0">
               <input
                 type="checkbox"
                 checked={showBathymetry}
@@ -152,7 +155,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
               <span>Bathymetry</span>
             </label>
 
-            <label className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer">
+            <label className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer whitespace-nowrap shrink-0">
               <input
                 type="checkbox"
                 checked={showWeatherRadar}
@@ -162,23 +165,19 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
               <span>Weather Radar</span>
             </label>
 
-            <button className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[#10b981]">
-              <span className="material-symbols-outlined text-[16px] animate-pulse">sensors</span>
-              <span className="font-bold">Uplink Ping: 42ms</span>
-            </button>
           </div>
         </div>
 
         {/* Tier 2: Search Bar & View Raster Modes */}
         <div className="flex flex-wrap items-center justify-between gap-4 pt-1 border-t border-slate-100 dark:border-slate-800/80">
-          <div className="flex-1 min-w-[280px] max-w-lg flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#f4f7fb] dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700">
+          <div className="w-full md:flex-1 md:min-w-[280px] max-w-lg flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#f4f7fb] dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700">
             <span className="material-symbols-outlined text-slate-400 text-[18px]">travel_explore</span>
             <input
               type="text"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              placeholder="Search 45 Expeditions, 4 Stations, 1,420 Datasets, Mooring Buoys..."
-              className="w-full bg-transparent text-[#0b1c30] dark:text-white font-['Inter'] text-xs focus:outline-none"
+              placeholder="Search stations and expeditions"
+              className="w-full bg-transparent text-[#0b1c30] dark:text-white text-base md:text-xs focus:outline-none"
             />
             <button
               onClick={() => setSearchFilter('')}
@@ -188,15 +187,15 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             </button>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <span className="font-['Space_Grotesk'] text-[10px] uppercase font-bold text-slate-400 mr-1">
-              VIEW RASTER:
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none -mx-4 px-4 md:mx-0 md:px-0">
+            <span className="text-xs font-semibold text-slate-400 mr-1 shrink-0">
+              Base map
             </span>
             <button
               onClick={() => setRasterMode('topo')}
-              className={`px-3 py-1 rounded-lg font-['JetBrains_Mono'] text-xs transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs whitespace-nowrap shrink-0 transition-colors ${
                 rasterMode === 'topo'
-                  ? 'bg-[#00b4d8] text-white font-bold shadow-xs'
+                  ? 'bg-[#00b4d8] text-white font-bold'
                   : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
               }`}
             >
@@ -204,9 +203,9 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             </button>
             <button
               onClick={() => setRasterMode('bed')}
-              className={`px-3 py-1 rounded-lg font-['JetBrains_Mono'] text-xs transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs whitespace-nowrap shrink-0 transition-colors ${
                 rasterMode === 'bed'
-                  ? 'bg-[#00b4d8] text-white font-bold shadow-xs'
+                  ? 'bg-[#00b4d8] text-white font-bold'
                   : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
               }`}
             >
@@ -214,9 +213,9 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             </button>
             <button
               onClick={() => setRasterMode('ice')}
-              className={`px-3 py-1 rounded-lg font-['JetBrains_Mono'] text-xs transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs whitespace-nowrap shrink-0 transition-colors ${
                 rasterMode === 'ice'
-                  ? 'bg-[#00b4d8] text-white font-bold shadow-xs'
+                  ? 'bg-[#00b4d8] text-white font-bold'
                   : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
               }`}
             >
@@ -224,9 +223,9 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             </button>
             <button
               onClick={() => setRasterMode('grav')}
-              className={`px-3 py-1 rounded-lg font-['JetBrains_Mono'] text-xs transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs whitespace-nowrap shrink-0 transition-colors ${
                 rasterMode === 'grav'
-                  ? 'bg-[#00b4d8] text-white font-bold shadow-xs'
+                  ? 'bg-[#00b4d8] text-white font-bold'
                   : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
               }`}
             >
@@ -237,7 +236,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
       </div>
 
       {/* MAIN INTERACTIVE CANVAS VIEWPORT */}
-      <div className="relative w-full h-[760px] lg:h-[820px] bg-[#f4f7fb] dark:bg-[#070c18] overflow-hidden select-none">
+      <div className="relative w-full h-[520px] sm:h-[680px] lg:h-[820px] bg-[#f4f7fb] dark:bg-[#070c18] overflow-hidden select-none">
         {/* Polar Projection Stereographic Canvas (Vector Map Stage) */}
         <div
           className="absolute inset-0 flex items-center justify-center transition-transform duration-300"
@@ -250,7 +249,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             {showGraticule && (
               <>
                 {/* 60°S */}
-                <div className="absolute w-[980px] h-[980px] rounded-full border border-slate-300 dark:border-slate-700 shadow-[inset_0_0_20px_rgba(148,163,184,0.1)] flex items-center justify-center pointer-events-none">
+                <div className="absolute w-[980px] h-[980px] rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center pointer-events-none">
                   <span className="absolute top-2 font-['JetBrains_Mono'] text-[11px] text-slate-500 bg-white/90 dark:bg-slate-800/90 px-3 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
                     60°00′00″ S (Antarctic Convergence)
                   </span>
@@ -321,10 +320,10 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             {/* Geographic South Pole 90°S Marker */}
             <div
               onClick={() => onShowToast?.('Amundsen-Scott South Pole Station (90°00′S, Elev: 2,835 m). Site of 2010 Indian overland convoy reach led by Dr. Rasik Ravindra.', 'GEOGRAPHIC SOUTH POLE', 'info')}
-              className="absolute w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-md flex items-center justify-center cursor-pointer group z-20 border border-slate-300"
+              className="absolute w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center cursor-pointer group z-20 border border-slate-300"
             >
               <span className="w-3 h-3 rounded-full bg-[#0b132b] dark:bg-white"></span>
-              <div className="absolute top-9 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded bg-[#0b132b] text-white font-['JetBrains_Mono'] text-xs whitespace-nowrap shadow-md opacity-90 group-hover:scale-105 transition-transform">
+              <div className="absolute top-9 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded bg-[#0b132b] text-white font-['JetBrains_Mono'] text-xs whitespace-nowrap opacity-90 group-hover:scale-105 transition-transform">
                 SOUTH POLE (90°00′S) • Amundsen-Scott
               </div>
             </div>
@@ -336,10 +335,10 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                 className="absolute top-[280px] right-[270px] cursor-pointer z-30 group"
               >
                 <div className="relative flex items-center justify-center">
-                  <span className="absolute w-12 h-12 rounded-full bg-[#00b4d8]/30 animate-ping"></span>
+                  <span className="absolute w-12 h-12 rounded-full bg-[#00b4d8]/30"></span>
                   <span className="absolute w-8 h-8 rounded-full bg-[#00b4d8]/40"></span>
-                  <div className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 shadow-[-4px_-4px_10px_rgba(255,255,255,0.95),4px_4px_12px_rgba(0,180,216,0.3)] hover:scale-105 transition-all border border-slate-200 dark:border-slate-700">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse"></span>
+                  <div className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 hover:scale-105 transition-all border border-slate-200 dark:border-slate-700">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#10b981]"></span>
                     <span className="font-['Space_Grotesk'] text-sm text-[#0b1c30] dark:text-white font-bold">BHARATI</span>
                     <span className="font-['JetBrains_Mono'] text-[10px] px-1.5 py-0.5 rounded bg-[#e5eeff] dark:bg-slate-700 text-[#00677d] dark:text-[#4cd6fb] font-semibold">
                       MoES
@@ -348,7 +347,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                 </div>
 
                 {/* Floating Quick Synoptic HUD */}
-                <div className="absolute -top-14 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1 rounded-xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-md flex items-center gap-2 border border-slate-200 dark:border-slate-700 pointer-events-none">
+                <div className="absolute -top-14 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1 rounded-xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md flex items-center gap-2 border border-slate-200 dark:border-slate-700 pointer-events-none">
                   <div className="flex items-center gap-1 text-[#00677d] dark:text-[#4cd6fb] font-['JetBrains_Mono'] text-xs font-semibold">
                     <span className="material-symbols-outlined text-[15px]">ac_unit</span>
                     <span>-14.2°C</span>
@@ -359,8 +358,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                     <span>18 kts ESE</span>
                   </div>
                   <span className="text-slate-300">|</span>
-                  <span className="font-['JetBrains_Mono'] text-[10px] text-[#10b981] font-bold">LIVE UPLINK</span>
-                </div>
+                                  </div>
               </div>
             )}
 
@@ -370,7 +368,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                 onClick={() => selectStationPin('maitri')}
                 className="absolute top-[240px] left-[300px] cursor-pointer z-30 group"
               >
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 shadow-md hover:scale-105 transition-all border border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 hover:scale-105 transition-all border border-slate-200 dark:border-slate-700">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#10b981]"></span>
                   <span className="font-['Space_Grotesk'] text-sm text-[#0b1c30] dark:text-white font-bold">MAITRI</span>
                   <span className="font-['JetBrains_Mono'] text-[10px] text-slate-500">Schirmacher</span>
@@ -384,7 +382,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                 onClick={() => selectStationPin('dakshin-gangotri')}
                 className="absolute top-[195px] left-[325px] cursor-pointer z-20 group"
               >
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-sm border border-slate-200 dark:border-slate-700 hover:scale-105 transition-all">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 hover:scale-105 transition-all">
                   <span className="w-2 h-2 rounded-full bg-[#f59e0b]"></span>
                   <span className="font-['Space_Grotesk'] text-xs font-semibold text-[#0b1c30] dark:text-white">
                     DAKSHIN GANGOTRI
@@ -399,7 +397,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
               onClick={() => selectStationPin('sagar-kanya')}
               className="absolute top-[160px] right-[290px] cursor-pointer z-20 group"
             >
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-md border border-slate-200 dark:border-slate-700 hover:scale-105 transition-all">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700 hover:scale-105 transition-all">
                 <span className="material-symbols-outlined text-[#00b4d8] text-[18px]">directions_boat</span>
                 <div className="flex flex-col">
                   <span className="font-['Space_Grotesk'] text-xs font-bold text-[#0b1c30] dark:text-white">
@@ -416,19 +414,19 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             {layerScarBases && (
               <>
                 <div className="absolute bottom-[280px] left-[230px] opacity-75 hover:opacity-100 transition-opacity cursor-pointer">
-                  <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/80 dark:bg-slate-800/80 shadow-xs font-['JetBrains_Mono'] text-[10px] text-slate-500 border border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/80 dark:bg-slate-800/80 font-['JetBrains_Mono'] text-[10px] text-slate-500 border border-slate-200 dark:border-slate-700">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
                     <span>McMurdo (US)</span>
                   </div>
                 </div>
                 <div className="absolute bottom-[360px] right-[300px] opacity-75 hover:opacity-100 transition-opacity cursor-pointer">
-                  <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/80 dark:bg-slate-800/80 shadow-xs font-['JetBrains_Mono'] text-[10px] text-slate-500 border border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/80 dark:bg-slate-800/80 font-['JetBrains_Mono'] text-[10px] text-slate-500 border border-slate-200 dark:border-slate-700">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
                     <span>Concordia (FR/IT)</span>
                   </div>
                 </div>
                 <div className="absolute top-[350px] right-[210px] opacity-75 hover:opacity-100 transition-opacity cursor-pointer">
-                  <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/80 dark:bg-slate-800/80 shadow-xs font-['JetBrains_Mono'] text-[10px] text-slate-500 border border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/80 dark:bg-slate-800/80 font-['JetBrains_Mono'] text-[10px] text-slate-500 border border-slate-200 dark:border-slate-700">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
                     <span>Davis (AU)</span>
                   </div>
@@ -438,24 +436,28 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
           </div>
         </div>
 
-        {/* FLOATING TACTILE NEUMORPHIC LAYERS DOCK (LEFT SIDE) */}
-        <div className="absolute top-4 left-4 w-72 rounded-3xl bg-white/95 dark:bg-[#0b132b]/95 backdrop-blur-xl shadow-[-5px_-5px_15px_rgba(255,255,255,0.95),5px_5px_20px_rgba(148,163,184,0.22)] p-4 z-30 flex flex-col gap-3 border border-slate-200/80 dark:border-slate-800">
+        {/* Layers panel */}
+        <button
+          onClick={() => setLayersOpen((o) => !o)}
+          className="md:hidden absolute top-3 left-3 z-40 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/95 dark:bg-[#0b132b]/95 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-[#0b1c30] dark:text-white"
+        >
+          <span className="material-symbols-outlined text-[16px]">layers</span>
+          {layersOpen ? 'Hide layers' : 'Layers'}
+        </button>
+        <div className={`${layersOpen ? 'flex' : 'hidden'} absolute top-14 md:top-4 left-3 md:left-4 w-[calc(100%-1.5rem)] max-w-72 rounded-2xl bg-white/95 dark:bg-[#0b132b]/95 backdrop-blur-xl p-4 z-30 flex-col gap-3 border border-slate-200/80 dark:border-slate-800`}>
           <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-[#00677d] dark:text-[#4cd6fb] text-[20px]">layers</span>
               <span className="font-['Space_Grotesk'] text-sm font-bold text-[#0b1c30] dark:text-white">
-                Observational Layers
+                Map layers
               </span>
             </div>
-            <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded-full bg-[#e5eeff] dark:bg-slate-700 text-[#00677d] dark:text-[#4cd6fb] font-bold">
-              6 ACTIVE
-            </span>
           </div>
 
           {/* Science Domains */}
           <div className="flex flex-col gap-1.5">
-            <span className="font-['Space_Grotesk'] text-[10px] font-bold text-slate-400 uppercase">
-              SCIENCE DOMAINS:
+            <span className="text-xs font-bold text-slate-400 ">
+              Topics
             </span>
             <div className="flex flex-wrap gap-1">
               {(['All', 'Glaciology', 'Atmospheric', 'Geomagnetism', 'Cryobio'] as const).map((dom) => (
@@ -464,7 +466,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                   onClick={() => setScienceDomain(dom)}
                   className={`px-2 py-0.5 rounded-full font-['JetBrains_Mono'] text-[10px] font-semibold transition-colors ${
                     scienceDomain === dom
-                      ? 'bg-[#00677d] text-white shadow-xs'
+                      ? 'bg-[#00677d] text-white'
                       : 'bg-[#f4f7fb] dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-[#dce9ff]'
                   }`}
                 >
@@ -499,7 +501,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                 />
                 <span className="font-medium">Recent Expedition (45th ISEA)</span>
               </div>
-              <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></span>
+              <span className="w-2 h-2 rounded-full bg-[#10b981]"></span>
             </label>
 
             <label className="flex items-center justify-between p-1.5 rounded-lg hover:bg-[#f4f7fb] dark:hover:bg-slate-800 cursor-pointer">
@@ -559,7 +561,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
 
         {/* MAP CONTROLS DOCK (BOTTOM-LEFT) */}
         <div className="absolute bottom-4 left-4 flex flex-col gap-2 z-30">
-          <div className="flex flex-col rounded-2xl bg-white dark:bg-[#0b132b] shadow-md border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div className="flex flex-col rounded-2xl bg-white dark:bg-[#0b132b] border border-slate-200 dark:border-slate-700 overflow-hidden">
             <button
               onClick={() => setMapZoom((z) => Math.min(1.8, z + 0.15))}
               className="p-2.5 text-slate-700 dark:text-slate-200 hover:bg-[#eff4ff] dark:hover:bg-slate-800 transition-colors flex items-center justify-center"
@@ -569,7 +571,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             </button>
             <div className="h-[1px] bg-slate-200 dark:bg-slate-700 w-full"></div>
             <button
-              onClick={() => setMapZoom((z) => Math.max(0.7, z - 0.15))}
+              onClick={() => setMapZoom((z) => Math.max(0.3, z - 0.15))}
               className="p-2.5 text-slate-700 dark:text-slate-200 hover:bg-[#eff4ff] dark:hover:bg-slate-800 transition-colors flex items-center justify-center"
               title="Zoom Out"
             >
@@ -578,7 +580,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             <div className="h-[1px] bg-slate-200 dark:bg-slate-700 w-full"></div>
             <button
               onClick={() => {
-                setMapZoom(1);
+                setMapZoom(initialZoom);
                 setMapCenterOffset({ x: 0, y: 0 });
               }}
               className="p-2.5 text-slate-700 dark:text-slate-200 hover:bg-[#eff4ff] dark:hover:bg-slate-800 transition-colors flex items-center justify-center"
@@ -590,7 +592,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
 
           <button
             onClick={() => onShowToast?.('3D Globe Mode: Re-projecting stereographic grid to 3D Ellipsoid View (WGS84) with 1.8x vertical terrain exaggeration.', '3D GLOBE PROJECTION', 'info')}
-            className="px-3.5 py-2 rounded-2xl bg-white dark:bg-[#0b132b] shadow-md border border-slate-200 dark:border-slate-700 font-['JetBrains_Mono'] text-xs text-[#0b1c30] dark:text-white flex items-center gap-2 hover:bg-[#eff4ff] dark:hover:bg-slate-800 transition-colors font-semibold"
+            className="hidden sm:flex px-3.5 py-2 rounded-2xl bg-white dark:bg-[#0b132b] border border-slate-200 dark:border-slate-700 font-['JetBrains_Mono'] text-xs text-[#0b1c30] dark:text-white items-center gap-2 hover:bg-[#eff4ff] dark:hover:bg-slate-800 transition-colors font-semibold"
           >
             <span className="material-symbols-outlined text-[#00677d] dark:text-[#4cd6fb] text-[18px]">3d_rotation</span>
             <span>3D Globe Mode</span>
@@ -599,9 +601,9 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
 
         {/* EXPANDED SLIDE-OUT STATION DRAWER (RIGHT SIDE) */}
         {drawerOpen && activeStation && (
-          <div className="absolute top-4 right-4 bottom-4 w-[420px] max-w-[calc(100vw-2rem)] rounded-3xl bg-white/95 dark:bg-[#0b132b]/95 backdrop-blur-2xl shadow-[-6px_-6px_20px_rgba(255,255,255,0.95),6px_6px_25px_rgba(148,163,184,0.28)] border border-slate-200/80 dark:border-slate-800 z-40 flex flex-col overflow-hidden animate-slide-in">
+          <div className="absolute inset-x-2 bottom-2 max-h-[70%] md:inset-x-auto md:max-h-none md:top-4 md:right-4 md:bottom-4 md:w-[420px] rounded-2xl bg-white/95 dark:bg-[#0b132b]/95 backdrop-blur-2xl border border-slate-200/80 dark:border-slate-800 z-40 flex flex-col overflow-hidden animate-slide-in">
             {/* Drawer Image Banner */}
-            <div className="relative w-full h-44 bg-slate-200 shrink-0 overflow-hidden">
+            <div className="relative w-full h-28 md:h-44 bg-slate-200 shrink-0 overflow-hidden">
               <img
                 src={activeStation.imageUrl}
                 alt={activeStation.name}
@@ -611,18 +613,18 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
 
               {/* Station Code & Badge */}
               <div className="absolute top-3 left-3 flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur font-['JetBrains_Mono'] text-xs text-[#00677d] dark:text-[#4cd6fb] font-bold shadow-sm">
+                <span className="px-2.5 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur font-['JetBrains_Mono'] text-xs text-[#00677d] dark:text-[#4cd6fb] font-bold">
                   {activeStation.code}
                 </span>
-                <span className="px-2.5 py-1 rounded-full bg-[#10b981] text-white font-['Space_Grotesk'] text-[10px] font-bold shadow-sm">
-                  {activeStation.status === 'OPERATIONAL' ? 'OPERATIONAL 24/7' : activeStation.status}
+                <span className="px-2.5 py-1 rounded-full bg-[#10b981] text-white font-['Space_Grotesk'] text-[10px] font-bold">
+                  {activeStation.status === 'OPERATIONAL' ? 'Year-round' : activeStation.status.charAt(0) + activeStation.status.slice(1).toLowerCase()}
                 </span>
               </div>
 
               <div className="absolute top-3 right-3">
                 <button
                   onClick={() => setDrawerOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/80 dark:bg-slate-800/80 hover:bg-white flex items-center justify-center text-slate-700 dark:text-slate-200 shadow-sm transition-colors"
+                  className="w-8 h-8 rounded-full bg-white/80 dark:bg-slate-800/80 hover:bg-white flex items-center justify-center text-slate-700 dark:text-slate-200 transition-colors"
                 >
                   <span className="material-symbols-outlined text-[18px]">close</span>
                 </button>
@@ -645,11 +647,11 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
               {/* Geodetic Coordinates Pill */}
               <div className="p-2 px-3 rounded-xl bg-[#f4f7fb] dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between font-['JetBrains_Mono'] text-xs">
                 <div>
-                  <span className="text-slate-400">COORDS: </span>
+                  <span className="text-slate-400">Location </span>
                   <span className="font-bold text-[#00677d] dark:text-[#4cd6fb]">{activeStation.coordinates}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400">ELEV: </span>
+                  <span className="text-slate-400">Elevation </span>
                   <span className="font-semibold">{activeStation.elevation}</span>
                 </div>
               </div>
@@ -657,42 +659,42 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
               {/* Real-time In-Situ Telemetry Bento */}
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-['Space_Grotesk'] text-[10px] uppercase font-bold text-slate-400">
-                    REAL-TIME IN-SITU SYNOPTIC TELEMETRY
+                  <span className="text-xs  font-bold text-slate-400">
+                    Sample readings
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[10px] text-[#10b981] flex items-center gap-1 font-bold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping"></span>
-                    SYNCED: 3m ago
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]"></span>
+                    Sample values
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2.5 font-['JetBrains_Mono'] text-xs">
-                  <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
-                    <span className="text-[10px] text-slate-400 font-bold">AMBIENT TEMP</span>
+                  <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col">
+                    <span className="text-[10px] text-slate-400 font-bold">Temperature</span>
                     <span className="text-lg font-bold text-[#00677d] dark:text-[#4cd6fb] mt-0.5">
                       {activeStation.temp}
                     </span>
                     <span className="text-[10px] text-slate-400">Wind Chill: {activeStation.windChill}</span>
                   </div>
 
-                  <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
-                    <span className="text-[10px] text-slate-400 font-bold">SURFACE WIND</span>
+                  <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col">
+                    <span className="text-[10px] text-slate-400 font-bold">Wind</span>
                     <span className="text-lg font-bold text-[#0b1c30] dark:text-white mt-0.5">
                       {activeStation.windSpeed}
                     </span>
                     <span className="text-[10px] text-slate-400">Heading: {activeStation.windDir}</span>
                   </div>
 
-                  <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
-                    <span className="text-[10px] text-slate-400 font-bold">BAROMETRIC</span>
+                  <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col">
+                    <span className="text-[10px] text-slate-400 font-bold">Pressure</span>
                     <span className="text-lg font-bold text-[#0b1c30] dark:text-white mt-0.5">
                       {activeStation.pressure}
                     </span>
                     <span className="text-[10px] text-[#10b981] font-semibold">Rising +1.1 hPa/3h</span>
                   </div>
 
-                  <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
-                    <span className="text-[10px] text-slate-400 font-bold">SOLAR FLUX</span>
+                  <div className="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col">
+                    <span className="text-[10px] text-slate-400 font-bold">Solar flux</span>
                     <span className="text-lg font-bold text-[#f59e0b] mt-0.5">
                       {activeStation.solarFlux}
                     </span>
@@ -709,7 +711,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                     onNavigate('stations');
                     onSelectStation(activeStation.id);
                   }}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#00b4d8] text-white font-['Space_Grotesk'] text-sm font-bold shadow-[0_4px_12px_rgba(0,180,216,0.35)] hover:bg-[#0077b6] transition-all transform active:scale-[0.98]"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#00b4d8] text-white font-['Space_Grotesk'] text-sm font-bold hover:bg-[#0077b6] transition-all transform active:scale-[0.98]"
                 >
                   <span className="material-symbols-outlined text-[20px]">view_in_ar</span>
                   <span>Launch 3D Virtual Station / Digital Twin</span>
@@ -739,8 +741,8 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
 
               {/* Active Payloads */}
               <div className="flex flex-col gap-2">
-                <span className="font-['Space_Grotesk'] text-[10px] uppercase font-bold text-slate-400">
-                  KEY ACTIVE SENSORS & OBSERVATIONAL PAYLOADS
+                <span className="text-xs  font-bold text-slate-400">
+                  Instruments
                 </span>
                 <div className="flex flex-col gap-2">
                   <div className="p-2.5 rounded-xl bg-[#f4f7fb] dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
@@ -752,7 +754,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                       </div>
                     </div>
                     <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">
-                      ONLINE
+                      Installed
                     </span>
                   </div>
 
@@ -765,7 +767,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                       </div>
                     </div>
                     <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">
-                      ONLINE
+                      Installed
                     </span>
                   </div>
 
@@ -778,7 +780,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                       </div>
                     </div>
                     <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">
-                      ONLINE
+                      Installed
                     </span>
                   </div>
                 </div>
@@ -786,12 +788,12 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
 
               {/* Connected Scientific Knowledge Assets */}
               <div className="flex flex-col gap-2 pb-2">
-                <span className="font-['Space_Grotesk'] text-[10px] uppercase font-bold text-slate-400">
-                  CONNECTED SCIENTIFIC KNOWLEDGE ASSETS
+                <span className="text-xs  font-bold text-slate-400">
+                  Linked records
                 </span>
                 <div className="p-3.5 rounded-2xl bg-[#eff4ff] dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col gap-2">
                   <div className="flex items-center justify-between font-['JetBrains_Mono'] text-xs">
-                    <span className="font-bold text-[#00677d] dark:text-[#4cd6fb]">12 EXPEDITIONS ANCHORED</span>
+                    <span className="font-bold text-[#00677d] dark:text-[#4cd6fb]">12 linked expeditions</span>
                     <span className="text-slate-400">31st – 45th ISEA</span>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-['Inter']">
@@ -814,14 +816,14 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
       </div>
 
       {/* BOTTOM MASTER EXPEDITION TIMELINE SCRUBBER (1981 - 2026) */}
-      <div className="w-full bg-white dark:bg-[#0b132b] shadow-md border-t border-slate-200 dark:border-slate-800 px-4 md:px-8 py-4 z-30 flex flex-col gap-3">
+      <div className="w-full bg-white dark:bg-[#0b132b] border-t border-slate-200 dark:border-slate-800 px-4 md:px-8 py-4 z-30 flex flex-col gap-3">
         {/* Scrubber Controls */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsPlayingTimeline(!isPlayingTimeline)}
-                className="w-9 h-9 rounded-full bg-white dark:bg-slate-800 shadow-md border border-slate-200 dark:border-slate-700 flex items-center justify-center text-[#00677d] dark:text-[#4cd6fb] hover:bg-[#eff4ff] transition-all"
+                className="w-9 h-9 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-[#00677d] dark:text-[#4cd6fb] hover:bg-[#eff4ff] transition-all"
                 title={isPlayingTimeline ? 'Pause Timeline' : 'Play Timeline Chronology'}
               >
                 <span className="material-symbols-outlined text-[20px]">
@@ -833,7 +835,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                   setIsPlayingTimeline(false);
                   setCurrentTimelineYear(1981);
                 }}
-                className="w-9 h-9 rounded-full bg-white dark:bg-slate-800 shadow-md border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 hover:text-black dark:hover:text-white transition-all"
+                className="w-9 h-9 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 hover:text-black dark:hover:text-white transition-all"
                 title="Replay from 1981"
               >
                 <span className="material-symbols-outlined text-[18px]">replay</span>
@@ -843,7 +845,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="font-['Space_Grotesk'] text-sm font-bold text-[#0b1c30] dark:text-white">
-                  INDIAN POLAR VOYAGES CHRONOLOGY
+                  Expedition timeline
                 </span>
                 <span className="font-['JetBrains_Mono'] text-xs px-2 py-0.5 rounded-full bg-[#e5eeff] dark:bg-slate-700 text-[#00677d] dark:text-[#4cd6fb] font-bold">
                   1981 — 2026
@@ -857,14 +859,14 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
 
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1 font-['JetBrains_Mono'] text-xs bg-[#f4f7fb] dark:bg-slate-800 px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-700">
-              <span className="text-slate-400">SPEED:</span>
+              <span className="text-slate-400">Speed</span>
               {([1, 5, 10] as const).map((spd) => (
                 <button
                   key={spd}
                   onClick={() => setPlaybackSpeed(spd)}
                   className={`px-2 py-0.5 rounded-lg font-bold transition-colors ${
                     playbackSpeed === spd
-                      ? 'bg-white dark:bg-slate-700 text-[#00677d] dark:text-[#4cd6fb] shadow-xs'
+                      ? 'bg-white dark:bg-slate-700 text-[#00677d] dark:text-[#4cd6fb]'
                       : 'text-slate-500 hover:text-black dark:hover:text-white'
                   }`}
                 >
@@ -907,7 +909,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                   <div
                     className={`w-3.5 h-3.5 rounded-full transition-transform ${
                       isSelected
-                        ? 'bg-[#10b981] scale-125 ring-4 ring-[#10b981]/25 shadow-md'
+                        ? 'bg-[#10b981] scale-125 ring-4 ring-[#10b981]/25'
                         : 'bg-[#00677d] dark:bg-slate-400 group-hover:scale-125'
                     }`}
                   ></div>
