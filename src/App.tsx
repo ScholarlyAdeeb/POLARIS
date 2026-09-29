@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { DomainType, NavTab, ScientificPaper, SimulationMission } from './types/polaris';
 import { Header } from './components/Header';
 import { ExploreView } from './components/ExploreView';

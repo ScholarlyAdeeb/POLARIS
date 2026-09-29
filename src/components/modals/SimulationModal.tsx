@@ -14,7 +14,6 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({ mission, onClo
   const [fuel, setFuel] = useState(85);
   const [temp, setTemp] = useState(21.4);
   const [water, setWater] = useState(90);
-  const [blizzardActive, setBlizzardActive] = useState(false);
   const [shuttersClosed, setShuttersClosed] = useState(false);
   const [generatorLoad, setGeneratorLoad] = useState<'LOW' | 'MEDIUM' | 'BOOST'>('MEDIUM');
   const [simLog, setSimLog] = useState<string[]>([
@@ -23,7 +22,7 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({ mission, onClo
 
   // State for Ice Core Lab Simulation
   const [depth, setDepth] = useState(45); // meters
-  const [laserWavelength, setLaserWavelength] = useState(532);
+  const laserWavelength = 532; // nm, fixed Nd:YAG line
 
   const advanceMaitriDay = () => {
     if (day >= 7) {
@@ -34,7 +33,6 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({ mission, onClo
     setDay(nextDay);
 
     const willBlizzard = nextDay === 3 || nextDay === 5;
-    setBlizzardActive(willBlizzard);
 
     let fuelBurn = generatorLoad === 'LOW' ? 8 : generatorLoad === 'MEDIUM' ? 12 : 18;
     let newFuel = Math.max(0, fuel - fuelBurn);

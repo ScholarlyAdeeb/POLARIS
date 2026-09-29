@@ -24,7 +24,6 @@ export const Header: React.FC<HeaderProps> = ({
   setLanguage,
   onOpenCommandPalette,
 }) => {
-  const [quickSearch, setQuickSearch] = useState('');
   const [highContrast, setHighContrast] = useState(false);
 
   const toggleContrast = () => {
