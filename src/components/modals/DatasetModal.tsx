@@ -34,6 +34,8 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
   if (!datasetName) return null;
 
   const external = !!dataset && !dataset.meta.sample;
+  // Publisher landing page for registry records; generated/stored files (uploads, ERA5 climate CSVs) download directly.
+  const opensPublisher = external && !!dataset?.url && !dataset.url.startsWith('/uploads/') && !dataset.meta.climateStation;
   const stats = !dataset
     ? []
     : external
@@ -164,15 +166,15 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
             <button
               onClick={() => {
                 if (!dataset) return;
-                if (external && dataset.url && !dataset.url.startsWith('/uploads/')) window.open(dataset.url, '_blank', 'noopener');
+                if (opensPublisher) window.open(dataset.url!, '_blank', 'noopener');
                 else download(downloadUrls.dataset(dataset.id));
                 setDataset({ ...dataset, downloads: dataset.downloads + 1 });
               }}
-              disabled={!dataset || (external && !dataset.url)}
+              disabled={!dataset || (external && !dataset.url && !dataset.meta.climateStation)}
               className="px-4 py-2 rounded-xl bg-[#00b4d8] hover:bg-[#0077b6] disabled:opacity-50 text-white font-['JetBrains_Mono'] text-xs font-bold flex items-center gap-1.5 shadow-md"
             >
-              <span className="material-symbols-outlined text-[16px]">{external && dataset?.url && !dataset.url.startsWith('/uploads/') ? 'open_in_new' : 'download'}</span>
-              <span>{external && dataset?.url && !dataset.url.startsWith('/uploads/') ? 'Get the data' : 'Download dataset'}</span>
+              <span className="material-symbols-outlined text-[16px]">{opensPublisher ? 'open_in_new' : 'download'}</span>
+              <span>{opensPublisher ? 'Get the data' : 'Download dataset'}</span>
             </button>
             {dataset && onAsk && (
               <button onClick={() => onAsk(`What does the archive say about ${dataset.title}?`)} className="px-3 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold">
