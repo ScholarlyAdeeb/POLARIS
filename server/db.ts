@@ -2,6 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import fs from 'fs';
 import path from 'path';
 import { seedDatabase } from './seed.ts';
+import { loadOpenData } from './openData.ts';
 import { runMigrations, deriveDataStatus, deriveProvenance, type DataStatus } from './migrations.ts';
 
 export type ArchiveType =
@@ -42,6 +43,8 @@ export interface ArchiveItem {
   dataStatus: DataStatus;
   provenance: Record<string, any>;
   reviewStatus: string;
+  reviewNote: string | null;
+  ownerId: number | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -162,6 +165,7 @@ export function getDb(): DatabaseSync {
   runMigrations(db);
   const { n } = db.prepare('SELECT COUNT(*) AS n FROM stations').get() as { n: number };
   if (n === 0) seedDatabase(db);
+  if (process.env.OPEN_DATA !== 'off') loadOpenData(db);
   return db;
 }
 
@@ -185,6 +189,8 @@ export function rowToItem(row: any): ArchiveItem {
     dataStatus: row.data_status ?? 'UNVERIFIED',
     provenance: JSON.parse(row.provenance || '{}'),
     reviewStatus: row.review_status ?? 'APPROVED',
+    reviewNote: row.review_note ?? null,
+    ownerId: row.owner_id ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -207,12 +213,14 @@ export interface ArchiveInput {
   meta?: Record<string, any>;
   dataStatus?: DataStatus;
   provenance?: Record<string, any>;
+  ownerId?: number | null;
+  reviewStatus?: string;
 }
 
 export function insertItem(d: DatabaseSync, item: ArchiveInput): void {
   d.prepare(
-    `INSERT INTO archive_items (id, type, title, summary, body, domain, station_id, year, date, tags, url, thumbnail_url, doi, meta, data_status, provenance)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    `INSERT INTO archive_items (id, type, title, summary, body, domain, station_id, year, date, tags, url, thumbnail_url, doi, meta, data_status, provenance, owner_id, review_status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).run(
     item.id,
     item.type,
@@ -229,8 +237,14 @@ export function insertItem(d: DatabaseSync, item: ArchiveInput): void {
     item.doi || null,
     JSON.stringify(item.meta ?? {}),
     item.dataStatus ?? deriveDataStatus(item.type, item.meta ?? {}),
-    JSON.stringify(item.provenance ?? deriveProvenance(item.type, item.meta ?? {}))
+    JSON.stringify(item.provenance ?? deriveProvenance(item.type, item.meta ?? {})),
+    item.ownerId ?? null,
+    item.reviewStatus ?? 'APPROVED'
   );
+}
+
+export function listStations(): import('../src/types/polaris.ts').StationData[] {
+  return (getDb().prepare('SELECT data FROM stations ORDER BY sort').all() as any[]).map((r) => JSON.parse(r.data));
 }
 
 export function getItem(id: string): ArchiveItem | null {

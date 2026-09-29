@@ -17,7 +17,7 @@ const X_LIMIT = 280;
 const X_URL_LENGTH = 23; // X counts every link as 23 characters
 const INSTAGRAM_HASHTAG_LIMIT = 30;
 
-const TYPE_LABEL: Record<string, string> = {
+export const TYPE_LABEL: Record<string, string> = {
   expedition: 'Expedition',
   report: 'Expedition report',
   dataset: 'Open dataset',
@@ -114,6 +114,7 @@ function context(item: ArchiveItem): string {
 function facts(item: ArchiveItem): string[] {
   const m = item.meta;
   const out: string[] = [];
+  if (m.contributor?.name) out.push(`Shared on POLARIS by ${m.contributor.name}${m.contributor.institution ? `, ${m.contributor.institution}` : ''}`);
   if (m.authors) out.push(`Authors: ${m.authors}`);
   if (m.journal) out.push(`Journal: ${m.journal}`);
   if (m.format) out.push(`Format: ${m.format}${m.size ? ` (${m.size})` : ''}`);
@@ -171,7 +172,9 @@ export function generateContent(item: ArchiveItem, link: string, channels: Chann
 
     if (channel === 'linkedin') {
       const text = [
-        `${emoji} ${label} from the National Centre for Polar and Ocean Research (NCPOR)`,
+        item.meta.contributor?.name
+          ? `${emoji} ${label} shared on POLARIS by ${item.meta.contributor.name}${item.meta.contributor.institution ? `, ${item.meta.contributor.institution}` : ''}`
+          : `${emoji} ${label} from the National Centre for Polar and Ocean Research (NCPOR)`,
         '',
         item.title,
         '',
@@ -195,6 +198,7 @@ export function generateContent(item: ArchiveItem, link: string, channels: Chann
         '',
         sentence(item.summary, 300),
         ctx ? `\n📍 ${ctx}` : '',
+        item.meta.contributor?.name ? `📸 Shared on POLARIS by ${item.meta.contributor.name}${item.meta.contributor.institution ? `, ${item.meta.contributor.institution}` : ''}` : '',
         '',
         'Link in bio → POLARIS knowledge portal',
         sampleNote ? `\n${sampleNote}` : '',

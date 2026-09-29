@@ -1,0 +1,2290 @@
+{
+ "retrievedAt": "2026-09-29T13:23:13.763Z",
+ "sources": {
+  "crossref": "https://api.crossref.org (metadata released under CC0)",
+  "pangaea": "https://www.pangaea.de (dataset metadata; each dataset carries its own licence)"
+ },
+ "papers": [
+  {
+   "source": "crossref",
+   "doi": "10.1002/lno.70359",
+   "title": "Interannual dynamics of plankton communities and carbon biomass across Southern Ocean frontal systems",
+   "year": 2026,
+   "journal": "Limnology and Oceanography",
+   "authors": [
+    "Athirpankandi Sreerag",
+    "Rajani Kanta Mishra",
+    "Vankara Venkataramana",
+    "Melena Augusta Soares",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Athirpankandi Sreerag",
+    "Rajani Kanta Mishra",
+    "Vankara Venkataramana",
+    "Melena Augusta Soares",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1088/1748-9326/ae738f",
+   "title": "Unravelling the temperature–precipitation relationship in Ny-Ålesund—a high-arctic maritime climate",
+   "year": 2026,
+   "journal": "Environmental Research Letters",
+   "authors": [
+    "Athulya R",
+    "Nuncio Murukesh"
+   ],
+   "ncporAuthors": [
+    "Athulya R",
+    "Nuncio Murukesh"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2026gl122580",
+   "title": "Unprecedented Open‐Ocean Polynya in Breid Bay, East Antarctica in Winter 2024",
+   "year": 2026,
+   "journal": "Geophysical Research Letters",
+   "authors": [
+    "Jeebanjyoti Swain",
+    "Babula Jena",
+    "S. Kshitija",
+    "A. Chouksey",
+    "S. Kashaboina",
+    "C. C. Bajish",
+    "S. Chatterjee",
+    "Rahul Mohan",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Jeebanjyoti Swain",
+    "Babula Jena",
+    "S. Kshitija",
+    "A. Chouksey",
+    "S. Kashaboina",
+    "S. Chatterjee",
+    "Rahul Mohan",
+    "Meloth Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.5194/bg-23-4227-2026",
+   "title": "Macroalgal influence on particulate organic matter sources and early transformation in an Arctic fjord",
+   "year": 2026,
+   "journal": "Biogeosciences",
+   "authors": [
+    "Ashok S. Jagtap",
+    "Archana Singh",
+    "Anand Jain",
+    "Nandini Raj",
+    "Manish Tiwari"
+   ],
+   "ncporAuthors": [
+    "Ashok S. Jagtap",
+    "Archana Singh"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2026jg009706",
+   "title": "Under‐Ice Phytoplankton Bloom and Associated Particulate Organic Matter Composition Dynamics in Prydz Bay, Antarctica",
+   "year": 2026,
+   "journal": "Journal of Geophysical Research: Biogeosciences",
+   "authors": [
+    "Archana Singh",
+    "Ravidas Krishna Naik",
+    "Pratiksha Deshmukh",
+    "Nandini Raj",
+    "Ashok Jagtap",
+    "Melena A. Soares",
+    "Manish Tiwari",
+    "Prema Piyusha Panda",
+    "Ajay Bhadran",
+    "Rahul Mohan",
+    "Jenson George"
+   ],
+   "ncporAuthors": [
+    "Archana Singh",
+    "Ravidas Krishna Naik",
+    "Pratiksha Deshmukh",
+    "Ashok Jagtap",
+    "Melena A. Soares",
+    "Manish Tiwari",
+    "Ajay Bhadran",
+    "Rahul Mohan",
+    "Jenson George"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2025jc023453",
+   "title": "Phytoplankton Bloom in an Arctic Fjord During Late‐Summer in Response to Atlantic Water Inflow and Atmospheric Forcings",
+   "year": 2026,
+   "journal": "Journal of Geophysical Research: Oceans",
+   "authors": [
+    "Teesha Mathew",
+    "Subeesh Meethale Puthukkottu",
+    "Divya T. David",
+    "Vidya Pottekkatt Jayapalan",
+    "Ahammed Shereef",
+    "Nuncio Murukesh",
+    "Sourav Chatterjee"
+   ],
+   "ncporAuthors": [
+    "Teesha Mathew",
+    "Divya T. David",
+    "Vidya Pottekkatt Jayapalan",
+    "Ahammed Shereef",
+    "Nuncio Murukesh",
+    "Sourav Chatterjee"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2025jc022821",
+   "title": "Characteristics of an Annually Recurring Open‐Ocean Polynya in the Southern Ocean",
+   "year": 2026,
+   "journal": "Journal of Geophysical Research: Oceans",
+   "authors": [
+    "Soumyadeep Dutta",
+    "P. Sabu",
+    "Aditya Narayanan",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Soumyadeep Dutta",
+    "P. Sabu",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1051/limn/2026005",
+   "title": "Diatom-based record of past sea-level changes from a lake of Vestfold Hills area, East Antarctica",
+   "year": 2026,
+   "journal": "International Journal of Limnology",
+   "authors": [
+    "Abhijit Mazumder",
+    "Pawan Govil",
+    "Shalini Sharma",
+    "Ratan Kar"
+   ],
+   "ncporAuthors": [
+    "Abhijit Mazumder",
+    "Pawan Govil"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.17491/jgsi.2026.174510",
+   "title": "Extending the Holocene Record of Marine Diatoms in East Antarctica: Evidence from the Larsemann Hills",
+   "year": 2026,
+   "journal": "Journal Of The Geological Society Of India",
+   "authors": [
+    "Avirajsinh Jadav",
+    "Badnal Mahesh",
+    "Cheryl A Noronha-D’Mello",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Avirajsinh Jadav",
+    "Badnal Mahesh",
+    "Cheryl A Noronha-D’Mello",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1093/plankt/fbag017",
+   "title": "Inter-annual variability of phytoplankton and subsurface chlorophyll in the Indian sector of the Southern Ocean: evidence from austral summers 2018 and 2020",
+   "year": 2026,
+   "journal": "Journal of Plankton Research",
+   "authors": [
+    "Sreerag Athirpankandi",
+    "Rajani Kanta Mishra",
+    "Arun Vadassery Sibi",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Sreerag Athirpankandi",
+    "Rajani Kanta Mishra",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.5194/tc-20-1363-2026",
+   "title": "A new coastal ice-core site identified in Dronning Maud Land, Antarctica, for high-resolution climate reconstructions to the Last Glacial Maximum",
+   "year": 2026,
+   "journal": "The Cryosphere",
+   "authors": [
+    "Vikram Goel",
+    "Carlos Martín",
+    "Kenichi Matsuoka",
+    "Bhanu Pratap",
+    "Geir Moholdt",
+    "Rahul Dey",
+    "Chavarukonam M. Laluraj",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Vikram Goel"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.5194/tc-20-4117-2026",
+   "title": "Evolution of Maud Rise Polynya during the last 250 years – a multiproxy ice core reconstruction from coastal Dronning Maud Land, Antarctica",
+   "year": 2026,
+   "journal": "The Cryosphere",
+   "authors": [
+    "Rahul Dey",
+    "Chavarukonam M. Laluraj",
+    "Kenichi Matsuoka",
+    "Ashish Paiguinkar",
+    "Bhikaji L. Redkar",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Rahul Dey"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1017/s0954102026100789",
+   "title": "Observational and numerical assessment of meteorological characteristics and climate variabilities over the Antarctic Peninsula in recent decades",
+   "year": 2026,
+   "journal": "Antarctic Science",
+   "authors": [
+    "Muhammad Hasifullah Ibrahim",
+    "Sheeba Nettukandy Chenoli",
+    "Azizan Abu Samah",
+    "Nuncio Murukesh",
+    "Matthew Lazzara",
+    "S.-J. Kim"
+   ],
+   "ncporAuthors": [
+    "Nuncio Murukesh"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1080/01431161.2026.2658814",
+   "title": "Recent decadal wind patterns over Queen Maud Land, Antarctica: evaluation and intercomparison of reanalysis using a VHF radar",
+   "year": 2026,
+   "journal": "International Journal of Remote Sensing",
+   "authors": [
+    "Ajilesh Parolla",
+    "K Satheesan",
+    "Sourav Chatterjee",
+    "Sujithlal SP",
+    "Rejoy Rebelo",
+    "Amal Joy",
+    "Avinash Paul",
+    "Anand Kumar Singh",
+    "Shailendra Saini",
+    "Nuncio Murukesh"
+   ],
+   "ncporAuthors": [
+    "Sourav Chatterjee",
+    "Anand Kumar Singh",
+    "Shailendra Saini",
+    "Nuncio Murukesh"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1080/19475705.2026.2639085",
+   "title": "Comprehensive assessment of Himalayan glacial lakes concerning their distribution, dynamics, and hazard potential",
+   "year": 2026,
+   "journal": "Geomatics, Natural Hazards and Risk",
+   "authors": [
+    "Litan Mohanty",
+    "Prateek Gantayat"
+   ],
+   "ncporAuthors": [
+    "Litan Mohanty"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1088/2752-5295/ae7749",
+   "title": "Accelerated hydrological response of the Western Himalayan glaciers to warming",
+   "year": 2026,
+   "journal": "Environmental Research: Climate",
+   "authors": [
+    "Uppara Umakanth",
+    "Swapna Panickal",
+    "Sandeep Narayanasetti",
+    "Suryachandra A Rao",
+    "Bhanu Pratap",
+    "Pramod Kumar",
+    "Rakesh Joshi",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Bhanu Pratap",
+    "Pramod Kumar",
+    "Meloth Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.3389/frpro.2026.1743384",
+   "title": "18S rDNA metabarcoding unveils trophic interactions between Neogloboquadrina pachyderma and the pelagic eukaryotic community in Prydz Bay, East Antarctica",
+   "year": 2026,
+   "journal": "Frontiers in Protistology",
+   "authors": [
+    "Tushar Kaushik",
+    "Vaishnavi Dixit",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1017/s0954102025100382",
+   "title": "Biophysical and chemical factors governing picophytoplankton succession in the Indian sector of the Southern Ocean during austral summer",
+   "year": 2025,
+   "journal": "Antarctic Science",
+   "authors": [
+    "A. Sreerag",
+    "Rajani Kanta Mishra",
+    "Melena A. Soares",
+    "V. Venkataramana",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "A. Sreerag",
+    "Rajani Kanta Mishra",
+    "Melena A. Soares",
+    "V. Venkataramana",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1017/jog.2025.31",
+   "title": "Mass balance of lake terminating Gepang Gath glacier (western Himalaya, India) and the role of glacier–lake interactions",
+   "year": 2025,
+   "journal": "Journal of Glaciology",
+   "authors": [
+    "Bhanu Pratap",
+    "Sunil N. Oulkar",
+    "Purushottam Kumar Garg",
+    "Parmanand Sharma",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Bhanu Pratap",
+    "Sunil N. Oulkar",
+    "Parmanand Sharma",
+    "Meloth Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1128/spectrum.01291-25",
+   "title": "Distinct bacterial community structures with abundant carbon degradation and sulfur metabolisms found in different sea-ice types from the Central Arctic Ocean",
+   "year": 2025,
+   "journal": "Microbiology Spectrum",
+   "authors": [
+    "Siddarthan Venkatachalam",
+    "Mats A. Granskog",
+    "Rafael Gonçalves‐Araujo",
+    "Dmitry V. Divine",
+    "Puthiya Veettil Vipindas",
+    "Thajudeen Jabir",
+    "Ahammed Shereef",
+    "Anand Jain"
+   ],
+   "ncporAuthors": [
+    "Siddarthan Venkatachalam",
+    "Puthiya Veettil Vipindas",
+    "Thajudeen Jabir",
+    "Ahammed Shereef",
+    "Anand Jain"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1111/1462-2920.70154",
+   "title": "Distribution of Surface‐Layer Prokaryotes in the Western Arctic Ocean: Responses to Pacific Water Inflow and Sea Ice Melting",
+   "year": 2025,
+   "journal": "Environmental Microbiology",
+   "authors": [
+    "Puthiya Veettil Vipindas",
+    "Siddarthan Venkatachalam",
+    "Thajudeen Jabir",
+    "Eun Jin Yang",
+    "Kyoung‐Ho Cho",
+    "Jinyoung Jung",
+    "Youngju Lee",
+    "Jong‐Kuk Moon",
+    "Anand Jain"
+   ],
+   "ncporAuthors": [
+    "Puthiya Veettil Vipindas",
+    "Siddarthan Venkatachalam",
+    "Thajudeen Jabir",
+    "Anand Jain"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.17491/jgsi/2025/174190",
+   "title": "Coccolithophores From the Indian Sector of the Southern Ocean: A Synthesis of Ecology, Diversity, and Biogeochemical Role",
+   "year": 2025,
+   "journal": "Journal Of The Geological Society Of India",
+   "authors": [
+    "Shramik M. Patil",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Shramik M. Patil",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1128/aem.00762-25",
+   "title": "Antibiotic resistome in the glacier forelands of polar regions",
+   "year": 2025,
+   "journal": "Applied and Environmental Microbiology",
+   "authors": [
+    "Jabir Thajudeen",
+    "Siddarthan Venkatachalam",
+    "Puthiya Veettil Vipindas"
+   ],
+   "ncporAuthors": [
+    "Jabir Thajudeen",
+    "Siddarthan Venkatachalam",
+    "Puthiya Veettil Vipindas"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2024jc021900",
+   "title": "Tracing Macroalgal‐Induced Changes in Carbon Dynamics of High‐Arctic Fjords Using Biomarker Fingerprinting",
+   "year": 2025,
+   "journal": "Journal of Geophysical Research: Oceans",
+   "authors": [
+    "Biswajit Roy",
+    "Archana Singh",
+    "Manish Tiwari"
+   ],
+   "ncporAuthors": [
+    "Biswajit Roy",
+    "Archana Singh",
+    "Manish Tiwari"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1002/joc.8791",
+   "title": "Trends in Antarctic Sea Ice and Albedo: Impacts of Ocean‐Atmospheric Processes",
+   "year": 2025,
+   "journal": "International Journal of Climatology",
+   "authors": [
+    "M Swathi",
+    "Aakriti Srivastava",
+    "Avinash Kumar",
+    "Juhi Yadav",
+    "Dinesh Chandra Gupta",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "M Swathi",
+    "Aakriti Srivastava",
+    "Avinash Kumar",
+    "Juhi Yadav",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1128/spectrum.03306-23",
+   "title": "Upper circumpolar deep water influences microbial functional gene composition and diversity along the southern Central Indian Ridge and eastern Southwest Indian Ridge",
+   "year": 2025,
+   "journal": "Microbiology Spectrum",
+   "authors": [
+    "Sheryl Oliveira Fernandes",
+    "Dhiraj Paul",
+    "Surya Prakash Lankalapalli",
+    "Srinivas Rao Arvapalli",
+    "Vidya PJ",
+    "John Kurian Palayil"
+   ],
+   "ncporAuthors": [
+    "Sheryl Oliveira Fernandes",
+    "Surya Prakash Lankalapalli",
+    "Srinivas Rao Arvapalli",
+    "Vidya PJ",
+    "John Kurian Palayil"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1002/joc.70052",
+   "title": "Jet Stream Variability and Ocean–Atmosphere Forcing in Driving Sea Ice Extremes in the Ross Sea, Winter 2023",
+   "year": 2025,
+   "journal": "International Journal of Climatology",
+   "authors": [
+    "S. Kshitija",
+    "Babula Jena",
+    "C. C. Bajish"
+   ],
+   "ncporAuthors": [
+    "S. Kshitija",
+    "Babula Jena"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1109/access.2025.3643171",
+   "title": "Detection of Long-Term Climatic Patterns in Polar Weather Using Time Series Analysis",
+   "year": 2025,
+   "journal": "IEEE Access",
+   "authors": [
+    "V. S. Samy",
+    "T. Veena",
+    "V. Sivakumar"
+   ],
+   "ncporAuthors": [
+    "V. S. Samy"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1021/acs.est.4c10088",
+   "title": "Extraction Strategies for Profiling the Molecular Composition of Particulate Organic Matter on Glacier Surfaces",
+   "year": 2025,
+   "journal": "Environmental Science &amp; Technology",
+   "authors": [
+    "Runa Antony",
+    "Pamela E. Rossel",
+    "Helen K. Feord",
+    "Thorsten Dittmar",
+    "Martyn Tranter",
+    "Alexandre Magno Anesio",
+    "Liane G. Benning"
+   ],
+   "ncporAuthors": [
+    "Runa Antony"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1525/elementa.2024.00098",
+   "title": "Status of ocean observations in the Indian Sector of the Southern Ocean",
+   "year": 2025,
+   "journal": "Elem Sci Anth",
+   "authors": [
+    "Svenja Halfter",
+    "Luke Brokensha",
+    "Cédric Cotté",
+    "Ruth Eriksen",
+    "Noémie Friscourt",
+    "David B. Green",
+    "Petra Heil",
+    "Nicole Hellessey",
+    "Laura Herraiz Borreguero",
+    "Toru Hirawake",
+    "Will Hobbs",
+    "Jan Jansen",
+    "Anoop S. Mahajan",
+    "Azwianewi B. Makhado",
+    "Clive R. McMahon",
+    "Charles E. O. von der Meden",
+    "Eric Raes",
+    "Luca Stirnimann",
+    "Roshni Subramaniam",
+    "Suchithra Sundaram",
+    "Alessandro Tagliabue",
+    "Cathryn Wynn-Edwards",
+    "Gerlien Verhaegen",
+    "Sarat C. Tripathy",
+    "Elizabeth H. Shadwick"
+   ],
+   "ncporAuthors": [
+    "Sarat C. Tripathy"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2023gl107561",
+   "title": "Evolution of Antarctic Sea Ice Ahead of the Record Low Annual Maximum Extent in September 2023",
+   "year": 2024,
+   "journal": "Geophysical Research Letters",
+   "authors": [
+    "Babula Jena",
+    "S. Kshitija",
+    "C. C. Bajish",
+    "John Turner",
+    "Caroline Holmes",
+    "Jeremy Wilkinson",
+    "Rahul Mohan",
+    "M. Thamban"
+   ],
+   "ncporAuthors": [
+    "Babula Jena",
+    "S. Kshitija",
+    "Rahul Mohan",
+    "M. Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1177/09596836241266424",
+   "title": "Mid to Late-Holocene environmental dynamics recorded in Lake Pup Lagoon, East Antarctica: Insights from environmental magnetism and biogeochemical proxies",
+   "year": 2024,
+   "journal": "The Holocene",
+   "authors": [
+    "Cheryl A. Noronha-D’Mello",
+    "Abhilash Nair",
+    "Mahesh B.S.",
+    "Anish K. Warrier",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Cheryl A. Noronha-D’Mello",
+    "Abhilash Nair",
+    "Mahesh B.S.",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.17491/jgsi/2024/172979",
+   "title": "Major Diatom Microfossils from the Arctic Region: A Review",
+   "year": 2024,
+   "journal": "Journal of the Geological Society of India",
+   "authors": [
+    "Harikrishnan Guruvayoorappan",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Harikrishnan Guruvayoorappan",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2023jd038993",
+   "title": "Spatiotemporal Variability of Extreme Precipitation Events and Associated Atmospheric Processes Over Dronning Maud Land, East Antarctica",
+   "year": 2024,
+   "journal": "Journal of Geophysical Research: Atmospheres",
+   "authors": [
+    "Sibin Simon",
+    "John Turner",
+    "Meloth Thamban",
+    "Jonathan D. Wille",
+    "Pranab Deb"
+   ],
+   "ncporAuthors": [
+    "Sibin Simon",
+    "Meloth Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1177/09596836241236347",
+   "title": "A high-resolution record of Mid- to Late-Holocene environmental changes from a land-locked lake in Schirmacher Oasis, East Antarctica",
+   "year": 2024,
+   "journal": "The Holocene",
+   "authors": [
+    "GS Joju",
+    "Anish Kumar Warrier",
+    "BS Mahesh",
+    "AS Yamuna Sali",
+    "Cheryl A Noronha-D’Mello",
+    "K Balakrishna",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "BS Mahesh",
+    "Cheryl A Noronha-D’Mello",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1080/10106049.2024.2356837",
+   "title": "Detection and mapping of supraglacial lakes on East Antarctic margin using Landsat 8 OLI during 2014–2023",
+   "year": 2024,
+   "journal": "Geocarto International",
+   "authors": [
+    "Rahul Pandey",
+    "Alvarinho J. Luis"
+   ],
+   "ncporAuthors": [
+    "Alvarinho J. Luis"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1175/jcli-d-24-0020.1",
+   "title": "Atmosphere–Ocean–Sea Ice Feedbacks Sustain Recent Barents Sea Ice Loss despite Cooler Atlantic Water Inflow",
+   "year": 2024,
+   "journal": "Journal of Climate",
+   "authors": [
+    "Sourav Chatterjee",
+    "Tido Semmler",
+    "James A. Screen",
+    "Tore Furevik",
+    "Julia Selivanova",
+    "Roshin P. Raj",
+    "Nuncio Murukesh",
+    "M. Ravichandran"
+   ],
+   "ncporAuthors": [
+    "Sourav Chatterjee",
+    "Nuncio Murukesh"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1080/15320383.2024.2323516",
+   "title": "An Assessment of Metal Pollution in the Surface Sediments of an East Antarctic Lake",
+   "year": 2024,
+   "journal": "Soil and Sediment Contamination: An International Journal",
+   "authors": [
+    "G.S. Joju",
+    "Anish Kumar Warrier",
+    "A.S Yamuna Sali",
+    "Marcos A.E. Chaparro",
+    "B.S. Mahesh",
+    "Amrutha K",
+    "Balakrishna K",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "B.S. Mahesh",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1007/s12594-023-2534-3",
+   "title": "Indian Endeavour in Antarctic Geoscience",
+   "year": 2023,
+   "journal": "Journal of the Geological Society of India",
+   "authors": [
+    "Rasik Ravindra"
+   ],
+   "ncporAuthors": [
+    "Rasik Ravindra"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.3233/jifs-224543",
+   "title": "Blizzard prediction in antarctic meteorological data using deep learning techniques",
+   "year": 2023,
+   "journal": "Journal of Intelligent &amp; Fuzzy Systems",
+   "authors": [
+    "V.S. Samy",
+    "Veena Thenkanidiyoor"
+   ],
+   "ncporAuthors": [
+    "V.S. Samy"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.3390/rs15051287",
+   "title": "Exploratory Mapping of Blue Ice Regions in Antarctica Using Very High-Resolution Satellite Remote Sensing Data",
+   "year": 2023,
+   "journal": "Remote Sensing",
+   "authors": [
+    "Shridhar D. Jawak",
+    "Alvarinho J. Luis",
+    "Prashant H. Pandit",
+    "Sagar F. Wankhede",
+    "Peter Convey",
+    "Peter T. Fretwell"
+   ],
+   "ncporAuthors": [
+    "Shridhar D. Jawak",
+    "Alvarinho J. Luis"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1525/elementa.2022.00130",
+   "title": "Untangling the influence of Antarctic and Southern Ocean life on clouds",
+   "year": 2023,
+   "journal": "Elem Sci Anth",
+   "authors": [
+    "Marc D. Mallet",
+    "Ruhi S. Humphries",
+    "Sonya L. Fiddes",
+    "Simon P. Alexander",
+    "Katye Altieri",
+    "Hélène Angot",
+    "N. Anilkumar",
+    "Thorsten Bartels-Rausch",
+    "Jessie Creamean",
+    "Manuel Dall’Osto",
+    "Aurélien Dommergue",
+    "Markus Frey",
+    "Silvia Henning",
+    "Delphine Lannuzel",
+    "Rémy Lapere",
+    "Gerald G. Mace",
+    "Anoop S. Mahajan",
+    "Greg M. McFarquhar",
+    "Klaus M. Meiners",
+    "Branka Miljevic",
+    "Ilka Peeken",
+    "Alain Protat",
+    "Julia Schmale",
+    "Nadja Steiner",
+    "Karine Sellegri",
+    "Rafel Simó",
+    "Jennie L. Thomas",
+    "Megan D. Willis",
+    "V. Holly L. Winton",
+    "Matthew T. Woodhouse"
+   ],
+   "ncporAuthors": [
+    "N. Anilkumar"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2022pa004436",
+   "title": "South Asian Monsoon Variability and Arctic Sea Ice Extent Linkages During the Late Pliocene",
+   "year": 2022,
+   "journal": "Paleoceanography and Paleoclimatology",
+   "authors": [
+    "Padmasini Behera",
+    "Manish Tiwari",
+    "Vikash Kumar",
+    "T. Sarathchandraprasad",
+    "Shubham Tripathi"
+   ],
+   "ncporAuthors": [
+    "Padmasini Behera",
+    "Manish Tiwari",
+    "Vikash Kumar",
+    "T. Sarathchandraprasad",
+    "Shubham Tripathi"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1007/s12594-022-2094-y",
+   "title": "Environmental Changes and Geomorphological Factors Influencing the Sediment Flux to a Coastal Lake Spanning the Deglacial- Early Holocene Period in East Antarctica",
+   "year": 2022,
+   "journal": "Journal of the Geological Society of India",
+   "authors": [
+    "B.S. Mahesh,",
+    "Cheryl Noronha E.D. Mello",
+    "Abhilash Nair",
+    "Anish Kumar Warrier",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "B.S. Mahesh,",
+    "Cheryl Noronha E.D. Mello",
+    "Abhilash Nair",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1099/ijsem.0.005375",
+   "title": "Phenylobacterium glaciei sp. nov., isolated from Vestrebroggerbreen, a valley glacier in Svalbard, Arctic",
+   "year": 2022,
+   "journal": "International Journal of Systematic and Evolutionary Microbiology",
+   "authors": [
+    "Femi Anna Thomas",
+    "Rupesh Kumar Sinha",
+    "A. A. Mohamed Hatha",
+    "K. P. Krishnan"
+   ],
+   "ncporAuthors": [
+    "Femi Anna Thomas",
+    "Rupesh Kumar Sinha",
+    "K. P. Krishnan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.24425/ppr.2022.143311",
+   "title": "Humic acids from an Arctic fjord, Krossfjorden, Spitsbergen",
+   "year": 2022,
+   "journal": "Polish Polar Research",
+   "authors": [
+    "Aswathy Shaji",
+    "Anu Gopinath",
+    "Anoop Krishnan",
+    "Sabu Prabhakaran"
+   ],
+   "ncporAuthors": [
+    "Sabu Prabhakaran"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2022gl098904",
+   "title": "Record Low Antarctic Sea Ice Cover in February 2022",
+   "year": 2022,
+   "journal": "Geophysical Research Letters",
+   "authors": [
+    "John Turner",
+    "Caroline Holmes",
+    "Thomas Caton Harrison",
+    "Tony Phillips",
+    "Babula Jena",
+    "Tylei Reeves‐Francois",
+    "Ryan Fogt",
+    "Elizabeth R. Thomas",
+    "C. C. Bajish"
+   ],
+   "ncporAuthors": [
+    "Babula Jena",
+    "C. C. Bajish"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1007/s12594-022-2065-3",
+   "title": "Can Ammonium Records in Antarctic Ice Cores be a Proxy for Sea Ice Fluctuations?",
+   "year": 2022,
+   "journal": "Journal of the Geological Society of India",
+   "authors": [
+    "Mohammad Nuruzzama",
+    "Tariq Ejaz",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Mohammad Nuruzzama",
+    "Tariq Ejaz",
+    "Rahul Mohan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.2174/1385272826666220620152557",
+   "title": "Bioactive Compounds from Polar Regions: An Account of Chemical Ecology and Biotechnological Applications",
+   "year": 2022,
+   "journal": "Current Organic Chemistry",
+   "authors": [
+    "Archana Singh",
+    "Keisham S. Singh"
+   ],
+   "ncporAuthors": [
+    "Archana Singh"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.3390/su141811727",
+   "title": "Elemental Composition and Freezing Tolerance in High Arctic Fishes and Invertebrates",
+   "year": 2022,
+   "journal": "Sustainability",
+   "authors": [
+    "Shiv Singh",
+    "Masaharu Tsuji",
+    "Purnima Singh",
+    "Ravindra Mulik"
+   ],
+   "ncporAuthors": [
+    "Shiv Singh"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.3390/su142214814",
+   "title": "Identification of Fungal Communities Isolated from Himalayan Glacier Cryoconites",
+   "year": 2022,
+   "journal": "Sustainability",
+   "authors": [
+    "Gandhali M. Dhume",
+    "Masaharu Tsuji",
+    "Shiv Mohan Singh"
+   ],
+   "ncporAuthors": [
+    "Shiv Mohan Singh"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2020jd033943",
+   "title": "Sea Ice Variability and Trends in the Western Indian Ocean Sector of Antarctica During the Past Two Centuries and Its Response to Climatic Modes",
+   "year": 2021,
+   "journal": "Journal of Geophysical Research: Atmospheres",
+   "authors": [
+    "Tariq Ejaz",
+    "Waliur Rahaman",
+    "C. M. Laluraj",
+    "K. Mahalinganathan",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Tariq Ejaz",
+    "Waliur Rahaman",
+    "C. M. Laluraj",
+    "K. Mahalinganathan",
+    "Meloth Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2020pa004139",
+   "title": "SST Changes in the Indian Sector of the Southern Ocean and Their Teleconnection With the Indian Monsoon During the Last Glacial Period",
+   "year": 2021,
+   "journal": "Paleoceanography and Paleoclimatology",
+   "authors": [
+    "Vikash Kumar",
+    "Manish Tiwari",
+    "Prince Prakash",
+    "Rahul Mohan",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Vikash Kumar",
+    "Manish Tiwari",
+    "Prince Prakash",
+    "Rahul Mohan",
+    "Meloth Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.3390/rs13142808",
+   "title": "Observation of Cloud Base Height and Precipitation Characteristics at a Polar Site Ny-Ålesund, Svalbard Using Ground-Based Remote Sensing and Model Reanalysis",
+   "year": 2021,
+   "journal": "Remote Sensing",
+   "authors": [
+    "Acharya Asutosh",
+    "Sourav Chatterjee",
+    "M.P. Subeesh",
+    "Athulya Radhakrishnan",
+    "Nuncio Murukesh"
+   ],
+   "ncporAuthors": [
+    "Acharya Asutosh",
+    "Sourav Chatterjee",
+    "M.P. Subeesh",
+    "Athulya Radhakrishnan",
+    "Nuncio Murukesh"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1039/d1ea00024a",
+   "title": "Characterization of black carbon aerosols over Indian Antarctic station, Maitri and identification of potential source areas",
+   "year": 2021,
+   "journal": "Environmental Science: Atmospheres",
+   "authors": [
+    "Sathish Mohan Botsa",
+    "Tara DLLM",
+    "N. S. Magesh",
+    "Anoop Kumar Tiwari"
+   ],
+   "ncporAuthors": [
+    "Sathish Mohan Botsa",
+    "Tara DLLM",
+    "N. S. Magesh",
+    "Anoop Kumar Tiwari"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1080/10106049.2021.1920627",
+   "title": "Spatial surface velocity pattern in the glaciers of Chandra Basin, Western Himalaya",
+   "year": 2021,
+   "journal": "Geocarto International",
+   "authors": [
+    "Lavkush Kumar Patel",
+    "Parmanand Sharma",
+    "Ajit T. Singh",
+    "Bhanu Pratap",
+    "Sunil Oulkar",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Lavkush Kumar Patel",
+    "Parmanand Sharma",
+    "Ajit T. Singh",
+    "Bhanu Pratap",
+    "Sunil Oulkar",
+    "Meloth Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1111/1758-2229.13017",
+   "title": "Microbial diversity and associated metabolic potential in the supraglacial habitat of a fast‐retreating glacier: a case study of Patsio glacier, North‐western Himalaya",
+   "year": 2021,
+   "journal": "Environmental Microbiology Reports",
+   "authors": [
+    "Meena Rathore",
+    "Rupesh Kumar Sinha",
+    "Siddarthan Venkatachalam",
+    "Kottekkattu Padinchati Krishnan"
+   ],
+   "ncporAuthors": [
+    "Meena Rathore",
+    "Rupesh Kumar Sinha",
+    "Siddarthan Venkatachalam",
+    "Kottekkattu Padinchati Krishnan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1080/10106049.2021.1892211",
+   "title": "Seasonal ice flow velocity variations of Polar Record Glacier, East Antarctica during 2016–2019 using Sentinel-1 data",
+   "year": 2021,
+   "journal": "Geocarto International",
+   "authors": [
+    "Kiledar Singh Tomar",
+    "Sheetal Kumari",
+    "Alvarinho J. Luis"
+   ],
+   "ncporAuthors": [
+    "Kiledar Singh Tomar",
+    "Alvarinho J. Luis"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2020pa004182",
+   "title": "Enhanced Arctic Stratification in a Warming Scenario: Evidence From the Mid Pliocene Warm Period",
+   "year": 2021,
+   "journal": "Paleoceanography and Paleoclimatology",
+   "authors": [
+    "Padmasini Behera",
+    "Manish Tiwari",
+    "Jochen Knies"
+   ],
+   "ncporAuthors": [
+    "Padmasini Behera",
+    "Manish Tiwari"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1093/femsec/fiab139",
+   "title": "Spatially resolved assembly, connectivity and structure of particle-associated and free-living bacterial communities in a high Arctic fjord",
+   "year": 2021,
+   "journal": "FEMS Microbiology Ecology",
+   "authors": [
+    "Anand Jain",
+    "John Paul Balmonte",
+    "Richa Singh",
+    "Parli Venkateswaran Bhaskar",
+    "Kottekkatu Padinchati Krishnan"
+   ],
+   "ncporAuthors": [
+    "Anand Jain",
+    "Parli Venkateswaran Bhaskar",
+    "Kottekkatu Padinchati Krishnan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.4018/ijda.2021010102",
+   "title": "Data Analysis and Visualization in Python for Polar Meteorological Data",
+   "year": 2021,
+   "journal": "International Journal of Data Analytics",
+   "authors": [
+    "V. Sakthivel Samy",
+    "Koyel Pramanick",
+    "Veena Thenkanidiyoor",
+    "Jeni Victor"
+   ],
+   "ncporAuthors": [
+    "V. Sakthivel Samy"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1002/hyp.14058",
+   "title": "Estimation of mass and energy balance of glaciers using a distributed energy balance model over the Chandra river basin (Western Himalaya)",
+   "year": 2021,
+   "journal": "Hydrological Processes",
+   "authors": [
+    "Akansha Patel",
+    "Ajanta Goswami",
+    "Jaydeo K. Dharpure",
+    "Meloth Thamban",
+    "Parmanand Sharma",
+    "Anil V. Kulkarni",
+    "Sunil Oulkar"
+   ],
+   "ncporAuthors": [
+    "Meloth Thamban",
+    "Parmanand Sharma",
+    "Sunil Oulkar"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1080/15481603.2021.1930730",
+   "title": "Regional mass variations and its sensitivity to climate drivers over glaciers of Karakoram and Himalayas",
+   "year": 2021,
+   "journal": "GIScience &amp; Remote Sensing",
+   "authors": [
+    "Akansha Patel",
+    "Ajanta Goswami",
+    "Jaydeo K. Dharpure",
+    "Meloth Thamban",
+    "Anil V. Kulkarni",
+    "Parmanand Sharma"
+   ],
+   "ncporAuthors": [
+    "Meloth Thamban",
+    "Parmanand Sharma"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1002/hyp.13734",
+   "title": "Dissolved major ions, Sr and 87 Sr/ 86 Sr of coastal lakes from Larsemann hills, East Antarctica: Solute sources and chemical weathering in a polar environment",
+   "year": 2020,
+   "journal": "Hydrological Processes",
+   "authors": [
+    "Mohammad Nuruzzama",
+    "Waliur Rahaman",
+    "Gyana R. Tripathy",
+    "Rahul Mohan",
+    "Shramik Patil"
+   ],
+   "ncporAuthors": [
+    "Mohammad Nuruzzama",
+    "Waliur Rahaman",
+    "Rahul Mohan",
+    "Shramik Patil"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2019jd030675",
+   "title": "Enhanced Dust Influx to South Atlantic Sector of Antarctica During the Late‐20th Century: Causes and Contribution to Radiative Forcing",
+   "year": 2020,
+   "journal": "Journal of Geophysical Research: Atmospheres",
+   "authors": [
+    "C. M. Laluraj",
+    "Waliur Rahaman",
+    "Meloth Thamban",
+    "Rohit Srivastava"
+   ],
+   "ncporAuthors": [
+    "C. M. Laluraj",
+    "Waliur Rahaman",
+    "Meloth Thamban",
+    "Rohit Srivastava"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2020jg005958",
+   "title": "Fate of Dissolved Organic Carbon in Antarctic Surface Environments During Summer",
+   "year": 2020,
+   "journal": "Journal of Geophysical Research: Biogeosciences",
+   "authors": [
+    "Gautami Samui",
+    "Runa Antony",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Gautami Samui",
+    "Runa Antony",
+    "Meloth Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1785/0220200034",
+   "title": "An Efficient Approach of Data Adaptive Polarization Filter to Extract Teleseismic Phases from the Ocean-Bottom Seismograms",
+   "year": 2020,
+   "journal": "Seismological Research Letters",
+   "authors": [
+    "Sanjay S. Negi",
+    "Amit Kumar",
+    "Lachit S. Ningthoujam",
+    "Dhananjai K. Pandey"
+   ],
+   "ncporAuthors": [
+    "Sanjay S. Negi",
+    "Amit Kumar",
+    "Lachit S. Ningthoujam",
+    "Dhananjai K. Pandey"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.18814/epiiugs/2020/020037",
+   "title": "Advances in Antarctic geoscience studies: Indian contributions",
+   "year": 2020,
+   "journal": "Episodes",
+   "authors": [
+    "Rasik Ravindra",
+    "S. Rajan"
+   ],
+   "ncporAuthors": [
+    "Rasik Ravindra",
+    "S. Rajan"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1111/maec.12588",
+   "title": "Spatial and seasonal variations of dinoflagellates and ciliates in the Kongsfjorden, Svalbard",
+   "year": 2020,
+   "journal": "Marine Ecology",
+   "authors": [
+    "Jane Theophline Bhaskar",
+    "Bhaskar Venkateswaran Parli",
+    "Sarat Chandra Tripathy"
+   ],
+   "ncporAuthors": [
+    "Jane Theophline Bhaskar",
+    "Bhaskar Venkateswaran Parli",
+    "Sarat Chandra Tripathy"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.18814/epiiugs/2020/020038",
+   "title": "Palaeoclimatic records from Antarctica and Southern Ocean: A review of Indian contributions",
+   "year": 2020,
+   "journal": "Episodes",
+   "authors": [
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Meloth Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1080/01490419.2020.1732507",
+   "title": "Estimation of Sea Ice Thickness from SARAL/AltiKa in Drifting Orbit Phase",
+   "year": 2020,
+   "journal": "Marine Geodesy",
+   "authors": [
+    "Purvee Joshi",
+    "Sandip R. Oza",
+    "Ujjwal K. Gupta",
+    "Shailendra Saini",
+    "D. Ram Rajak",
+    "I. M. Bahuguna",
+    "A. S. Rajawat",
+    "Raj Kumar"
+   ],
+   "ncporAuthors": [
+    "Shailendra Saini"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1029/2020gl087127",
+   "title": "Recent Decrease of Summer Sea Ice in the Weddell Sea, Antarctica",
+   "year": 2020,
+   "journal": "Geophysical Research Letters",
+   "authors": [
+    "John Turner",
+    "Maria Vittoria Guarino",
+    "Jack Arnatt",
+    "Babula Jena",
+    "Gareth J. Marshall",
+    "Tony Phillips",
+    "C. C. Bajish",
+    "Kyle Clem",
+    "Zhaomin Wang",
+    "Tom Andersson",
+    "Eugene J. Murphy",
+    "Rachel Cavanagh"
+   ],
+   "ncporAuthors": [
+    "Babula Jena",
+    "C. C. Bajish"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1177/0959683620908654",
+   "title": "Late-Holocene climate response and glacial fluctuations revealed by the sediment record of the monsoon-dominated Chorabari Lake, Central Himalaya",
+   "year": 2020,
+   "journal": "The Holocene",
+   "authors": [
+    "Tanuj Shukla",
+    "Manish Mehta",
+    "DP Dobhal",
+    "Archna Bohra",
+    "Bhanu Pratap",
+    "Anil Kumar"
+   ],
+   "ncporAuthors": [
+    "Bhanu Pratap"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.3390/su12166477",
+   "title": "Contrasting Patterns of Microbial Communities in Glacier Cryoconite of Nepali Himalaya and Greenland, Arctic",
+   "year": 2020,
+   "journal": "Sustainability",
+   "authors": [
+    "Purnima Singh",
+    "Masaharu Tsuji",
+    "Shiv Mohan Singh",
+    "Nozomu Takeuchi"
+   ],
+   "ncporAuthors": [
+    "Shiv Mohan Singh"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1002/jobm.201800537",
+   "title": "Effects of growth conditions on siderophore producing bacteria and siderophore production from Indian Ocean sector of Southern Ocean",
+   "year": 2019,
+   "journal": "Journal of Basic Microbiology",
+   "authors": [
+    "Alok K. Sinha",
+    "Bhaskar Parli Venkateswaran",
+    "Sarat C. Tripathy",
+    "Amit Sarkar",
+    "Sabu Prabhakaran"
+   ],
+   "ncporAuthors": [
+    "Alok K. Sinha",
+    "Bhaskar Parli Venkateswaran",
+    "Sarat C. Tripathy",
+    "Sabu Prabhakaran"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.3390/w11112242",
+   "title": "Moisture Sources for Precipitation and Hydrograph Components of the Sutri Dhaka Glacier Basin, Western Himalayas",
+   "year": 2019,
+   "journal": "Water",
+   "authors": [
+    "Ajit T. Singh",
+    "Waliur Rahaman",
+    "Parmanand Sharma",
+    "C. M. Laluraj",
+    "Lavkush K. Patel",
+    "Bhanu Pratap",
+    "Vinay Kumar Gaddam",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Ajit T. Singh",
+    "Waliur Rahaman",
+    "Parmanand Sharma",
+    "C. M. Laluraj",
+    "Lavkush K. Patel",
+    "Bhanu Pratap",
+    "Vinay Kumar Gaddam",
+    "Meloth Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.3390/w11081561",
+   "title": "Reconciling High Glacier Surface Melting in Summer with Air Temperature in the Semi-Arid Zone of Western Himalaya",
+   "year": 2019,
+   "journal": "Water",
+   "authors": [
+    "Bhanu Pratap",
+    "Parmanand Sharma",
+    "Lavkush Patel",
+    "Ajit T. Singh",
+    "Vinay Kumar Gaddam",
+    "Sunil Oulkar",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Bhanu Pratap",
+    "Parmanand Sharma",
+    "Lavkush Patel",
+    "Ajit T. Singh",
+    "Vinay Kumar Gaddam",
+    "Sunil Oulkar",
+    "Meloth Thamban"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1080/10826068.2019.1706559",
+   "title": "Psychrotolerant Antarctic bacteria biosynthesize gold nanoparticles active against sulphate reducing bacteria",
+   "year": 2019,
+   "journal": "Preparative Biochemistry &amp; Biotechnology",
+   "authors": [
+    "Kirti Ranjan Das",
+    "Anoop Kumar Tiwari",
+    "Savita Kerkar"
+   ],
+   "ncporAuthors": [
+    "Kirti Ranjan Das",
+    "Anoop Kumar Tiwari"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.1093/jcbiol/ruz077",
+   "title": "Morphometric estimation of copepod carbon biomass in coastal Antarctica: a case study in Prydz Bay",
+   "year": 2019,
+   "journal": "Journal of Crustacean Biology",
+   "authors": [
+    "Anvita U Kerkar",
+    "Vankara Venkataramana",
+    "Sarat C Tripathy"
+   ],
+   "ncporAuthors": [
+    "Anvita U Kerkar",
+    "Vankara Venkataramana",
+    "Sarat C Tripathy"
+   ],
+   "subjects": []
+  },
+  {
+   "source": "crossref",
+   "doi": "10.3390/rs11101207",
+   "title": "Explorative Study on Mapping Surface Facies of Selected Glaciers from Chandra Basin, Himalaya Using WorldView-2 Data",
+   "year": 2019,
+   "journal": "Remote Sensing",
+   "authors": [
+    "Shridhar D. Jawak",
+    "Sagar F. Wankhede",
+    "Alvarinho J. Luis"
+   ],
+   "ncporAuthors": [
+    "Shridhar D. Jawak",
+    "Sagar F. Wankhede",
+    "Alvarinho J. Luis"
+   ],
+   "subjects": []
+  }
+ ],
+ "datasets": [
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.808290",
+   "title": "Aerosol total mass concentration and optical depth during IPY 2007-2008 at Maitri and Larsemann Hills Station",
+   "year": 2011,
+   "authors": [
+    "Jai Prakash Chaubey",
+    "K Krishna Moorthy",
+    "S Suresh Babu",
+    "Vijayakumar S Nair"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "2008-01-05T00:00:00/2008-02-24T00:00:00",
+   "location": {
+    "lat": -70.0872,
+    "lon": 43.9597
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.808285",
+   "title": "(Table 1, 3) Total mass concentration of aerosols in Maitri and Larsemann Hills Station, Antarctica",
+   "year": 2011,
+   "authors": [
+    "Jai Prakash Chaubey",
+    "K Krishna Moorthy",
+    "S Suresh Babu",
+    "Vijayakumar S Nair"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "2008-01-05T00:00:00/2008-02-24T00:00:00",
+   "location": {
+    "lat": -70.0872,
+    "lon": 43.9597
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.808286",
+   "title": "(Table 2) Aerosol optical depth in Maitri and Larsemann Hills Station, Antarctica",
+   "year": 2011,
+   "authors": [
+    "Jai Prakash Chaubey",
+    "K Krishna Moorthy",
+    "S Suresh Babu",
+    "Vijayakumar S Nair"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": null,
+   "location": {
+    "lat": -70.0872,
+    "lon": 43.9597
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.972992",
+   "title": "GTN-P: 41 years of Mean Annual Ground Temperature (MAGT) across latitudinal and elevational gradients in the Northern Hemisphere, v1.0",
+   "year": 2025,
+   "authors": [
+    "Mareike Wieczorek",
+    "GTN-P",
+    "Antoni G Lewkowicz",
+    "Alexander L Kholodov",
+    "Vladimir E Romanovsky",
+    "Dmitry Nicolsky",
+    "Dmitry A Streletskiy",
+    "Julia Boike",
+    "Birgit Heim",
+    "Annett Bartsch",
+    "Boris K Biskaborn",
+    "Hanne Hvidtfeldt Christiansen",
+    "Kirsten Elger",
+    "Anna Maria Irrgang"
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/",
+   "temporalCoverage": "1980-01-01T00:00:00/2021-01-01T00:00:00",
+   "location": {
+    "lat": 61.4201,
+    "lon": 164.1728
+   },
+   "keywords": [
+    "ESA CCI; GTN-P; MAGT"
+   ]
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.846890",
+   "title": "Selected soil properties and bacterial abundance in the glacier forefields 'Black Valley Transect' and 'Glacier Transect' on Larsemann Hills, East Antarctica",
+   "year": 2015,
+   "authors": [
+    "Felizitas Bajerski",
+    "Dirk Wagner"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": null,
+   "location": {
+    "lat": -69.4034,
+    "lon": 76.3398
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.865270",
+   "title": "Colored dissolved organic matter (cDOM) absorption measurements on Larsemann Hills Oasis (East Antarctica) - Progress station, Russia, in 2016",
+   "year": 2016,
+   "authors": [
+    "Tatiana Skorospekhova",
+    "Irina V Fedorova",
+    "Alexander Evdokimov",
+    "Natalia Alekseeva",
+    "Mikhail Naumov",
+    "Birgit Heim"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "2016-01-09T00:00:00/2016-01-29T00:00:00",
+   "location": {
+    "lat": -69.3026,
+    "lon": 76.5952
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.846889",
+   "title": "(Table 1) Selected soil properties and bacterial abundance in the glacier forefield called 'Glacier Transect' on Larsemann Hills, East Antarctica",
+   "year": 2013,
+   "authors": [
+    "Felizitas Bajerski",
+    "Dirk Wagner"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": null,
+   "location": {
+    "lat": -69.4023,
+    "lon": 76.3373
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.846887",
+   "title": "(Table 2) Selected soil properties and bacterial abundance in the glacier forefield called 'Black Valley Transect' on Larsemann Hills, East Antarctica",
+   "year": 2013,
+   "authors": [
+    "Felizitas Bajerski",
+    "Dirk Wagner"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": null,
+   "location": {
+    "lat": -69.4046,
+    "lon": 76.3424
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.857466",
+   "title": "Colored dissolved organic matter (cDOM) absorption measurements on Larsemann Hills Oasis (East Antarctica) - Progress station, Russia, in 2015",
+   "year": 2016,
+   "authors": [
+    "Tatiana Skorospekhova",
+    "Irina V Fedorova",
+    "Alexander Evdokimov",
+    "Natalia Alekseeva",
+    "Mikhail Naumov",
+    "Birgit Heim"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "2015-01-08T00:00:00/2015-03-02T00:00:00",
+   "location": {
+    "lat": -69.3893,
+    "lon": 76.3669
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.857467",
+   "title": "Colored dissolved organic matter (cDOM) absorption measurements in Antarctic lakes",
+   "year": 2016,
+   "authors": [
+    "Tatiana Skorospekhova",
+    "Irina V Fedorova",
+    "Alexander Evdokimov",
+    "Natalia Alekseeva",
+    "Mikhail Naumov",
+    "Birgit Heim"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "2013-02-10T00:00:00/2016-01-29T00:00:00",
+   "location": {
+    "lat": -66.8878,
+    "lon": 31.5248
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.858210",
+   "title": "Weathering characteristics and lithology of samples from the Rauer Group, Antarctica, obtained in February/March 2007, and conducted with field support of POLARSTERN cruise ANT-XXIII/9",
+   "year": 2009,
+   "authors": [
+    "Duanne A White",
+    "Ole Bennike",
+    "Sonja Berg",
+    "S Harley",
+    "David Fink",
+    "Kevin W Kiernan",
+    "Anne McConnell",
+    "Bernd Wagner"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "2007-02-25T00:00:00/2007-03-16T00:00:00",
+   "location": {
+    "lat": -68.8355,
+    "lon": 77.8691
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.707132",
+   "title": "Radiocarbon dating on four sediment profiles from Bunger Hills, East Antarctica",
+   "year": 1994,
+   "authors": [
+    "Martin Melles",
+    "Sergey R Verkulich",
+    "Wolf-Dieter Hermichen"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": null,
+   "location": {
+    "lat": -66.2737,
+    "lon": 100.7625
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.792752",
+   "title": "Major element oxides, trace element content and isotopic ratios of dolerites from the Schirmacher Oasis",
+   "year": 2009,
+   "authors": [
+    "Nadezhda M Sushchevskaya",
+    "Boris V Belyatsky",
+    "G L Leichenkov",
+    "Anatoly A Laiba"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": null,
+   "location": {
+    "lat": -70.742,
+    "lon": 11.612
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.960907",
+   "title": "Properties of liquid-dominated clouds over the ice-free and sea-ice-covered Arctic Ocean during ACLOUD",
+   "year": 2023,
+   "authors": [
+    "Marcus Klingebiel",
+    "André Ehrlich",
+    "Evelyn Jäkel",
+    "Michael Schäfer",
+    "Elena Ruiz-Donoso",
+    "Kevin Wolf",
+    "Manfred Wendisch"
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/",
+   "temporalCoverage": "2017-05-27T12:46:48/2017-06-25T17:19:19",
+   "location": {
+    "lat": 78.2458,
+    "lon": 15.504
+   },
+   "keywords": [
+    "ACLOUD; Arctic; Arctic Amplification; clouds; Polar 5"
+   ]
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.792751",
+   "title": "(Table 2) Isotopic composition of the Schirmacher Oasis dolerites",
+   "year": 2009,
+   "authors": [
+    "Nadezhda M Sushchevskaya",
+    "Boris V Belyatsky",
+    "G L Leichenkov",
+    "Anatoly A Laiba"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": null,
+   "location": {
+    "lat": -70.742,
+    "lon": 11.612
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.963112",
+   "title": "Aircraft measurements of spectral solar up- and downward irradiances in the Arctic during the HALO-(AC)3 campaign 2022",
+   "year": 2023,
+   "authors": [
+    "Evelyn Jäkel",
+    "Sebastian Becker",
+    "Marcus Klingebiel",
+    "Hanno Müller",
+    "Tim R Sperzel",
+    "Manfred Wendisch"
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/",
+   "temporalCoverage": "2022-03-20T10:58:59/2022-04-10T14:19:30",
+   "location": {
+    "lat": 78.2457,
+    "lon": 15.503
+   },
+   "keywords": [
+    "Arctic; HALO-(AC)³; irradiance; Polar 5"
+   ]
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.960906",
+   "title": "Properties of liquid-dominated clouds over the ice-free and sea-ice-covered Arctic Ocean during AFLUX",
+   "year": 2023,
+   "authors": [
+    "Marcus Klingebiel",
+    "André Ehrlich",
+    "Evelyn Jäkel",
+    "Michael Schäfer",
+    "Elena Ruiz-Donoso",
+    "Kevin Wolf",
+    "Manfred Wendisch"
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/",
+   "temporalCoverage": "2019-03-21T09:36:01/2019-04-11T15:20:04",
+   "location": {
+    "lat": 78.2459,
+    "lon": 15.5018
+   },
+   "keywords": [
+    "AFLUX; Arctic; Arctic Amplification; clouds; Polar 5"
+   ]
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.763872",
+   "title": "Sulphur isotope analyses in the southern ocean and the central Dronning Maud Land, East Antarctica",
+   "year": 1992,
+   "authors": [
+    "Ulrich Wand",
+    "Ingeborg Maaß",
+    "Dietmar Haendel"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "1981-02-05T00:00:00/1984-01-19T00:00:00",
+   "location": {
+    "lat": -70.0634,
+    "lon": 1.6246
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.962996",
+   "title": "Collocated broadband surface albedo and surface type fractions aircraft observations during HALO-(AC)3 2022",
+   "year": 2023,
+   "authors": [
+    "Evelyn Jäkel",
+    "Sebastian Becker",
+    "Hanno Müller",
+    "Manfred Wendisch"
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/",
+   "temporalCoverage": "2022-03-25T13:47:01/2022-04-07T12:17:46",
+   "location": {
+    "lat": 80.2075,
+    "lon": 5.8714
+   },
+   "keywords": [
+    "Arctic; broadband surface albedo; surface type fraction"
+   ]
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.967347",
+   "title": "Spectral solar cloud top radiance measured by airborne spectral imaging (AISA Eagle) during the HALO-(AC)³ campaign in 2022",
+   "year": 2024,
+   "authors": [
+    "Marcus Klingebiel",
+    "Evelyn Jäkel",
+    "Michael Schäfer",
+    "André Ehrlich",
+    "Manfred Wendisch"
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/",
+   "temporalCoverage": "2022-03-20T10:58:59/2022-04-10T14:19:30",
+   "location": {
+    "lat": 78.2457,
+    "lon": 15.5031
+   },
+   "keywords": [
+    "Arctic clouds; Cloud top radiance; HALO-(AC)³; radiation"
+   ]
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.967288",
+   "title": "Radiance fields of clouds and the Arctic surface measured by a digital camera during HALO-(AC)3",
+   "year": 2024,
+   "authors": [
+    "Evelyn Jäkel",
+    "Manfred Wendisch"
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/",
+   "temporalCoverage": "2022-03-20T11:00:00/2022-04-10T13:00:00",
+   "location": {
+    "lat": 78.2457,
+    "lon": 15.503
+   },
+   "keywords": [
+    "Arctic surface; clouds; HALO-(AC)³; images; radiances"
+   ]
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.55239",
+   "title": "Geochemistry and mineralogy of sediment core PG1221",
+   "year": 1999,
+   "authors": [
+    "Markus J Schwab"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "1995-04-01T00:00:00",
+   "location": {
+    "lat": -70.756,
+    "lon": 11.753
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.964982",
+   "title": "Microwave brightness temperature measurements during the HALO-AC3 Arctic airborne campaign in early spring 2022 out of Svalbard",
+   "year": 2024,
+   "authors": [
+    "Mario Mech",
+    "Nils Risse",
+    "Pavel Krobot",
+    "Imke Schirmacher",
+    "Sabrina Schnitt",
+    "Susanne Crewell"
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/",
+   "temporalCoverage": "2022-03-20T10:58:59/2022-04-10T14:19:30",
+   "location": {
+    "lat": 78.2457,
+    "lon": 15.5031
+   },
+   "keywords": [
+    "airborne; Arctic; Arctic Amplification; brightness temperature; clouds; HALO-(AC)³; Polar 5; remote sensing; Svalbard"
+   ]
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.951163",
+   "title": "Chemical analysis of manganese deposits from the Indian-Antarctic Ridge",
+   "year": 2022,
+   "authors": [
+    "Geoffrey P Glasby"
+   ],
+   "license": "https://creativecommons.org/licenses/by/4.0/",
+   "temporalCoverage": "1969-01-01T00:00:00/1969-11-11T00:00:00",
+   "location": {
+    "lat": -55.5498,
+    "lon": 152.4585
+   },
+   "keywords": [
+    "Geochemistry; manganese micronodule; manganese nodule; ocean; Sediment"
+   ]
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.754425",
+   "title": "X-ray fluorescence on sediment core PS2612-1 (raw data from XRF-core scanner)",
+   "year": 2010,
+   "authors": [
+    "Gerhard Kuhn"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "1994-05-14T00:00:00",
+   "location": {
+    "lat": -48.26,
+    "lon": 37.4367
+   },
+   "keywords": [
+    "awixrfraw2010"
+   ]
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.115379",
+   "title": "Documentation of sediment core PS2612-1",
+   "year": 2003,
+   "authors": [
+    "Gerhard Kuhn"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "1994-05-14T00:00:00",
+   "location": {
+    "lat": -48.26,
+    "lon": 37.4367
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.725642",
+   "title": "Documentation of sediment core PS1771-1",
+   "year": 2009,
+   "authors": [
+    "Rainer Gersonde"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "1989-11-12T12:37:00",
+   "location": {
+    "lat": -53.755,
+    "lon": 3.772
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.53367",
+   "title": "Ice rafted debris (> 2 mm gravel) distribution in sediment core PS2612-1",
+   "year": 1998,
+   "authors": [
+    "Hannes Grobe"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "1994-05-14T00:00:00",
+   "location": {
+    "lat": -48.26,
+    "lon": 37.4367
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.50963",
+   "title": "Sound velocity of sediment core PS1771-1",
+   "year": 1996,
+   "authors": [
+    "Heinrich Villinger"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "1989-11-12T12:37:00",
+   "location": {
+    "lat": -53.755,
+    "lon": 3.772
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.50676",
+   "title": "Susceptibility raw data of sediment core PS1771-1",
+   "year": 1996,
+   "authors": [
+    "Heinrich Villinger"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "1989-11-12T12:37:00",
+   "location": {
+    "lat": -53.755,
+    "lon": 3.772
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.725363",
+   "title": "Susceptibility of sediment core PS1771-1",
+   "year": 1999,
+   "authors": [
+    "Heinrich Villinger"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "1989-11-12T12:37:00",
+   "location": {
+    "lat": -53.755,
+    "lon": 3.772
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.93249",
+   "title": "Color values (X, Y, Z) of sediment core PS2612-1",
+   "year": 2003,
+   "authors": [
+    "Gerhard Kuhn"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "1994-05-14T00:00:00",
+   "location": {
+    "lat": -48.26,
+    "lon": 37.4367
+   },
+   "keywords": []
+  },
+  {
+   "source": "pangaea",
+   "doi": "10.1594/pangaea.754559",
+   "title": "Linescanner images of sediment core PS2612-1",
+   "year": 2010,
+   "authors": [
+    "Gerhard Kuhn"
+   ],
+   "license": "https://creativecommons.org/licenses/by/3.0/",
+   "temporalCoverage": "1994-05-14T00:00:00",
+   "location": {
+    "lat": -48.26,
+    "lon": 37.4367
+   },
+   "keywords": [
+    "awilinescan2010"
+   ]
+  }
+ ]
+}

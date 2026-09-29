@@ -8,95 +8,17 @@ import { bibtex, datasetDownload, datasetHeader, metadataRecord, proposalTemplat
 import { CHANNELS, generateContent, type Channel } from './outreach.ts';
 import { DATA_STATUSES, REVIEW_STATUSES } from './migrations.ts';
 import { facets, ftsQuery, hybridSearch, parseQuery, type SearchFilters } from './search.ts';
-import { answerQuestion, draftOutreachWithLlm, toSource, verifyClaims } from './rag.ts';
+import { answerQuestion } from './rag.ts';
 import { providerStatus } from './llm.ts';
 import { embedTexts, mlStatus } from './ml.ts';
+import { HttpError, intOrNull, publicBase, rateLimit, sendDownload, str, tag, wrap } from './http.ts';
+import { attachUser, createAuthRouter, createUsersRouter, isReviewer, requireRole } from './auth.ts';
+import { checkAgainst, createContributorRouter, createDraft, createPublicContentRouter } from './contrib.ts';
+import { countUsage, createExtrasRouter } from './extras.ts';
+import { rawBody, saveUpload } from './uploads.ts';
 
-export const UPLOAD_DIR = path.resolve(process.cwd(), process.env.UPLOAD_DIR || 'uploads');
+export { UPLOAD_DIR } from './uploads.ts';
 
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN || crypto.randomBytes(18).toString('base64url');
-if (!process.env.ADMIN_TOKEN) {
-  console.log(`[POLARIS] ADMIN_TOKEN not set; generated one for this run: ${ADMIN_TOKEN}`);
-}
-
-// --- helpers ------------------------------------------------------------------
-
-class HttpError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
-  }
-}
-
-const wrap =
-  (fn: (req: Request, res: Response) => unknown) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const out = fn(req, res);
-      if (out instanceof Promise) out.catch(next);
-    } catch (err) {
-      next(err);
-    }
-  };
-
-function requireAdmin(req: Request, _res: Response, next: NextFunction) {
-  const header = req.get('authorization') || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : '';
-  const a = Buffer.from(token);
-  const b = Buffer.from(ADMIN_TOKEN);
-  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return next(new HttpError(401, 'Admin token required'));
-  next();
-}
-
-function str(v: unknown, field: string, { required = false, max = 5000 } = {}): string {
-  if (v === undefined || v === null || v === '') {
-    if (required) throw new HttpError(400, `${field} is required`);
-    return '';
-  }
-  if (typeof v !== 'string') throw new HttpError(400, `${field} must be a string`);
-  const s = v.trim();
-  if (required && !s) throw new HttpError(400, `${field} is required`);
-  if (s.length > max) throw new HttpError(400, `${field} must be at most ${max} characters`);
-  return s;
-}
-
-/** Tags are stored comma-separated, so a tag may not contain a comma. */
-function tag(v: unknown): string {
-  const t = str(v, 'tag', { max: 60 });
-  if (t.includes(',')) throw new HttpError(400, `tag "${t}" must not contain a comma`);
-  return t;
-}
-
-function intOrNull(v: unknown, field: string): number | null {
-  if (v === undefined || v === null || v === '') return null;
-  const n = Number(v);
-  if (!Number.isInteger(n)) throw new HttpError(400, `${field} must be an integer`);
-  return n;
-}
-
-function publicBase(req: Request): string {
-  const configured = process.env.APP_URL;
-  if (configured && /^https?:\/\//.test(configured)) return configured.replace(/\/$/, '');
-  return `${req.protocol}://${req.get('host')}`;
-}
-
-function sendDownload(res: Response, filename: string, contentType: string, body: string | Buffer) {
-  res.setHeader('Content-Type', contentType);
-  res.setHeader('Content-Disposition', `attachment; filename="${filename.replace(/"/g, '')}"`);
-  res.send(body);
-}
-
-// Tiny fixed-window limiter for public write endpoints.
-function rateLimit(max: number, windowMs: number) {
-  const hits = new Map<string, { n: number; reset: number }>();
-  return (req: Request, _res: Response, next: NextFunction) => {
-    const key = req.ip || 'unknown';
-    const now = Date.now();
-    const h = hits.get(key);
-    if (!h || h.reset < now) hits.set(key, { n: 1, reset: now + windowMs });
-    else if (++h.n > max) return next(new HttpError(429, 'Too many requests, try again later'));
-    next();
-  };
-}
 
 // --- mappers --------------------------------------------------------------------
 
@@ -134,12 +56,34 @@ function listStations(): StationData[] {
     .map((r: any) => JSON.parse(r.data));
 }
 
-function linksFor(id: string) {
+/** Records are public once a reviewer approved them (seeded records start approved). */
+export const PUBLIC_SQL = "a.review_status = 'APPROVED'";
+
+/** A record the caller may see: approved, their own, or any record for reviewers. */
+function visibleItem(req: Request, id: string): ArchiveItem | null {
+  const item = getItem(id);
+  if (!item) return null;
+  if (item.reviewStatus === 'APPROVED' || isReviewer(req.user) || (req.user && item.ownerId === req.user.id)) return item;
+  return null;
+}
+
+/** Links including unapproved records, for reviewers looking at a submission. */
+function linksForAll(id: string) {
   return getDb()
     .prepare(
       `SELECT a.id, a.type, a.title, l.relation, 'out' AS direction FROM item_links l JOIN archive_items a ON a.id = l.to_id WHERE l.from_id = ?
        UNION ALL
        SELECT a.id, a.type, a.title, l.relation, 'in' AS direction FROM item_links l JOIN archive_items a ON a.id = l.from_id WHERE l.to_id = ?`
+    )
+    .all(id, id);
+}
+
+function linksFor(id: string) {
+  return getDb()
+    .prepare(
+      `SELECT a.id, a.type, a.title, l.relation, 'out' AS direction FROM item_links l JOIN archive_items a ON a.id = l.to_id WHERE l.from_id = ? AND ${PUBLIC_SQL}
+       UNION ALL
+       SELECT a.id, a.type, a.title, l.relation, 'in' AS direction FROM item_links l JOIN archive_items a ON a.id = l.from_id WHERE l.to_id = ? AND ${PUBLIC_SQL}`
     )
     .all(id, id) as { id: string; type: string; title: string; relation: string; direction: string }[];
 }
@@ -148,7 +92,7 @@ function linksFor(id: string) {
 function findDataset(ref: string): ArchiveItem | null {
   const row = getDb()
     .prepare(
-      `SELECT * FROM archive_items WHERE type = 'dataset'
+      `SELECT * FROM archive_items a WHERE type = 'dataset' AND ${PUBLIC_SQL}
          AND (id = ?1 OR json_extract(meta, '$.fileName') = ?1 OR title = ?1)
        LIMIT 1`
     )
@@ -193,7 +137,13 @@ export function createApiRouter() {
   // Parse JSON here (not app-wide) so parse errors reach the JSON error handler below.
   // Uploads carry raw bytes and are parsed by their own route.
   const json = express.json({ limit: '1mb' });
-  api.use((req, res, next) => (req.path === '/admin/uploads' ? next() : json(req, res, next)));
+  const rawUpload = (p: string) => p === '/admin/uploads' || p === '/me/uploads';
+  api.use((req, res, next) => (rawUpload(req.path) ? next() : json(req, res, next)));
+  api.use(attachUser(db));
+  api.use('/auth', createAuthRouter(db));
+  api.use('/me', createContributorRouter(db));
+  api.use(createPublicContentRouter(db));
+  api.use(createExtrasRouter(db));
 
   api.get('/health', (_req, res) => {
     const { n } = db.prepare('SELECT COUNT(*) AS n FROM archive_items').get() as { n: number };
@@ -205,9 +155,9 @@ export function createApiRouter() {
     const hotspots: Record<number, HotspotInfo> = {};
     for (const r of db.prepare('SELECT id, data FROM hotspots ORDER BY id').all() as any[]) hotspots[r.id] = JSON.parse(r.data);
     const milestones = (db.prepare(
-      `SELECT * FROM archive_items WHERE type = 'expedition' AND json_extract(meta, '$.milestone') = 1 ORDER BY year`
+      `SELECT * FROM archive_items a WHERE type = 'expedition' AND json_extract(meta, '$.milestone') = 1 AND ${PUBLIC_SQL} ORDER BY year`
     ).all() as any[]).map((r) => toMilestone(rowToItem(r)));
-    const papers = (db.prepare(`SELECT * FROM archive_items WHERE type = 'publication' ORDER BY rowid`).all() as any[]).map((r) =>
+    const papers = (db.prepare(`SELECT * FROM archive_items a WHERE type = 'publication' AND ${PUBLIC_SQL} AND json_extract(meta, '$.openData') IS NULL ORDER BY rowid`).all() as any[]).map((r) =>
       toPaper(rowToItem(r))
     );
     const simulations: SimulationMission[] = (db.prepare('SELECT data FROM simulations ORDER BY sort').all() as any[]).map((r) =>
@@ -219,9 +169,9 @@ export function createApiRouter() {
 
   api.get('/stats', (_req, res) => {
     const byType = Object.fromEntries(
-      (db.prepare('SELECT type, COUNT(*) AS n FROM archive_items GROUP BY type').all() as any[]).map((r) => [r.type, r.n])
+      (db.prepare(`SELECT type, COUNT(*) AS n FROM archive_items a WHERE ${PUBLIC_SQL} GROUP BY type`).all() as any[]).map((r) => [r.type, r.n])
     );
-    const { downloads } = db.prepare('SELECT COALESCE(SUM(downloads), 0) AS downloads FROM archive_items').get() as any;
+    const { downloads } = db.prepare(`SELECT COALESCE(SUM(downloads), 0) AS downloads FROM archive_items a WHERE ${PUBLIC_SQL}`).get() as any;
     const { proposals } = db.prepare('SELECT COUNT(*) AS proposals FROM proposals').get() as any;
     const { posts } = db.prepare('SELECT COUNT(*) AS posts FROM outreach_posts').get() as any;
     res.json({ byType, downloads, proposals, outreachPosts: posts, stations: listStations().length });
@@ -236,7 +186,7 @@ export function createApiRouter() {
       const row = stationRow(req.params.id);
       if (!row) throw new HttpError(404, 'Station not found');
       const counts = Object.fromEntries(
-        (db.prepare('SELECT type, COUNT(*) AS n FROM archive_items WHERE station_id = ? GROUP BY type').all(req.params.id) as any[]).map(
+        (db.prepare(`SELECT type, COUNT(*) AS n FROM archive_items a WHERE station_id = ? AND ${PUBLIC_SQL} GROUP BY type`).all(req.params.id) as any[]).map(
           (r) => [r.type, r.n]
         )
       );
@@ -260,7 +210,7 @@ export function createApiRouter() {
         out.push({ key: `hs-${r.id}`, kind: 'instrument', label: info.id, title: info.title, dataStatus: r.data_status, itemId: item?.id ?? null, itemType: item?.type ?? null, info });
       }
       const recs = db
-        .prepare(`SELECT * FROM archive_items WHERE station_id = ? AND type IN ('dataset','report','publication') ORDER BY year DESC, rowid`)
+        .prepare(`SELECT * FROM archive_items a WHERE station_id = ? AND type IN ('dataset','report','publication') AND ${PUBLIC_SQL} ORDER BY year DESC, rowid LIMIT 40`)
         .all(req.params.id) as any[];
       for (const r of recs.map(rowToItem)) {
         if (linked.has(r.id)) continue;
@@ -285,7 +235,7 @@ export function createApiRouter() {
     '/archive',
     wrap((req, res) => {
       const f = readFilters(req.query);
-      const where: string[] = [];
+      const where: string[] = [PUBLIC_SQL];
       const params: any[] = [];
       if (f.types?.length) {
         where.push(`a.type IN (${f.types.map(() => '?').join(',')})`);
@@ -350,7 +300,7 @@ export function createApiRouter() {
   api.get(
     '/archive/:id',
     wrap((req, res) => {
-      const item = getItem(req.params.id);
+      const item = visibleItem(req, req.params.id);
       if (!item) throw new HttpError(404, 'Record not found');
       res.json({ ...item, links: linksFor(item.id) });
     })
@@ -359,7 +309,7 @@ export function createApiRouter() {
   api.get(
     '/archive/:id/metadata.json',
     wrap((req, res) => {
-      const item = getItem(req.params.id);
+      const item = visibleItem(req, req.params.id);
       if (!item) throw new HttpError(404, 'Record not found');
       sendDownload(res, `${item.id}.metadata.json`, 'application/json', JSON.stringify(metadataRecord(item, linksFor(item.id)), null, 2));
     })
@@ -368,7 +318,7 @@ export function createApiRouter() {
   api.get(
     '/publications/:id/citation.bib',
     wrap((req, res) => {
-      const item = getItem(req.params.id);
+      const item = visibleItem(req, req.params.id);
       if (!item || item.type !== 'publication') throw new HttpError(404, 'Publication not found');
       sendDownload(res, `citation-${item.id}.bib`, 'application/x-bibtex; charset=utf-8', bibtex(item));
     })
@@ -389,6 +339,7 @@ export function createApiRouter() {
       const item = findDataset(req.params.ref);
       if (!item) throw new HttpError(404, 'Dataset not found');
       db.prepare('UPDATE archive_items SET downloads = downloads + 1 WHERE id = ?').run(item.id);
+      countUsage(db, 'download', item.id);
       const file = datasetDownload(item);
       sendDownload(res, file.filename, file.contentType, file.body);
     })
@@ -403,6 +354,7 @@ export function createApiRouter() {
       if (!q) return res.json({ query: q, mode: 'lexical', semanticNote: null, matchedAllTerms: true, results: [], stations: [], total: 0 });
       const limit = Math.min(Math.max(intOrNull(req.query.limit, 'limit') ?? 20, 1), 50);
       const result = await hybridSearch(db, q, filters, limit);
+      countUsage(db, 'search', q.toLowerCase().slice(0, 60));
       const { terms } = parseQuery(q);
       const generic = new Set(['station', 'stations', 'research', 'base', 'observatory', 'polar']);
       const stations = listStations().filter((s) =>
@@ -425,7 +377,7 @@ export function createApiRouter() {
       const types = listParam(req.query.type);
       for (const t of types) if (!ARCHIVE_TYPES.includes(t as ArchiveType)) throw new HttpError(400, `Unknown type: ${t}`);
       const stations = listStations().filter((s) => !station || s.id === station);
-      let items = (db.prepare('SELECT * FROM archive_items ORDER BY year, rowid').all() as any[]).map(rowToItem);
+      let items = (db.prepare(`SELECT * FROM archive_items a WHERE ${PUBLIC_SQL} ORDER BY year, rowid`).all() as any[]).map(rowToItem);
       const links = db.prepare('SELECT from_id, to_id, relation FROM item_links').all() as any[];
       if (station) {
         const seed = new Set(items.filter((i) => i.stationId === station).map((i) => i.id));
@@ -467,6 +419,7 @@ export function createApiRouter() {
     rateLimit(60, 10 * 60 * 1000),
     wrap(async (req, res) => {
       const question = str(req.body?.question, 'question', { required: true, max: 500 });
+      countUsage(db, 'ask', 'assistant');
       res.json(await answerQuestion(db, question, readFilters(req.body?.filters ?? {})));
     })
   );
@@ -517,7 +470,7 @@ export function createApiRouter() {
     '/outreach/generate',
     wrap((req, res) => {
       const itemId = str(req.body?.itemId, 'itemId', { required: true, max: 120 });
-      const item = getItem(itemId) ?? findDataset(itemId);
+      const item = visibleItem(req, itemId) ?? findDataset(itemId);
       if (!item) throw new HttpError(404, 'Record not found');
       const requested: Channel[] = Array.isArray(req.body?.channels) && req.body.channels.length ? req.body.channels : CHANNELS;
       for (const c of requested) if (!CHANNELS.includes(c)) throw new HttpError(400, `Unknown channel: ${c}`);
@@ -528,7 +481,8 @@ export function createApiRouter() {
 
   // --- admin ----------------------------------------------------------------------
   const admin = express.Router();
-  admin.use(requireAdmin);
+  admin.use(requireRole('reviewer', 'admin'));
+  admin.use('/users', createUsersRouter(db));
 
   admin.post(
     '/archive',
@@ -651,27 +605,7 @@ export function createApiRouter() {
     })
   );
 
-  const UPLOAD_TYPES: Record<string, string> = {
-    '.jpg': 'image', '.jpeg': 'image', '.png': 'image', '.webp': 'image', '.gif': 'image',
-    '.mp4': 'video', '.webm': 'video',
-    '.pdf': 'document', '.csv': 'data', '.nc': 'data', '.txt': 'document', '.json': 'data',
-  };
-
-  admin.post(
-    '/uploads',
-    express.raw({ type: () => true, limit: process.env.MAX_UPLOAD || '100mb' }),
-    wrap((req, res) => {
-      const original = str(req.get('x-filename'), 'X-Filename header', { required: true, max: 200 });
-      const ext = path.extname(original).toLowerCase();
-      if (!UPLOAD_TYPES[ext]) throw new HttpError(400, `File type ${ext || '(none)'} is not allowed`);
-      if (!Buffer.isBuffer(req.body) || !req.body.length) throw new HttpError(400, 'Empty upload');
-      const safeBase = path.basename(original, ext).replace(/[^A-Za-z0-9_-]+/g, '-').slice(0, 60) || 'file';
-      const name = `${Date.now()}-${crypto.randomBytes(4).toString('hex')}-${safeBase}${ext}`;
-      fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-      fs.writeFileSync(path.join(UPLOAD_DIR, name), req.body);
-      res.status(201).json({ url: `/uploads/${name}`, kind: UPLOAD_TYPES[ext], bytes: req.body.length });
-    })
-  );
+  admin.post('/uploads', rawBody, wrap((req, res) => res.status(201).json(saveUpload(req))));
 
   admin.get('/proposals', (_req, res) => {
     res.json(db.prepare('SELECT * FROM proposals ORDER BY id DESC').all());
@@ -725,14 +659,45 @@ export function createApiRouter() {
     })
   );
 
+  // ---- contributor submissions: approve before anything becomes public -------------
+  admin.get('/submissions', (req, res) => {
+    const status = String(req.query.review || 'PENDING_REVIEW');
+    if (!(REVIEW_STATUSES as readonly string[]).includes(status)) throw new HttpError(400, 'Unknown review status');
+    const rows = db
+      .prepare(
+        `SELECT a.*, u.name AS owner_name, u.institution AS owner_institution FROM archive_items a
+         JOIN users u ON u.id = a.owner_id WHERE a.review_status = ? ORDER BY a.rowid DESC`
+      )
+      .all(status) as any[];
+    res.json(rows.map((r) => ({ ...rowToItem(r), ownerName: r.owner_name, ownerInstitution: r.owner_institution, links: linksForAll(r.id) })));
+  });
+
+  admin.post(
+    '/archive/:id/review',
+    wrap((req, res) => {
+      const item = getItem(req.params.id);
+      if (!item) throw new HttpError(404, 'Record not found');
+      const action = str(req.body?.action, 'action', { required: true });
+      const note = str(req.body?.note, 'note', { max: 1000 });
+      const reviewer = req.user && req.user.id > 0 ? req.user.name : str(req.body?.reviewer, 'reviewer', { max: 80 });
+      if (!reviewer) throw new HttpError(400, 'reviewer is required');
+      const next = { approve: 'APPROVED', request_changes: 'CHANGES_REQUESTED', reject: 'REJECTED' }[action];
+      if (!next) throw new HttpError(400, 'action must be one of: approve, request_changes, reject');
+      if (next !== 'APPROVED' && !note) throw new HttpError(400, 'Add a note so the contributor knows what to change');
+      const dataStatus = req.body?.dataStatus ? str(req.body.dataStatus, 'dataStatus') : item.dataStatus;
+      if (!(DATA_STATUSES as readonly string[]).includes(dataStatus)) throw new HttpError(400, 'Invalid dataStatus');
+      const provenance = { ...item.provenance, reviewedBy: reviewer, reviewedAt: new Date().toISOString(), reviewDecision: next };
+      db.prepare(
+        `UPDATE archive_items SET review_status = ?, review_note = ?, data_status = ?, provenance = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id = ?`
+      ).run(next, note || null, dataStatus, JSON.stringify(provenance), item.id);
+      res.json(getItem(item.id));
+    })
+  );
+
   // ---- outreach studio: draft -> claim check -> human review -> publish -------------
   const postRow = (id: unknown) => {
     const p = db.prepare('SELECT * FROM outreach_posts WHERE id = ?').get(id as any) as any;
     return p ? { ...p, claim_check: JSON.parse(p.claim_check || '{}') } : null;
-  };
-  const checkAgainst = (itemId: string, content: string) => {
-    const item = getItem(itemId);
-    return item ? verifyClaims(content, [toSource(item, 0)]) : null;
   };
 
   admin.post(
@@ -743,31 +708,8 @@ export function createApiRouter() {
       if (!item) throw new HttpError(404, 'Record not found');
       const channel = str(req.body?.channel, 'channel', { required: true }) as Channel;
       if (!CHANNELS.includes(channel)) throw new HttpError(400, `channel must be one of: ${CHANNELS.join(', ')}`);
-      const wantAi = req.body?.mode !== 'template';
-      let content = '';
-      let provider = 'template';
-      let dataStatus = 'TEMPLATE';
-      if (wantAi) {
-        const { gen } = await draftOutreachWithLlm(item, channel);
-        if (gen) {
-          content = gen.text.replace(/\[S1\]/g, '').replace(/[ \t]+\n/g, '\n').trim();
-          provider = `${gen.provider}:${gen.model}`;
-          dataStatus = 'AI_GENERATED';
-        }
-      }
-      if (!content) {
-        const link = `${publicBase(req)}/?record=${encodeURIComponent(item.id)}`;
-        const t = generateContent(item, link, [channel])[0];
-        content = [t.title, t.text].filter(Boolean).join('\n\n');
-      }
-      const check = checkAgainst(item.id, content);
-      const { lastInsertRowid } = db
-        .prepare(
-          `INSERT INTO outreach_posts (item_id, channel, content, status, data_status, review_status, provider, claim_check)
-           VALUES (?, ?, ?, 'DRAFT', ?, 'PENDING_REVIEW', ?, ?)`
-        )
-        .run(item.id, channel, content, dataStatus, provider, JSON.stringify(check ?? {}));
-      res.status(201).json({ ...postRow(lastInsertRowid), aiRequested: wantAi, aiUsed: dataStatus === 'AI_GENERATED' });
+      const by = req.user && req.user.id > 0 ? req.user.id : null;
+      res.status(201).json(await createDraft(db, item, channel, req.body?.mode !== 'template', publicBase(req), by));
     })
   );
 
@@ -800,8 +742,11 @@ export function createApiRouter() {
     }
     const rows = db
       .prepare(
-        `SELECT p.*, a.title AS item_title, a.data_status AS item_data_status FROM outreach_posts p
-         JOIN archive_items a ON a.id = p.item_id ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY p.id DESC`
+        `SELECT p.*, a.title AS item_title, a.data_status AS item_data_status, a.review_status AS item_review_status,
+                u.name AS author_name, u.institution AS author_institution
+         FROM outreach_posts p JOIN archive_items a ON a.id = p.item_id
+         LEFT JOIN users u ON u.id = COALESCE(p.created_by, a.owner_id)
+         ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY p.id DESC`
       )
       .all(...params) as any[];
     res.json(rows.map((p) => ({ ...p, claim_check: JSON.parse(p.claim_check || '{}') })));
@@ -821,7 +766,8 @@ export function createApiRouter() {
       if (!post) throw new HttpError(404, 'Post not found');
       const b = req.body ?? {};
       const action = str(b.action, 'action', { max: 30 }) || (b.status ? 'status' : b.content !== undefined ? 'edit' : '');
-      const reviewer = str(b.reviewer, 'reviewer', { max: 80 });
+      // Signed-in reviewers sign with their account name; the shared admin token must type one.
+      const reviewer = str(b.reviewer, 'reviewer', { max: 80 }) || (req.user && req.user.id > 0 ? req.user.name : '');
       const note = str(b.note, 'note', { max: 1000 });
       const set = (fields: Record<string, unknown>) => {
         const keys = Object.keys(fields);
@@ -844,7 +790,8 @@ export function createApiRouter() {
         set({ review_status: action === 'reject' ? 'REJECTED' : 'CHANGES_REQUESTED', status: action === 'reject' ? 'ARCHIVED' : 'DRAFT', reviewer, review_note: note || null, reviewed_at: now });
       } else if (action === 'publish' || (action === 'status' && b.status === 'PUBLISHED')) {
         if (post.review_status !== 'APPROVED') throw new HttpError(409, 'Only human-approved posts can be published');
-        set({ status: 'PUBLISHED' });
+        if (getItem(post.item_id)?.reviewStatus !== 'APPROVED') throw new HttpError(409, 'Approve the source record before publishing content about it');
+        set({ status: 'PUBLISHED', published_at: now });
       } else if (action === 'status') {
         const status = str(b.status, 'status');
         if (!['DRAFT', 'APPROVED', 'ARCHIVED'].includes(status)) throw new HttpError(400, 'Invalid status');

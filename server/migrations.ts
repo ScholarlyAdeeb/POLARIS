@@ -6,7 +6,7 @@ import type { DatabaseSync } from 'node:sqlite';
  * archive rows are never dropped: new columns get defaults and are back-filled.
  */
 
-export const DATA_STATUSES = ['OFFICIAL', 'VERIFIED', 'SAMPLE', 'SYNTHETIC', 'AI_GENERATED', 'UNVERIFIED'] as const;
+export const DATA_STATUSES = ['OFFICIAL', 'VERIFIED', 'EXTERNAL', 'SAMPLE', 'SYNTHETIC', 'AI_GENERATED', 'UNVERIFIED'] as const;
 export type DataStatus = (typeof DATA_STATUSES)[number];
 
 export const REVIEW_STATUSES = ['PENDING_REVIEW', 'APPROVED', 'CHANGES_REQUESTED', 'REJECTED'] as const;
@@ -107,6 +107,41 @@ const MIGRATIONS: Migration[] = [
           citations TEXT NOT NULL,
           verification TEXT NOT NULL,
           created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+        );
+      `);
+    },
+  },
+  {
+    version: 5,
+    name: 'contributors: users, sessions, record ownership, usage counters',
+    up: (db) => {
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          email TEXT NOT NULL UNIQUE COLLATE NOCASE,
+          name TEXT NOT NULL,
+          institution TEXT NOT NULL DEFAULT '',
+          role TEXT NOT NULL DEFAULT 'contributor',
+          password_hash TEXT NOT NULL,
+          created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+        );
+        CREATE TABLE IF NOT EXISTS sessions (
+          token_hash TEXT PRIMARY KEY,
+          user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          expires_at TEXT NOT NULL
+        );
+        ALTER TABLE archive_items ADD COLUMN owner_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
+        ALTER TABLE archive_items ADD COLUMN review_note TEXT;
+        CREATE INDEX IF NOT EXISTS idx_archive_owner ON archive_items(owner_id);
+        CREATE INDEX IF NOT EXISTS idx_archive_review ON archive_items(review_status);
+        ALTER TABLE outreach_posts ADD COLUMN created_by INTEGER REFERENCES users(id) ON DELETE SET NULL;
+        ALTER TABLE outreach_posts ADD COLUMN published_at TEXT;
+        CREATE TABLE IF NOT EXISTS usage_counts (
+          day TEXT NOT NULL,
+          kind TEXT NOT NULL,
+          key TEXT NOT NULL,
+          n INTEGER NOT NULL DEFAULT 0,
+          PRIMARY KEY (day, kind, key)
         );
       `);
     },

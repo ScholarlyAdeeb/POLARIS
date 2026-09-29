@@ -60,7 +60,8 @@ export function ftsQuery(q: string, mode: 'AND' | 'OR'): string | null {
 }
 
 function filterSql(f: SearchFilters): { sql: string; params: any[] } {
-  const where: string[] = [];
+  // Only reviewer-approved records are searchable (contributor uploads wait for review).
+  const where: string[] = ["a.review_status = 'APPROVED'"];
   const params: any[] = [];
   if (f.types?.length) {
     where.push(`a.type IN (${f.types.map(() => '?').join(',')})`);
@@ -190,16 +191,16 @@ export async function hybridSearch(db: DatabaseSync, q: string, f: SearchFilters
 export function facets(db: DatabaseSync) {
   const col = (sql: string) => (db.prepare(sql).all() as any[]).map((r) => Object.values(r)[0]);
   const tagCounts = new Map<string, number>();
-  for (const r of db.prepare('SELECT tags FROM archive_items').all() as any[]) {
+  for (const r of db.prepare(`SELECT tags FROM archive_items WHERE review_status = 'APPROVED'`).all() as any[]) {
     for (const t of String(r.tags || '').split(',').map((x) => x.trim().toLowerCase()).filter((x) => x && x.length < 40)) {
       tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
     }
   }
-  const years = db.prepare('SELECT MIN(year) AS min, MAX(year) AS max FROM archive_items WHERE year IS NOT NULL').get() as any;
+  const years = db.prepare(`SELECT MIN(year) AS min, MAX(year) AS max FROM archive_items WHERE year IS NOT NULL AND review_status = 'APPROVED'`).get() as any;
   return {
-    domains: col(`SELECT DISTINCT domain FROM archive_items WHERE domain <> '' ORDER BY domain`),
-    types: col('SELECT DISTINCT type FROM archive_items ORDER BY type'),
-    dataStatuses: col('SELECT DISTINCT data_status FROM archive_items ORDER BY data_status'),
+    domains: col(`SELECT DISTINCT domain FROM archive_items WHERE domain <> '' AND review_status = 'APPROVED' ORDER BY domain`),
+    types: col(`SELECT DISTINCT type FROM archive_items WHERE review_status = 'APPROVED' ORDER BY type`),
+    dataStatuses: col(`SELECT DISTINCT data_status FROM archive_items WHERE review_status = 'APPROVED' ORDER BY data_status`),
     stations: (db.prepare('SELECT data FROM stations ORDER BY sort').all() as any[]).map((r) => {
       const s = JSON.parse(r.data);
       return { id: s.id, name: s.name };
