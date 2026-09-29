@@ -135,7 +135,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white dark:bg-slate-800 shadow-[-3px_-3px_8px_rgba(255,255,255,0.9),3px_3px_8px_rgba(148,163,184,0.18)]">
               <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-ping"></span>
               <span className="font-['Space_Grotesk'] text-[11px] font-bold text-[#1c2541] dark:text-slate-200 tracking-wider">
-                NCPOR OFFICIAL SCIENTIFIC KNOWLEDGE REPOSITORY • MoES GOVT OF INDIA
+                SIH 2026 PROTOTYPE • BUILT FOR NCPOR, MoES
               </span>
             </div>
 

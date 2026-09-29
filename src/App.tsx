@@ -100,6 +100,18 @@ export default function App() {
       .catch(() => setActiveRecordId(id)); // RecordModal shows the error state
   };
 
+  // Ctrl/Cmd+K toggles the command palette from anywhere
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setCommandPaletteOpen((open) => !open);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   // Deep links from generated outreach posts: /?record=<id>
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get('record');

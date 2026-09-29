@@ -58,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Brand Lockup */}
           <div 
             onClick={() => setActiveTab('explore')}
-            className="flex items-center gap-3 cursor-pointer group select-none shrink-0"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer group select-none min-w-0"
           >
             <img 
               alt="POLARIS Emblem" 
@@ -70,20 +70,29 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="font-['Space_Grotesk'] text-lg md:text-xl tracking-tight text-[#0b1c30] dark:text-white font-bold leading-none">
                   POLARIS
                 </span>
-                <span className="font-['Space_Grotesk'] text-[10px] px-2 py-0.5 rounded-full bg-[#e5eeff] dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] font-bold tracking-wider border border-[#b3ebff]/50 dark:border-slate-700">
-                  GOVT OF INDIA
+                <span className="hidden sm:inline font-['Space_Grotesk'] text-[10px] px-2 py-0.5 rounded-full bg-[#e5eeff] dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] font-bold tracking-wider border border-[#b3ebff]/50 dark:border-slate-700">
+                  SIH 2026 PROTOTYPE
                 </span>
               </div>
               <span className="font-['JetBrains_Mono'] text-[11px] text-[#3d494d] dark:text-slate-400 truncate max-w-xs md:max-w-xl hidden sm:inline mt-0.5">
                 {language === 'EN' 
-                  ? 'Indian Polar Science Knowledge Platform | Ministry of Earth Sciences (MoES / NCPOR)'
-                  : 'भारतीय ध्रुवीय विज्ञान ज्ञान मंच | पृथ्वी विज्ञान मंत्रालय (एनसीपीओआर)'}
+                  ? 'Indian Polar Science Knowledge Platform | Built for MoES / NCPOR'
+                  : 'भारतीय ध्रुवीय विज्ञान ज्ञान मंच | एमओईएस / एनसीपीओआर के लिए निर्मित'}
               </span>
             </div>
           </div>
 
           {/* Search & Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Search button for screens without the search bar */}
+            <button
+              onClick={onOpenCommandPalette}
+              className="lg:hidden w-8 h-8 rounded-lg flex items-center justify-center bg-[#eff4ff] dark:bg-slate-800 text-[#3d494d] dark:text-slate-300 hover:text-black"
+              title="Search"
+              aria-label="Search"
+            >
+              <span className="material-symbols-outlined text-[18px]">search</span>
+            </button>
             {/* Quick Search trigger */}
             <div 
               onClick={onOpenCommandPalette}
@@ -100,7 +109,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             {/* Quick action buttons */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               {/* Language Switcher */}
               <div className="flex items-center rounded-lg bg-[#eff4ff] dark:bg-slate-800 p-0.5 text-xs font-['JetBrains_Mono']">
                 <button 
@@ -139,8 +148,8 @@ export const Header: React.FC<HeaderProps> = ({
 
               {/* User Avatar */}
               <div 
-                onClick={() => alert('NCPOR Polar Credentials Node: Validated Guest Researcher Session.')}
-                className="w-8 h-8 rounded-full bg-[#00677d] text-white flex items-center justify-center shadow-[-2px_-2px_6px_rgba(255,255,255,0.9),2px_2px_6px_rgba(148,163,184,0.25)] cursor-pointer hover:scale-105 transition-transform"
+                onClick={() => alert('Guest session (demo). Sign-in is not part of this prototype.')}
+                className="w-8 h-8 rounded-full bg-[#00677d] text-white hidden min-[380px]:flex items-center justify-center shadow-[-2px_-2px_6px_rgba(255,255,255,0.9),2px_2px_6px_rgba(148,163,184,0.25)] cursor-pointer hover:scale-105 transition-transform"
                 title="Polar Researcher Account"
               >
                 <span className="material-symbols-outlined text-[18px]">person</span>
