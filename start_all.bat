@@ -3,13 +3,17 @@ setlocal EnableExtensions
 title POLARIS
 
 rem ---------------------------------------------------------------------------
-rem  POLARIS launcher: pulls the latest code from GitHub, installs dependencies
-rem  and starts the backend (Express API + SQLite) and the frontend (Vite/React).
-rem  Both run in ONE Node process on ONE port (default http://localhost:3000).
+rem  POLARIS launcher. Brings up everything:
+rem    - web app: backend (Express API + SQLite) and frontend (Vite/React), one port
+rem    - local AI: Ollama model for the assistant and outreach drafts (if installed)
+rem    - ML embedding service (ml\serve.ps1) + automatic search-embedding rebuild
+rem  Large downloads (Ollama model, CUDA PyTorch) are only started after you say Y.
 rem
 rem    start_all.bat           dev mode (hot reload)
 rem    start_all.bat prod      production build, then serve it
 rem    start_all.bat nopull    skip the GitHub update
+rem  Optional env vars: POLARIS_NO_PROMPT=1 (answer No to downloads), POLARIS_NO_BROWSER=1,
+rem                     POLARIS_ML_BACKEND=st|hash|off (hash = no-PyTorch wiring test)
 rem ---------------------------------------------------------------------------
 
 rem git pull may rewrite this very file while cmd is reading it, so run from a temp copy.
@@ -87,31 +91,109 @@ if not exist ".env" if exist ".env.example" (
     copy /y ".env.example" ".env" >nul
     echo [ok] Created .env from .env.example
 )
+powershell -NoProfile -ExecutionPolicy Bypass -File "%CD%\scripts\ensure-token.ps1"
 set "PORT=3000"
-for /f "usebackq tokens=1,* delims==" %%a in (".env") do if /i "%%a"=="PORT" if not "%%b"=="" set "PORT=%%b"
+set "ADMIN_TOKEN="
+set "GEMINI_API_KEY="
+set "OLLAMA_MODEL=llama3.1:8b"
+set "ML_URL=http://127.0.0.1:8765"
+for /f "usebackq tokens=1,* delims==" %%a in (".env") do (
+    if /i "%%a"=="PORT" if not "%%b"=="" set "PORT=%%b"
+    if /i "%%a"=="ADMIN_TOKEN" set "ADMIN_TOKEN=%%b"
+    if /i "%%a"=="GEMINI_API_KEY" set "GEMINI_API_KEY=%%b"
+    if /i "%%a"=="OLLAMA_MODEL" if not "%%b"=="" set "OLLAMA_MODEL=%%b"
+    if /i "%%a"=="ML_SERVICE_URL" if not "%%b"=="" set "ML_URL=%%b"
+)
 
-rem ---- 5. Start ----------------------------------------------------------------
-rem Open the browser once /api/health answers (backend + frontend are then both up).
-if not defined POLARIS_NO_BROWSER start "" /b powershell -NoProfile -WindowStyle Hidden -Command ^
-  "for($i=0;$i -lt 90;$i++){try{Invoke-WebRequest -UseBasicParsing -TimeoutSec 2 http://localhost:%PORT%/api/health|Out-Null;Start-Process http://localhost:%PORT%;break}catch{Start-Sleep 1}}"
+rem ---- 5. AI generator: Gemini key, else local Ollama, else offline mode -------
+set "AI_STATE=offline extractive mode - answers are quoted from archive records"
+if defined GEMINI_API_KEY (
+    set "AI_STATE=Gemini API key found"
+    goto :ai_done
+)
+where ollama >nul 2>&1
+if errorlevel 1 (
+    echo [--] Local AI: Ollama not installed. The assistant uses offline mode. Get it from https://ollama.com
+    goto :ai_done
+)
+rem "ollama list" also starts the Ollama server if it is not running
+ollama list > "%TEMP%\polaris_ollama.txt" 2>nul
+findstr /b /i /c:"%OLLAMA_MODEL%" "%TEMP%\polaris_ollama.txt" >nul
+if not errorlevel 1 (
+    set "AI_STATE=Ollama %OLLAMA_MODEL% ready"
+    goto :ai_done
+)
+echo [..] Ollama is installed but the model %OLLAMA_MODEL% is not downloaded - about 5 GB.
+call :ask "     Download it now in a separate window"
+if errorlevel 1 (
+    echo [--] Skipped. The assistant uses offline mode until you run: ollama pull %OLLAMA_MODEL%
+    goto :ai_done
+)
+start "POLARIS - downloading %OLLAMA_MODEL%" cmd /c "ollama pull %OLLAMA_MODEL% && echo. && echo Done. POLARIS switches to Ollama automatically within 30 seconds. && pause"
+set "AI_STATE=Ollama %OLLAMA_MODEL% downloading - switches on automatically when done"
+:ai_done
+echo [ok] Assistant: %AI_STATE%
+
+rem ---- 6. ML embedding service (semantic half of hybrid search) ----------------
+set "ML_STARTED="
+set "ML_BACKEND=st"
+if defined POLARIS_ML_BACKEND set "ML_BACKEND=%POLARIS_ML_BACKEND%"
+if /i "%ML_BACKEND%"=="off" (
+    echo [--] Semantic search: turned off ^(POLARIS_ML_BACKEND=off^). Search uses BM25 keywords.
+    goto :ml_done
+)
+powershell -NoProfile -Command "try{Invoke-WebRequest -UseBasicParsing -TimeoutSec 2 '%ML_URL%/health'|Out-Null;exit 0}catch{exit 1}"
+if not errorlevel 1 (
+    echo [ok] Semantic search: ML service already running at %ML_URL%
+    set "ML_STARTED=1"
+    goto :ml_done
+)
+if /i "%ML_BACKEND%"=="hash" goto :ml_start
+if exist "ml\.venv\.polaris-installed" goto :ml_start
+echo [..] Semantic search needs a one-time setup: CUDA PyTorch + embedding model, about 3 GB.
+call :ask "     Set it up now in a separate window"
+if errorlevel 1 (
+    echo [--] Skipped. Search uses BM25 keywords until you run start_all.bat again and answer Y.
+    goto :ml_done
+)
+:ml_start
+start "POLARIS - ML embedding service" /min powershell -NoExit -NoProfile -ExecutionPolicy Bypass -File "%CD%\ml\serve.ps1" -Backend %ML_BACKEND%
+set "ML_STARTED=1"
+echo [ok] Semantic search: ML service starting in its own window; embeddings rebuild automatically when it is ready.
+:ml_done
+
+rem ---- 7. Start -----------------------------------------------------------------
+set "HELPER_FLAGS="
+if defined ML_STARTED set "HELPER_FLAGS=-WaitForMl"
+if defined POLARIS_NO_BROWSER set "HELPER_FLAGS=%HELPER_FLAGS% -NoBrowser"
+start "" /b powershell -NoProfile -ExecutionPolicy Bypass -File "%CD%\scripts\start-helper.ps1" -Port %PORT% -Token "%ADMIN_TOKEN%" -MlUrl "%ML_URL%" %HELPER_FLAGS%
+
+echo.
+echo  POLARIS  http://localhost:%PORT%
+echo    Explore, map, stations, knowledge graph, assistant: open to everyone
+echo    Outreach studio and Admin: sign in with ADMIN_TOKEN = %ADMIN_TOKEN%
+echo    Press Ctrl+C to stop the web app. Close the "POLARIS - ..." windows to stop the extras.
+echo.
 
 if /i "%MODE%"=="prod" (
     echo [..] Building the frontend for production...
     call npm run build
     if errorlevel 1 (echo [x] Build failed. & goto :fail)
     set "NODE_ENV=production"
-    echo.
-    echo [ok] Starting POLARIS ^(production^) on http://localhost:%PORT%   -  Ctrl+C to stop
-    echo.
     call npm start
 ) else (
-    echo.
-    echo [ok] Starting POLARIS ^(backend API + frontend^) on http://localhost:%PORT%   -  Ctrl+C to stop
-    echo      First start creates and seeds data\polaris.db. The admin token is printed below.
-    echo.
     call npm run dev
 )
 exit /b %errorlevel%
+
+rem ---- helpers --------------------------------------------------------------------
+rem :ask "question"  ->  errorlevel 0 = yes, 1 = no. Defaults to No after 20 s or without a console.
+:ask
+if defined POLARIS_NO_PROMPT exit /b 1
+choice /c YN /t 20 /d N /m "%~1"
+if errorlevel 255 exit /b 1
+if errorlevel 2 exit /b 1
+exit /b 0
 
 :fail
 echo.

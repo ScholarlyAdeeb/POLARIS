@@ -10,7 +10,7 @@ export default defineConfig(() => {
     build: { chunkSizeWarningLimit: 1000 },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(import.meta.dirname, '.'),
       },
     },
     server: {
