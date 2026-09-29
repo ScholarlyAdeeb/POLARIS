@@ -6,5 +6,20 @@ coverage/
 *.log
 .env*
 !.env.example
-data/
-uploads/
+/data/
+/uploads/
+
+# ML pipeline artifacts (never commit weights, data or venvs)
+ml/.venv/
+ml/data/
+ml/checkpoints/
+ml/runs/
+*.pt
+*.pth
+*.safetensors
+*.ckpt
+*.onnx
+ml/**/*.bin
+__pycache__/
+/data/
+/uploads/

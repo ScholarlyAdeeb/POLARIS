@@ -708,8 +708,8 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                 {/* Launch 3D Digital Twin Button (Navigates to Bharati Screen 1) */}
                 <button
                   onClick={() => {
-                    onNavigate('stations');
                     onSelectStation(activeStation.id);
+                    onNavigate('stations');
                   }}
                   className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#00b4d8] text-white font-['Space_Grotesk'] text-sm font-bold hover:bg-[#0077b6] transition-all transform active:scale-[0.98]"
                 >

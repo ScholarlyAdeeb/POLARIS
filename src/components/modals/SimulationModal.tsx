@@ -281,7 +281,7 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({ mission, onClo
                   <span className="text-[10px] text-slate-400 block font-bold">PALEO-CLIMATIC EPOCH</span>
                   <span className="text-base font-bold text-[#0b1c30] dark:text-white">{climateEpoch}</span>
                   <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold block">
-                    ✓ Validated by NCPOR Ice Core Vault
+                    Sample classroom data (illustrative)
                   </span>
                 </div>
               </div>

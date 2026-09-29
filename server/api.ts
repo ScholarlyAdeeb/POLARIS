@@ -6,6 +6,11 @@ import type { ScientificPaper, StationData, SimulationMission, HotspotInfo, Expe
 import { getDb, getItem, insertItem, rowToItem, ARCHIVE_TYPES, type ArchiveItem, type ArchiveType } from './db.ts';
 import { bibtex, datasetDownload, datasetHeader, metadataRecord, proposalTemplate, synopticCsv } from './files.ts';
 import { CHANNELS, generateContent, type Channel } from './outreach.ts';
+import { DATA_STATUSES, REVIEW_STATUSES } from './migrations.ts';
+import { facets, ftsQuery, hybridSearch, parseQuery, type SearchFilters } from './search.ts';
+import { answerQuestion, draftOutreachWithLlm, toSource, verifyClaims } from './rag.ts';
+import { providerStatus } from './llm.ts';
+import { embedTexts, mlStatus } from './ml.ts';
 
 export const UPLOAD_DIR = path.resolve(process.cwd(), process.env.UPLOAD_DIR || 'uploads');
 
@@ -151,28 +156,32 @@ function findDataset(ref: string): ArchiveItem | null {
   return row ? rowToItem(row) : null;
 }
 
-const STOPWORDS = new Set(
-  ('a an and are as at be by conducted did do does done for from how in into is it of on or show ' +
-    'that the their there these this to was were what when where which who why with me find about any all')
-    .split(' ')
-);
 
-/** Split a natural-language query into search terms and year filters ("... at Maitri in 2023?"). */
-function parseQuery(q: string): { terms: string[]; years: number[] } {
-  const terms: string[] = [];
-  const years: number[] = [];
-  for (const t of q.toLowerCase().split(/[^\p{L}\p{N}]+/u)) {
-    if (/^(19[5-9]\d|20\d\d)$/.test(t)) years.push(Number(t));
-    else if (t.length >= 2 && !STOPWORDS.has(t)) terms.push(t);
-  }
-  return { terms: terms.slice(0, 12), years: [...new Set(years)] };
+function listParam(v: unknown): string[] {
+  return String(v ?? '')
+    .split(',')
+    .map((t) => t.trim())
+    .filter(Boolean);
 }
 
-/** Turn search terms into a safe FTS5 query: every token quoted, prefix-matched. */
-function ftsQuery(q: string, mode: 'AND' | 'OR'): string | null {
-  const { terms } = parseQuery(q);
-  if (!terms.length) return null;
-  return terms.map((t) => `"${t}"*`).join(mode === 'AND' ? ' ' : ' OR ');
+function readFilters(q: Record<string, any>): SearchFilters {
+  const types = listParam(q.type);
+  for (const t of types) if (!ARCHIVE_TYPES.includes(t as ArchiveType)) throw new HttpError(400, `Unknown type: ${t}`);
+  const dataStatus = listParam(q.status);
+  for (const t of dataStatus) if (!(DATA_STATUSES as readonly string[]).includes(t)) throw new HttpError(400, `Unknown data status: ${t}`);
+  return {
+    types,
+    dataStatus,
+    domain: q.domain ? String(q.domain) : undefined,
+    station: q.station ? String(q.station) : undefined,
+    yearFrom: intOrNull(q.yearFrom, 'yearFrom'),
+    yearTo: intOrNull(q.yearTo, 'yearTo'),
+    theme: q.theme ? String(q.theme).slice(0, 60) : undefined,
+  };
+}
+
+function stationRow(id: string) {
+  return getDb().prepare('SELECT data, data_status, readings_status FROM stations WHERE id = ?').get(id) as any;
 }
 
 // --- router -------------------------------------------------------------------
@@ -224,14 +233,40 @@ export function createApiRouter() {
   api.get(
     '/stations/:id',
     wrap((req, res) => {
-      const row = db.prepare('SELECT data FROM stations WHERE id = ?').get(req.params.id) as any;
+      const row = stationRow(req.params.id);
       if (!row) throw new HttpError(404, 'Station not found');
       const counts = Object.fromEntries(
         (db.prepare('SELECT type, COUNT(*) AS n FROM archive_items WHERE station_id = ? GROUP BY type').all(req.params.id) as any[]).map(
           (r) => [r.type, r.n]
         )
       );
-      res.json({ ...JSON.parse(row.data), archiveCounts: counts });
+      res.json({ ...JSON.parse(row.data), archiveCounts: counts, dataStatus: row.data_status, readingsStatus: row.readings_status });
+    })
+  );
+
+  // Hotspots for the station's 3D scene: curated instrument hotspots (hotspots table)
+  // plus one hotspot per dataset/report/publication recorded at the station.
+  api.get(
+    '/stations/:id/hotspots',
+    wrap((req, res) => {
+      if (!stationRow(req.params.id)) throw new HttpError(404, 'Station not found');
+      const out: any[] = [];
+      const linked = new Set<string>();
+      for (const r of db.prepare('SELECT id, data, data_status FROM hotspots WHERE station_id = ? ORDER BY id').all(req.params.id) as any[]) {
+        const info: HotspotInfo = JSON.parse(r.data);
+        const itemId = info.datasetTitle.split(':')[0].trim();
+        const item = getItem(itemId);
+        if (item) linked.add(item.id);
+        out.push({ key: `hs-${r.id}`, kind: 'instrument', label: info.id, title: info.title, dataStatus: r.data_status, itemId: item?.id ?? null, itemType: item?.type ?? null, info });
+      }
+      const recs = db
+        .prepare(`SELECT * FROM archive_items WHERE station_id = ? AND type IN ('dataset','report','publication') ORDER BY year DESC, rowid`)
+        .all(req.params.id) as any[];
+      for (const r of recs.map(rowToItem)) {
+        if (linked.has(r.id)) continue;
+        out.push({ key: `rec-${r.id}`, kind: 'record', label: r.type, title: r.title, dataStatus: r.dataStatus, itemId: r.id, itemType: r.type, summary: r.summary });
+      }
+      res.json({ stationId: req.params.id, hotspots: out });
     })
   );
 
@@ -249,29 +284,41 @@ export function createApiRouter() {
   api.get(
     '/archive',
     wrap((req, res) => {
+      const f = readFilters(req.query);
       const where: string[] = [];
       const params: any[] = [];
-      const types = String(req.query.type || '')
-        .split(',')
-        .map((t) => t.trim())
-        .filter(Boolean);
-      for (const t of types) if (!ARCHIVE_TYPES.includes(t as ArchiveType)) throw new HttpError(400, `Unknown type: ${t}`);
-      if (types.length) {
-        where.push(`a.type IN (${types.map(() => '?').join(',')})`);
-        params.push(...types);
+      if (f.types?.length) {
+        where.push(`a.type IN (${f.types.map(() => '?').join(',')})`);
+        params.push(...f.types);
       }
-      if (req.query.domain) {
+      if (f.dataStatus?.length) {
+        where.push(`a.data_status IN (${f.dataStatus.map(() => '?').join(',')})`);
+        params.push(...f.dataStatus);
+      }
+      if (f.domain) {
         where.push('a.domain = ?');
-        params.push(String(req.query.domain));
+        params.push(f.domain);
       }
-      if (req.query.station) {
+      if (f.station) {
         where.push('a.station_id = ?');
-        params.push(String(req.query.station));
+        params.push(f.station);
       }
       const year = intOrNull(req.query.year, 'year');
       if (year !== null) {
         where.push('a.year = ?');
         params.push(year);
+      }
+      if (f.yearFrom != null) {
+        where.push('a.year >= ?');
+        params.push(f.yearFrom);
+      }
+      if (f.yearTo != null) {
+        where.push('a.year <= ?');
+        params.push(f.yearTo);
+      }
+      if (f.theme) {
+        where.push("(',' || lower(a.tags) || ',') LIKE ?");
+        params.push(`%${f.theme.toLowerCase()}%`);
       }
       let join = '';
       const q = String(req.query.q || '').trim();
@@ -350,52 +397,77 @@ export function createApiRouter() {
   // --- search -----------------------------------------------------------------
   api.get(
     '/search',
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       const q = str(req.query.q, 'q', { max: 200 });
-      if (!q) return res.json({ query: q, results: [], stations: [], total: 0 });
+      const filters = readFilters(req.query);
+      if (!q) return res.json({ query: q, mode: 'lexical', semanticNote: null, matchedAllTerms: true, results: [], stations: [], total: 0 });
       const limit = Math.min(Math.max(intOrNull(req.query.limit, 'limit') ?? 20, 1), 50);
-      const { terms, years } = parseQuery(q);
-      const yearSql = years.length ? `AND a.year IN (${years.map(() => '?').join(',')})` : '';
-      const run = (mode: 'AND' | 'OR', withYears: boolean) => {
-        const fts = ftsQuery(q, mode);
-        if (!fts) {
-          // Year-only query ("2023"): list that year's records
-          if (!withYears || !years.length) return [];
-          return db
-            .prepare(`SELECT a.*, a.summary AS snippet FROM archive_items a WHERE 1=1 ${yearSql} ORDER BY a.rowid DESC LIMIT ?`)
-            .all(...years, limit) as any[];
-        }
-        return db
-          .prepare(
-            `SELECT a.*, snippet(archive_fts, -1, '[', ']', '…', 18) AS snippet,
-                    bm25(archive_fts, 8.0, 3.0, 1.0, 4.0, 1.0) AS score
-             FROM archive_fts JOIN archive_items a ON a.rowid = archive_fts.rowid
-             WHERE archive_fts MATCH ? ${withYears ? yearSql : ''} ORDER BY score LIMIT ?`
-          )
-          .all(fts, ...(withYears ? years : []), limit) as any[];
-      };
-      // Strictest first: all terms + year, then all terms, then any term.
-      let rows = run('AND', true);
-      let matchedAll = true;
-      if (!rows.length && years.length && terms.length) rows = run('AND', false);
-      if (!rows.length && terms.length > 1) {
-        rows = run('OR', true);
-        if (!rows.length && years.length) rows = run('OR', false);
-        matchedAll = false;
-      }
+      const result = await hybridSearch(db, q, filters, limit);
+      const { terms } = parseQuery(q);
       const generic = new Set(['station', 'stations', 'research', 'base', 'observatory', 'polar']);
       const stations = listStations().filter((s) =>
-        terms.some(
-          (w) => w.length >= 4 && !generic.has(w) && [s.id, s.name, s.locationName, s.domain].some((f) => f.toLowerCase().includes(w))
-        )
+        terms.some((w) => w.length >= 4 && !generic.has(w) && [s.id, s.name, s.locationName, s.domain].some((v) => v.toLowerCase().includes(w)))
       );
       res.json({
-        query: q,
-        matchedAllTerms: matchedAll,
-        total: rows.length,
-        results: rows.map((r) => ({ ...rowToItem(r), snippet: r.snippet })),
+        ...result,
         stations: stations.map((s) => ({ id: s.id, name: s.name, domain: s.domain, locationName: s.locationName })),
       });
+    })
+  );
+
+  api.get('/facets', (_req, res) => res.json(facets(db)));
+
+  // --- knowledge graph: nodes and edges straight from the database -------------------
+  api.get(
+    '/graph',
+    wrap((req, res) => {
+      const station = req.query.station ? String(req.query.station) : null;
+      const types = listParam(req.query.type);
+      for (const t of types) if (!ARCHIVE_TYPES.includes(t as ArchiveType)) throw new HttpError(400, `Unknown type: ${t}`);
+      const stations = listStations().filter((s) => !station || s.id === station);
+      let items = (db.prepare('SELECT * FROM archive_items ORDER BY year, rowid').all() as any[]).map(rowToItem);
+      const links = db.prepare('SELECT from_id, to_id, relation FROM item_links').all() as any[];
+      if (station) {
+        const seed = new Set(items.filter((i) => i.stationId === station).map((i) => i.id));
+        for (const l of links) {
+          if (seed.has(l.from_id)) seed.add(l.to_id);
+          if (seed.has(l.to_id)) seed.add(l.from_id);
+        }
+        items = items.filter((i) => seed.has(i.id));
+      }
+      if (types.length) items = items.filter((i) => types.includes(i.type));
+      const ids = new Set(items.map((i) => i.id));
+      const stationIds = new Set(stations.map((s) => s.id));
+      const nodes = [
+        ...stations.map((s) => ({ id: `station:${s.id}`, kind: 'station', label: s.name, domain: s.domain, dataStatus: stationRow(s.id)?.data_status ?? 'UNVERIFIED' })),
+        ...items.map((i) => ({ id: i.id, kind: i.type, label: i.title, year: i.year, stationId: i.stationId, dataStatus: i.dataStatus })),
+      ];
+      const edges = [
+        ...links.filter((l) => ids.has(l.from_id) && ids.has(l.to_id)).map((l) => ({ id: `${l.from_id}>${l.relation}>${l.to_id}`, source: l.from_id, target: l.to_id, relation: l.relation, origin: 'item_links' })),
+        ...items
+          .filter((i) => i.stationId && stationIds.has(i.stationId))
+          .map((i) => ({ id: `${i.id}>located_at>${i.stationId}`, source: i.id, target: `station:${i.stationId}`, relation: 'located_at', origin: 'archive_items.station_id' })),
+      ];
+      res.json({ nodes, edges });
+    })
+  );
+
+  // --- Polar AI (retrieval-augmented, claim-verified) ---------------------------------
+  api.get(
+    '/ai/status',
+    wrap(async (_req, res) => {
+      const [llm, ml] = await Promise.all([providerStatus(), mlStatus()]);
+      const { n } = db.prepare('SELECT COUNT(*) AS n FROM item_embeddings').get() as any;
+      res.json({ llm, ml, embeddings: n });
+    })
+  );
+
+  api.post(
+    '/ai/ask',
+    rateLimit(60, 10 * 60 * 1000),
+    wrap(async (req, res) => {
+      const question = str(req.body?.question, 'question', { required: true, max: 500 });
+      res.json(await answerQuestion(db, question, readFilters(req.body?.filters ?? {})));
     })
   );
 
@@ -485,6 +557,8 @@ export function createApiRouter() {
         thumbnailUrl: str(b.thumbnailUrl, 'thumbnailUrl', { max: 2000 }) || null,
         doi: str(b.doi, 'doi', { max: 200 }) || null,
         meta: b.meta ?? {},
+        ...(b.dataStatus ? { dataStatus: (DATA_STATUSES as readonly string[]).includes(b.dataStatus) ? b.dataStatus : (() => { throw new HttpError(400, 'Invalid dataStatus'); })() } : {}),
+        ...(b.provenance && typeof b.provenance === 'object' ? { provenance: b.provenance } : {}),
       });
       if (Array.isArray(b.links)) {
         const ins = db.prepare('INSERT OR IGNORE INTO item_links (from_id, to_id, relation) VALUES (?, ?, ?)');
@@ -515,6 +589,29 @@ export function createApiRouter() {
         url: ['url', (v) => str(v, 'url', { max: 2000 }) || null],
         thumbnailUrl: ['thumbnail_url', (v) => str(v, 'thumbnailUrl', { max: 2000 }) || null],
         doi: ['doi', (v) => str(v, 'doi', { max: 200 }) || null],
+        dataStatus: [
+          'data_status',
+          (v) => {
+            const st = str(v, 'dataStatus', { required: true });
+            if (!(DATA_STATUSES as readonly string[]).includes(st)) throw new HttpError(400, `dataStatus must be one of: ${DATA_STATUSES.join(', ')}`);
+            return st;
+          },
+        ],
+        reviewStatus: [
+          'review_status',
+          (v) => {
+            const st = str(v, 'reviewStatus', { required: true });
+            if (!(REVIEW_STATUSES as readonly string[]).includes(st)) throw new HttpError(400, `reviewStatus must be one of: ${REVIEW_STATUSES.join(', ')}`);
+            return st;
+          },
+        ],
+        provenance: [
+          'provenance',
+          (v) => {
+            if (typeof v !== 'object' || v === null || Array.isArray(v)) throw new HttpError(400, 'provenance must be an object');
+            return JSON.stringify({ ...item.provenance, ...v });
+          },
+        ],
         tags: [
           'tags',
           (v) => {
@@ -592,7 +689,89 @@ export function createApiRouter() {
     })
   );
 
-  // Save generated outreach copy as drafts, then move them through review.
+  admin.get(
+    '/overview',
+    wrap(async (_req, res) => {
+      const group = (sql: string) => Object.fromEntries((db.prepare(sql).all() as any[]).map((r) => [r.k, r.n]));
+      const [llm, ml] = await Promise.all([providerStatus(), mlStatus(true)]);
+      res.json({
+        archiveByStatus: group('SELECT data_status AS k, COUNT(*) AS n FROM archive_items GROUP BY data_status'),
+        outreachByReview: group('SELECT review_status AS k, COUNT(*) AS n FROM outreach_posts GROUP BY review_status'),
+        proposalsByStatus: group('SELECT status AS k, COUNT(*) AS n FROM proposals GROUP BY status'),
+        embeddings: (db.prepare('SELECT COUNT(*) AS n FROM item_embeddings').get() as any).n,
+        aiQueries: (db.prepare('SELECT COUNT(*) AS n FROM ai_queries').get() as any).n,
+        migrations: db.prepare('SELECT version, name, applied_at FROM schema_migrations ORDER BY version').all(),
+        llm,
+        ml,
+      });
+    })
+  );
+
+  admin.post(
+    '/embeddings/rebuild',
+    wrap(async (_req, res) => {
+      const items = (db.prepare('SELECT * FROM archive_items ORDER BY rowid').all() as any[]).map(rowToItem);
+      const texts = items.map((i) => [i.title, i.summary, i.tags.join(', '), i.body].filter(Boolean).join('. ').slice(0, 2000));
+      const out = await embedTexts(texts);
+      if (!out || out.vectors.length !== items.length) throw new HttpError(503, 'ML embedding service is not reachable (see ml/README.md)');
+      const up = db.prepare(
+        `INSERT INTO item_embeddings (item_id, model, dim, vector) VALUES (?, ?, ?, ?)
+         ON CONFLICT(item_id) DO UPDATE SET model = excluded.model, dim = excluded.dim, vector = excluded.vector, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now')`
+      );
+      db.exec('BEGIN');
+      items.forEach((it, i) => up.run(it.id, out.model, out.vectors[i].length, JSON.stringify(out.vectors[i])));
+      db.exec('COMMIT');
+      res.json({ embedded: items.length, model: out.model, dim: out.vectors[0]?.length ?? 0 });
+    })
+  );
+
+  // ---- outreach studio: draft -> claim check -> human review -> publish -------------
+  const postRow = (id: unknown) => {
+    const p = db.prepare('SELECT * FROM outreach_posts WHERE id = ?').get(id as any) as any;
+    return p ? { ...p, claim_check: JSON.parse(p.claim_check || '{}') } : null;
+  };
+  const checkAgainst = (itemId: string, content: string) => {
+    const item = getItem(itemId);
+    return item ? verifyClaims(content, [toSource(item, 0)]) : null;
+  };
+
+  admin.post(
+    '/outreach/draft',
+    wrap(async (req, res) => {
+      const itemId = str(req.body?.itemId, 'itemId', { required: true, max: 120 });
+      const item = getItem(itemId) ?? findDataset(itemId);
+      if (!item) throw new HttpError(404, 'Record not found');
+      const channel = str(req.body?.channel, 'channel', { required: true }) as Channel;
+      if (!CHANNELS.includes(channel)) throw new HttpError(400, `channel must be one of: ${CHANNELS.join(', ')}`);
+      const wantAi = req.body?.mode !== 'template';
+      let content = '';
+      let provider = 'template';
+      let dataStatus = 'TEMPLATE';
+      if (wantAi) {
+        const { gen } = await draftOutreachWithLlm(item, channel);
+        if (gen) {
+          content = gen.text.replace(/\[S1\]/g, '').replace(/[ \t]+\n/g, '\n').trim();
+          provider = `${gen.provider}:${gen.model}`;
+          dataStatus = 'AI_GENERATED';
+        }
+      }
+      if (!content) {
+        const link = `${publicBase(req)}/?record=${encodeURIComponent(item.id)}`;
+        const t = generateContent(item, link, [channel])[0];
+        content = [t.title, t.text].filter(Boolean).join('\n\n');
+      }
+      const check = checkAgainst(item.id, content);
+      const { lastInsertRowid } = db
+        .prepare(
+          `INSERT INTO outreach_posts (item_id, channel, content, status, data_status, review_status, provider, claim_check)
+           VALUES (?, ?, ?, 'DRAFT', ?, 'PENDING_REVIEW', ?, ?)`
+        )
+        .run(item.id, channel, content, dataStatus, provider, JSON.stringify(check ?? {}));
+      res.status(201).json({ ...postRow(lastInsertRowid), aiRequested: wantAi, aiUsed: dataStatus === 'AI_GENERATED' });
+    })
+  );
+
+  // Save hand-written/edited copy as a draft (always needs review).
   admin.post(
     '/outreach',
     wrap((req, res) => {
@@ -602,36 +781,77 @@ export function createApiRouter() {
       if (!CHANNELS.includes(channel)) throw new HttpError(400, `channel must be one of: ${CHANNELS.join(', ')}`);
       const content = str(req.body?.content, 'content', { required: true, max: 20000 });
       const { lastInsertRowid } = db
-        .prepare('INSERT INTO outreach_posts (item_id, channel, content) VALUES (?, ?, ?)')
-        .run(itemId, channel, content);
-      res.status(201).json(db.prepare('SELECT * FROM outreach_posts WHERE id = ?').get(lastInsertRowid));
+        .prepare(`INSERT INTO outreach_posts (item_id, channel, content, data_status, provider, claim_check) VALUES (?, ?, ?, 'TEMPLATE', 'template', ?)`)
+        .run(itemId, channel, content, JSON.stringify(checkAgainst(itemId, content) ?? {}));
+      res.status(201).json(postRow(lastInsertRowid));
     })
   );
 
   admin.get('/outreach', (req, res) => {
-    const status = req.query.status ? String(req.query.status) : null;
-    res.json(
-      status
-        ? db.prepare('SELECT * FROM outreach_posts WHERE status = ? ORDER BY id DESC').all(status)
-        : db.prepare('SELECT * FROM outreach_posts ORDER BY id DESC').all()
-    );
+    const where: string[] = [];
+    const params: any[] = [];
+    if (req.query.status) {
+      where.push('p.status = ?');
+      params.push(String(req.query.status));
+    }
+    if (req.query.review) {
+      where.push('p.review_status = ?');
+      params.push(String(req.query.review));
+    }
+    const rows = db
+      .prepare(
+        `SELECT p.*, a.title AS item_title, a.data_status AS item_data_status FROM outreach_posts p
+         JOIN archive_items a ON a.id = p.item_id ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY p.id DESC`
+      )
+      .all(...params) as any[];
+    res.json(rows.map((p) => ({ ...p, claim_check: JSON.parse(p.claim_check || '{}') })));
   });
 
+  /**
+   * Review actions. Rules enforced here, not just in the UI:
+   *  - editing content re-runs the claim check and sends the post back to PENDING_REVIEW;
+   *  - approval needs a named reviewer, and an explicit override note if any claim is unsupported;
+   *  - only APPROVED posts can be published. Nothing is ever auto-published.
+   */
   admin.patch(
     '/outreach/:id',
     wrap((req, res) => {
       const id = intOrNull(req.params.id, 'id');
-      const post = db.prepare('SELECT * FROM outreach_posts WHERE id = ?').get(id) as any;
+      const post = postRow(id);
       if (!post) throw new HttpError(404, 'Post not found');
-      const status = req.body?.status !== undefined ? str(req.body.status, 'status') : post.status;
-      if (!['DRAFT', 'APPROVED', 'PUBLISHED', 'ARCHIVED'].includes(status)) throw new HttpError(400, 'Invalid status');
-      const content = req.body?.content !== undefined ? str(req.body.content, 'content', { required: true, max: 20000 }) : post.content;
-      db.prepare(`UPDATE outreach_posts SET status = ?, content = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id = ?`).run(
-        status,
-        content,
-        id
-      );
-      res.json(db.prepare('SELECT * FROM outreach_posts WHERE id = ?').get(id));
+      const b = req.body ?? {};
+      const action = str(b.action, 'action', { max: 30 }) || (b.status ? 'status' : b.content !== undefined ? 'edit' : '');
+      const reviewer = str(b.reviewer, 'reviewer', { max: 80 });
+      const note = str(b.note, 'note', { max: 1000 });
+      const set = (fields: Record<string, unknown>) => {
+        const keys = Object.keys(fields);
+        db.prepare(`UPDATE outreach_posts SET ${keys.map((k) => `${k} = ?`).join(', ')}, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id = ?`).run(
+          ...keys.map((k) => fields[k] as any),
+          id
+        );
+      };
+      const now = new Date().toISOString();
+      if (action === 'edit') {
+        const content = str(b.content, 'content', { required: true, max: 20000 });
+        set({ content, claim_check: JSON.stringify(checkAgainst(post.item_id, content) ?? {}), review_status: 'PENDING_REVIEW', status: 'DRAFT' });
+      } else if (action === 'approve') {
+        if (!reviewer) throw new HttpError(400, 'reviewer is required to approve');
+        if ((post.claim_check?.unsupported ?? 0) > 0 && !note)
+          throw new HttpError(409, 'This draft has unsupported claims. Fix them, or approve with a note explaining why.');
+        set({ review_status: 'APPROVED', status: 'APPROVED', reviewer, review_note: note || null, reviewed_at: now });
+      } else if (action === 'request_changes' || action === 'reject') {
+        if (!reviewer) throw new HttpError(400, 'reviewer is required');
+        set({ review_status: action === 'reject' ? 'REJECTED' : 'CHANGES_REQUESTED', status: action === 'reject' ? 'ARCHIVED' : 'DRAFT', reviewer, review_note: note || null, reviewed_at: now });
+      } else if (action === 'publish' || (action === 'status' && b.status === 'PUBLISHED')) {
+        if (post.review_status !== 'APPROVED') throw new HttpError(409, 'Only human-approved posts can be published');
+        set({ status: 'PUBLISHED' });
+      } else if (action === 'status') {
+        const status = str(b.status, 'status');
+        if (!['DRAFT', 'APPROVED', 'ARCHIVED'].includes(status)) throw new HttpError(400, 'Invalid status');
+        if (status === 'APPROVED' && post.review_status !== 'APPROVED') throw new HttpError(409, 'Use action "approve" with a reviewer name');
+        set({ status });
+      } else throw new HttpError(400, 'action must be one of: edit, approve, request_changes, reject, publish');
+      res.json(postRow(id));
     })
   );
 

@@ -335,7 +335,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
       </section>
 
       {/* SECTION 5: POLAR ACADEMY */}
-      <section className="w-full py-10 md:py-14 bg-[#eff4ff] dark:bg-[#0c162c] transition-colors">
+      <section id="academy" className="w-full py-10 md:py-14 bg-[#eff4ff] dark:bg-[#0c162c] transition-colors">
         <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
           <SectionHeader title="Polar Academy" text="Student missions built on real polar data, from Grade 6 to undergraduate." />
 

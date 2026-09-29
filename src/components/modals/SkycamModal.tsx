@@ -47,20 +47,19 @@ export const SkycamModal: React.FC<SkycamModalProps> = ({ isOpen, onClose }) => 
         <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-black/40">
           <div className="flex items-center gap-3">
             <span className="flex h-3 w-3 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-400"></span>
             </span>
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-['Space_Grotesk'] font-bold text-base">
-                  Bharati Live Optical Telemetry Feed
+                  Bharati station camera
                 </span>
-                <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">
-                  LIVE H.265
+                <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">
+                  DEMO VISUALIZATION
                 </span>
               </div>
               <span className="font-['JetBrains_Mono'] text-xs text-slate-400">
-                Uplink: Inmarsat-GX Direct • Latency: 42ms • Prydz Bay, East Antarctica
+                Still images only · no live camera connection · Prydz Bay, East Antarctica
               </span>
             </div>
           </div>

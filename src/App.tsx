@@ -3,13 +3,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { NavTab, ScientificPaper, SimulationMission } from './types/polaris';
 import { Header } from './components/Header';
 import { ExploreView } from './components/ExploreView';
-import { BharatiStationView } from './components/BharatiStationView';
 import { PolarMapView } from './components/PolarMapView';
 import { Footer } from './components/Footer';
+import { ExplorePage } from './pages/ExplorePage';
+import { AssistantPage } from './pages/AssistantPage';
+import { ContentStudioPage } from './pages/ContentStudioPage';
+import { AdminPage } from './pages/AdminPage';
 
 // Modals
 import { SimulationModal } from './components/modals/SimulationModal';
@@ -23,6 +27,11 @@ import { MediaGalleryModal } from './components/modals/MediaGalleryModal';
 import { Toast, ToastMessage } from './components/Toast';
 import { usePolarisData } from './context/PolarisDataContext';
 import { api, type ArchiveItem } from './lib/api';
+
+// Heavy routes (three.js, React Flow) load on demand.
+const StationRoutes = lazy(() => import('./pages/StationPage').then((m) => ({ default: m.StationPage })));
+const StationsIndex = lazy(() => import('./pages/StationPage').then((m) => ({ default: m.StationsIndex })));
+const KnowledgeGraphPage = lazy(() => import('./pages/KnowledgeGraphPage'));
 
 function recordToPaper(r: ArchiveItem): ScientificPaper {
   return {
@@ -39,26 +48,13 @@ function recordToPaper(r: ArchiveItem): ScientificPaper {
   };
 }
 
-const VIEW_FOR_TAB: Record<NavTab, 'explore' | 'station' | 'map'> = {
-  explore: 'explore',
-  knowledge: 'explore',
-  learn: 'explore',
-  stations: 'station',
-  media: 'station',
-  map: 'map',
-  expeditions: 'map',
-  data: 'map',
-};
-
 export default function App() {
-  const [activeTab, setActiveTab] = useState<NavTab>('explore');
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isPolarNight, setIsPolarNight] = useState(false);
   const [language, setLanguage] = useState<'EN' | 'HI'>('EN');
-
-  // Toasts state
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  // Modals state
   const [activeSimulation, setActiveSimulation] = useState<SimulationMission | null>(null);
   const [activePaper, setActivePaper] = useState<ScientificPaper | null>(null);
   const [activeDataset, setActiveDataset] = useState<string | null>(null);
@@ -69,19 +65,58 @@ export default function App() {
   const [mediaGalleryOpen, setMediaGalleryOpen] = useState(false);
   const { papers } = usePolarisData();
 
-  // Selected station
+  // Station picked on the map; read synchronously when the map asks to open it.
   const [selectedStationId, setSelectedStationId] = useState('bharati');
+  const selectedRef = useRef(selectedStationId);
+  const selectStation = (id: string) => {
+    selectedRef.current = id;
+    setSelectedStationId(id);
+  };
 
-  // Apply polar night dark class to HTML
+  /** Legacy tab ids used inside the older views, mapped to routes. */
+  const goTab = (tab: NavTab) => {
+    const paths: Record<NavTab, string> = {
+      explore: '/',
+      expeditions: '/map',
+      stations: `/stations/${selectedRef.current}`,
+      map: '/map',
+      knowledge: '/explore',
+      data: '/explore?type=dataset',
+      media: '/explore?type=photo,video',
+      learn: '/#academy',
+    };
+    navigate(paths[tab]);
+  };
+  const openStation = (id: string) => {
+    selectStation(id);
+    navigate(`/stations/${id}`);
+  };
+
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isPolarNight);
     document.documentElement.classList.toggle('polar-night', isPolarNight);
   }, [isPolarNight]);
 
-  const openStation = (id: string) => {
-    setSelectedStationId(id);
-    setActiveTab('stations');
-  };
+  // Leaving a page closes any open viewer so it never covers the next page.
+  useEffect(() => {
+    setActiveDataset(null);
+    setActivePaper(null);
+    setActiveRecordId(null);
+    setActiveSimulation(null);
+    setMediaGalleryOpen(false);
+    setSkycamOpen(false);
+    setCommandPaletteOpen(false);
+  }, [location.pathname]);
+
+  // New page, new scroll position (hash links such as /#academy excepted).
+  useEffect(() => {
+    if (!location.hash) {
+      window.scrollTo(0, 0);
+      return;
+    }
+    const t = setTimeout(() => document.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' }), 150);
+    return () => clearTimeout(t);
+  }, [location.pathname, location.hash]);
 
   /** Open any archive record in the most specific viewer available. */
   const openArchiveRecord = (r: ArchiveItem) => {
@@ -131,16 +166,12 @@ export default function App() {
     }, 4500);
   };
 
-  const handleDismissToast = (id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
+  const viewers = { onOpenDataset: setActiveDataset, onOpenRecord: handleOpenRecord };
+  const loading = <div className="sci-page min-h-[60vh] flex items-center justify-center text-sm sci-muted">Loading…</div>;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f8f9ff] dark:bg-[#070c18] text-[#0b1c30] dark:text-[#e6f0ff] transition-colors">
-      {/* Top Header */}
       <Header
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
         isPolarNight={isPolarNight}
         setIsPolarNight={setIsPolarNight}
         language={language}
@@ -148,103 +179,72 @@ export default function App() {
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
       />
 
-      {/* Main View Area: several tabs share a view; key={activeTab} remounts it on every tab switch */}
       <main className="w-full pt-24 flex-1">
-        {VIEW_FOR_TAB[activeTab] === 'explore' && (
-          <ExploreView
-            key={activeTab}
-            onNavigate={setActiveTab}
-            onSelectStation={openStation}
-            onOpenSimulation={setActiveSimulation}
-            onOpenPaper={setActivePaper}
-            onOpenSkycam={() => setSkycamOpen(true)}
-            onOpenProposal={() => setProposalModalOpen(true)}
-            onOpenDataset={setActiveDataset}
-            onOpenRecord={handleOpenRecord}
-            onOpenMediaGallery={() => setMediaGalleryOpen(true)}
-            onShowToast={handleShowToast}
-          />
-        )}
-
-        {VIEW_FOR_TAB[activeTab] === 'station' && (
-          <BharatiStationView
-            key={activeTab}
-            onNavigate={setActiveTab}
-            onOpenSimulation={setActiveSimulation}
-            onOpenPaper={setActivePaper}
-            onOpenSkycam={() => setSkycamOpen(true)}
-            onOpenDataset={setActiveDataset}
-            onShowToast={handleShowToast}
-          />
-        )}
-
-        {VIEW_FOR_TAB[activeTab] === 'map' && (
-          <PolarMapView
-            key={activeTab}
-            onNavigate={setActiveTab}
-            onSelectStation={setSelectedStationId}
-            selectedStationId={selectedStationId}
-            onShowToast={handleShowToast}
-          />
-        )}
+        <Suspense fallback={loading}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ExploreView
+                  onNavigate={goTab}
+                  onSelectStation={openStation}
+                  onOpenSimulation={setActiveSimulation}
+                  onOpenPaper={setActivePaper}
+                  onOpenSkycam={() => setSkycamOpen(true)}
+                  onOpenProposal={() => setProposalModalOpen(true)}
+                  onOpenDataset={setActiveDataset}
+                  onOpenRecord={handleOpenRecord}
+                  onOpenMediaGallery={() => setMediaGalleryOpen(true)}
+                  onShowToast={handleShowToast}
+                />
+              }
+            />
+            <Route path="/explore" element={<ExplorePage {...viewers} />} />
+            <Route
+              path="/map"
+              element={<PolarMapView onNavigate={goTab} onSelectStation={selectStation} selectedStationId={selectedStationId} onShowToast={handleShowToast} />}
+            />
+            <Route path="/stations" element={<StationsIndex />} />
+            <Route path="/stations/:id" element={<StationRoutes {...viewers} />} />
+            <Route path="/knowledge-graph" element={<KnowledgeGraphPage {...viewers} />} />
+            <Route path="/ai" element={<AssistantPage {...viewers} />} />
+            <Route path="/content" element={<Navigate to="/content/review" replace />} />
+            <Route path="/content/review" element={<ContentStudioPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </main>
 
-      {/* Global Footer */}
-      <Footer
-        onNavigate={setActiveTab}
-        onSelectStation={openStation}
-      />
+      <Footer />
 
-      {/* Interactive Global Modals */}
-      <SimulationModal
-        mission={activeSimulation}
-        onClose={() => setActiveSimulation(null)}
-      />
-
-      <SkycamModal
-        isOpen={skycamOpen}
-        onClose={() => setSkycamOpen(false)}
-      />
-
-      <PaperModal
-        paper={activePaper}
-        onClose={() => setActivePaper(null)}
-        onOpenDataset={setActiveDataset}
-      />
-
+      <SimulationModal mission={activeSimulation} onClose={() => setActiveSimulation(null)} />
+      <SkycamModal isOpen={skycamOpen} onClose={() => setSkycamOpen(false)} />
+      <PaperModal paper={activePaper} onClose={() => setActivePaper(null)} onOpenDataset={setActiveDataset} />
       <DatasetModal
         datasetName={activeDataset}
         onClose={() => setActiveDataset(null)}
         onOpenRecord={handleOpenRecord}
+        onAsk={(q) => {
+          setActiveDataset(null);
+          navigate(`/ai?q=${encodeURIComponent(q)}`);
+        }}
+        onDraft={(id) => {
+          setActiveDataset(null);
+          navigate(`/content/review?item=${encodeURIComponent(id)}`);
+        }}
       />
-
       <CommandPalette
         isOpen={commandPaletteOpen}
         onClose={() => setCommandPaletteOpen(false)}
-        onNavigate={setActiveTab}
-        onSelectStation={setSelectedStationId}
+        onNavigate={goTab}
+        onSelectStation={selectStation}
         onOpenResult={openArchiveRecord}
       />
-
-      <ProposalModal
-        isOpen={proposalModalOpen}
-        onClose={() => setProposalModalOpen(false)}
-      />
-
-      <RecordModal
-        recordId={activeRecordId}
-        onClose={() => setActiveRecordId(null)}
-        onOpenRecord={handleOpenRecord}
-      />
-
-      <MediaGalleryModal
-        isOpen={mediaGalleryOpen}
-        onClose={() => setMediaGalleryOpen(false)}
-        onOpenRecord={handleOpenRecord}
-      />
-
-      {/* Non-intrusive Scientific Toast HUD */}
-      <Toast toasts={toasts} onDismiss={handleDismissToast} />
+      <ProposalModal isOpen={proposalModalOpen} onClose={() => setProposalModalOpen(false)} />
+      <RecordModal recordId={activeRecordId} onClose={() => setActiveRecordId(null)} onOpenRecord={handleOpenRecord} />
+      <MediaGalleryModal isOpen={mediaGalleryOpen} onClose={() => setMediaGalleryOpen(false)} onOpenRecord={handleOpenRecord} />
+      <Toast toasts={toasts} onDismiss={(id) => setToasts((prev) => prev.filter((t) => t.id !== id))} />
     </div>
   );
 }

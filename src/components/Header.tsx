@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { NavTab } from '../types/polaris';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
-  activeTab: NavTab;
-  setActiveTab: (tab: NavTab) => void;
   isPolarNight: boolean;
   setIsPolarNight: (val: boolean) => void;
   language: 'EN' | 'HI';
@@ -12,8 +10,6 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  activeTab,
-  setActiveTab,
   isPolarNight,
   setIsPolarNight,
   language,
@@ -27,15 +23,16 @@ export const Header: React.FC<HeaderProps> = ({
     document.documentElement.classList.toggle('high-contrast');
   };
 
-  const navItems: { id: NavTab; label: string; hindiLabel: string }[] = [
-    { id: 'explore', label: 'Explore', hindiLabel: 'अन्वेषण' },
-    { id: 'expeditions', label: 'Expeditions', hindiLabel: 'अभियान' },
-    { id: 'stations', label: 'Stations', hindiLabel: 'अनुसंधान केंद्र' },
-    { id: 'map', label: 'Map', hindiLabel: 'मानचित्र' },
-    { id: 'knowledge', label: 'Knowledge', hindiLabel: 'ज्ञानकोश' },
-    { id: 'data', label: 'Data', hindiLabel: 'डेटा' },
-    { id: 'media', label: 'Media', hindiLabel: 'मीडिया' },
-    { id: 'learn', label: 'Polar Academy', hindiLabel: 'ध्रुवीय अकादमी' },
+  const navigate = useNavigate();
+  const navItems: { to: string; label: string; hindiLabel: string }[] = [
+    { to: '/', label: 'Home', hindiLabel: 'मुख्य पृष्ठ' },
+    { to: '/explore', label: 'Explore', hindiLabel: 'अन्वेषण' },
+    { to: '/map', label: 'Map', hindiLabel: 'मानचित्र' },
+    { to: '/stations', label: 'Stations', hindiLabel: 'अनुसंधान केंद्र' },
+    { to: '/knowledge-graph', label: 'Knowledge graph', hindiLabel: 'ज्ञान ग्राफ़' },
+    { to: '/ai', label: 'Assistant', hindiLabel: 'सहायक' },
+    { to: '/content/review', label: 'Outreach studio', hindiLabel: 'आउटरीच स्टूडियो' },
+    { to: '/admin', label: 'Admin', hindiLabel: 'व्यवस्थापन' },
   ];
   const shortcut = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘K' : 'Ctrl K';
 
@@ -46,7 +43,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center justify-between gap-4">
           {/* Brand Lockup */}
           <div 
-            onClick={() => setActiveTab('explore')}
+            onClick={() => navigate('/')}
             className="flex items-center gap-2 sm:gap-3 cursor-pointer group select-none min-w-0"
           >
             <span className="h-9 w-9 shrink-0 rounded-lg bg-white p-0.5 ring-1 ring-slate-200 dark:ring-slate-700 flex items-center justify-center">
@@ -149,22 +146,22 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Tier 2: Navigation Links & Domain Filters */}
         <div className="-mx-4 px-4 md:mx-0 md:px-0 border-t border-slate-200 dark:border-slate-800 pt-1.5 overflow-x-auto scrollbar-none">
           <nav className="flex items-center gap-1 md:gap-2 w-max">
-            {navItems.map((item) => {
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`text-sm whitespace-nowrap transition-colors px-3 py-1.5 rounded-lg ${
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === '/'}
+                className={({ isActive }) =>
+                  `text-sm whitespace-nowrap transition-colors px-3 py-1.5 rounded-lg ${
                     isActive
-                      ? 'text-[#00677d] dark:text-[#4cd6fb] font-semibold bg-[#eff4ff] dark:bg-slate-800/80' 
+                      ? 'text-[#00677d] dark:text-[#4cd6fb] font-semibold bg-[#eff4ff] dark:bg-slate-800/80'
                       : 'text-slate-600 dark:text-slate-400 hover:text-[#0b1c30] dark:hover:text-white hover:bg-slate-100/60 dark:hover:bg-slate-800/40'
-                  }`}
-                >
-                  {language === 'EN' ? item.label : item.hindiLabel}
-                </button>
-              );
-            })}
+                  }`
+                }
+              >
+                {language === 'EN' ? item.label : item.hindiLabel}
+              </NavLink>
+            ))}
           </nav>
 
         </div>

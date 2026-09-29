@@ -2,6 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import fs from 'fs';
 import path from 'path';
 import { seedDatabase } from './seed.ts';
+import { runMigrations, deriveDataStatus, deriveProvenance, type DataStatus } from './migrations.ts';
 
 export type ArchiveType =
   | 'expedition'
@@ -38,6 +39,9 @@ export interface ArchiveItem {
   doi: string | null;
   meta: Record<string, any>;
   downloads: number;
+  dataStatus: DataStatus;
+  provenance: Record<string, any>;
+  reviewStatus: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -155,6 +159,7 @@ export function getDb(): DatabaseSync {
   db = new DatabaseSync(dbPath);
   db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
   db.exec(SCHEMA);
+  runMigrations(db);
   const { n } = db.prepare('SELECT COUNT(*) AS n FROM stations').get() as { n: number };
   if (n === 0) seedDatabase(db);
   return db;
@@ -177,6 +182,9 @@ export function rowToItem(row: any): ArchiveItem {
     doi: row.doi,
     meta: JSON.parse(row.meta || '{}'),
     downloads: row.downloads,
+    dataStatus: row.data_status ?? 'UNVERIFIED',
+    provenance: JSON.parse(row.provenance || '{}'),
+    reviewStatus: row.review_status ?? 'APPROVED',
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -197,12 +205,14 @@ export interface ArchiveInput {
   thumbnailUrl?: string | null;
   doi?: string | null;
   meta?: Record<string, any>;
+  dataStatus?: DataStatus;
+  provenance?: Record<string, any>;
 }
 
 export function insertItem(d: DatabaseSync, item: ArchiveInput): void {
   d.prepare(
-    `INSERT INTO archive_items (id, type, title, summary, body, domain, station_id, year, date, tags, url, thumbnail_url, doi, meta)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    `INSERT INTO archive_items (id, type, title, summary, body, domain, station_id, year, date, tags, url, thumbnail_url, doi, meta, data_status, provenance)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).run(
     item.id,
     item.type,
@@ -217,7 +227,9 @@ export function insertItem(d: DatabaseSync, item: ArchiveInput): void {
     item.url ?? null,
     item.thumbnailUrl ?? null,
     item.doi || null,
-    JSON.stringify(item.meta ?? {})
+    JSON.stringify(item.meta ?? {}),
+    item.dataStatus ?? deriveDataStatus(item.type, item.meta ?? {}),
+    JSON.stringify(item.provenance ?? deriveProvenance(item.type, item.meta ?? {}))
   );
 }
 

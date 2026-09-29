@@ -138,3 +138,90 @@
   background-color: #070c18;
   color: #e6f0ff;
 }
+
+/* =========================================================================
+   POLARIS design tokens (single source for new pages)
+   Scientific neumorphism: soft, low-contrast relief for panels and wells,
+   never glowing halos. Monospace + tabular figures for technical values.
+   ========================================================================= */
+:root {
+  --pol-bg: #f3f6fb;
+  --pol-surface: #ffffff;
+  --pol-surface-2: #eef3fa;
+  --pol-ink: #0b1c30;
+  --pol-ink-2: #3d4a5c;
+  --pol-muted: #64748b;
+  --pol-border: #d7e0ec;
+  --pol-accent: #00677d;
+  --pol-accent-2: #00b4d8;
+  --pol-ok: #0f7a4f;
+  --pol-warn: #a15c00;
+  --pol-bad: #b42318;
+  --pol-raise: 4px 4px 10px rgba(15, 30, 55, 0.08), -3px -3px 8px rgba(255, 255, 255, 0.9);
+  --pol-well: inset 2px 2px 5px rgba(15, 30, 55, 0.08), inset -2px -2px 5px rgba(255, 255, 255, 0.8);
+  --pol-radius: 14px;
+  --pol-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.dark,
+.polar-night {
+  --pol-bg: #070c18;
+  --pol-surface: #0f1a2e;
+  --pol-surface-2: #0b1424;
+  --pol-ink: #e6f0ff;
+  --pol-ink-2: #b6c4d8;
+  --pol-muted: #8da0b8;
+  --pol-border: #1f2e48;
+  --pol-accent: #4cd6fb;
+  --pol-accent-2: #00b4d8;
+  --pol-ok: #34d399;
+  --pol-warn: #fbbf24;
+  --pol-bad: #f87171;
+  --pol-raise: 3px 3px 8px rgba(0, 0, 0, 0.45), -2px -2px 6px rgba(40, 60, 95, 0.18);
+  --pol-well: inset 2px 2px 6px rgba(0, 0, 0, 0.5), inset -2px -2px 5px rgba(40, 60, 95, 0.15);
+}
+
+.sci-page { background: var(--pol-bg); color: var(--pol-ink); }
+.sci-card {
+  background: var(--pol-surface);
+  border: 1px solid var(--pol-border);
+  border-radius: var(--pol-radius);
+  box-shadow: var(--pol-raise);
+}
+.sci-well {
+  background: var(--pol-surface-2);
+  border-radius: calc(var(--pol-radius) - 4px);
+  box-shadow: var(--pol-well);
+}
+.sci-mono { font-family: var(--pol-font-mono); font-variant-numeric: tabular-nums; }
+.sci-muted { color: var(--pol-muted); }
+.sci-ink-2 { color: var(--pol-ink-2); }
+.sci-accent { color: var(--pol-accent); }
+.sci-border { border-color: var(--pol-border); }
+.sci-input {
+  background: var(--pol-surface-2);
+  border: 1px solid var(--pol-border);
+  border-radius: 10px;
+  color: var(--pol-ink);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+.sci-input:focus { outline: 2px solid var(--pol-accent-2); outline-offset: 1px; }
+.sci-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+  padding: 0.55rem 1rem; border-radius: 10px; font-size: 0.875rem; font-weight: 600;
+  background: var(--pol-accent); color: #fff; transition: filter 0.15s;
+}
+.dark .sci-btn, .polar-night .sci-btn { color: #04121c; }
+.sci-btn:hover { filter: brightness(1.08); }
+.sci-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.sci-btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+  padding: 0.5rem 0.9rem; border-radius: 10px; font-size: 0.875rem; font-weight: 600;
+  border: 1px solid var(--pol-border); color: var(--pol-ink); background: transparent;
+}
+.sci-btn-ghost:hover { background: var(--pol-surface-2); }
+.sci-btn-ghost:disabled { opacity: 0.5; cursor: not-allowed; }
+.claim-supported { background: color-mix(in srgb, var(--pol-ok) 14%, transparent); }
+.claim-partial { background: color-mix(in srgb, var(--pol-warn) 16%, transparent); }
+.claim-unsupported { background: color-mix(in srgb, var(--pol-bad) 16%, transparent); text-decoration: underline wavy color-mix(in srgb, var(--pol-bad) 70%, transparent); }
