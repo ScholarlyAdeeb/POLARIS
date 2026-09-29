@@ -32,8 +32,8 @@ export const MediaGalleryModal: React.FC<MediaGalleryModalProps> = ({ isOpen, on
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-5xl max-h-[88vh] flex flex-col bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-5xl h-[100dvh] sm:h-auto sm:max-h-[88vh] flex flex-col bg-white rounded-none sm:rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 bg-[#eff4ff]">
           <div>
             <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-[#00b4d8] text-white font-bold">

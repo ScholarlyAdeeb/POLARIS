@@ -154,7 +154,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCommandPalette }) => {
             </div>
 
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <div className="flex items-center rounded-lg bg-[#eff4ff] p-0.5 text-xs" role="group" aria-label="Language">
+              <div className="hidden sm:flex items-center rounded-lg bg-[#eff4ff] p-0.5 text-xs" role="group" aria-label="Language">
                 {LANGS.map((l) => (
                   <button
                     key={l.code}
@@ -169,7 +169,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCommandPalette }) => {
               </div>
               <button
                 onClick={toggleContrast}
-                className={`hidden min-[400px]:flex w-8 h-8 rounded-lg items-center justify-center transition-colors ${highContrast ? 'bg-[#00677d] text-white' : 'bg-[#eff4ff] text-[#3d494d] hover:text-black'}`}
+                className={`hidden sm:flex w-8 h-8 rounded-lg items-center justify-center transition-colors ${highContrast ? 'bg-[#00677d] text-white' : 'bg-[#eff4ff] text-[#3d494d] hover:text-black'}`}
                 title="High contrast"
                 aria-label="High contrast"
               >
@@ -180,7 +180,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCommandPalette }) => {
           </div>
         </div>
 
-        <div className="-mx-4 px-4 md:mx-0 md:px-0 border-t border-slate-200 pt-1.5 overflow-x-auto scrollbar-none">
+        <div className="hidden md:block border-t border-slate-200 pt-1.5 overflow-x-auto scrollbar-none">
           <nav className="flex items-center gap-1 md:gap-1.5 w-max">
             {navItems
               .filter((i) => i.show !== false)

@@ -4,6 +4,7 @@ import { api, downloadUrls, download, type ArchiveItem, type Hotspot } from '../
 import { usePolarisData } from '../context/PolarisDataContext';
 import { DataStatusBadge, ErrorNote, Page } from '../components/ui';
 import { WeatherCard } from '../components/WeatherCard';
+import { ClimateCard } from '../components/ClimateCard';
 
 const StationScene = lazy(() => import('../components/StationScene'));
 
@@ -126,7 +127,7 @@ export function StationPage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
         {/* 3D scene */}
         <div className="xl:col-span-8">
-          <div className="relative h-[380px] sm:h-[480px] lg:h-[560px] rounded-2xl overflow-hidden border sci-border bg-[#0b1424]">
+          <div className="relative h-[380px] sm:h-[480px] lg:h-[560px] rounded-2xl overflow-hidden border sci-border bg-[#dbe9f6]">
             <Suspense fallback={<div className="h-full flex items-center justify-center text-sm text-slate-400">Loading 3D view…</div>}>
               <StationScene stationId={station.id} stationStatus={station.status} hotspots={hotspots} selected={selected} onSelect={setSelected} />
             </Suspense>
@@ -226,6 +227,11 @@ export function StationPage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
       {live && (
         <div className="mt-6">
           <WeatherCard stationId={station.id} />
+        </div>
+      )}
+      {live && (
+        <div className="mt-6">
+          <ClimateCard stationId={station.id} />
         </div>
       )}
 

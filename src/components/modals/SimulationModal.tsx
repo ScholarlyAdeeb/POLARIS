@@ -66,8 +66,8 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({ mission, onClo
       : 'Last Glacial Maximum (18,000 BP)';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-4xl h-[100dvh] sm:h-auto sm:max-h-[90vh] flex flex-col bg-white rounded-none sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-[#eff4ff]">
           <div className="flex items-center gap-3">

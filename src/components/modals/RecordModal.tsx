@@ -47,8 +47,8 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
   const isVideoFile = record?.type === 'video' && record.url && /\.(mp4|webm)$/i.test(record.url);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-3xl max-h-[88vh] flex flex-col bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-3xl h-[100dvh] sm:h-auto sm:max-h-[88vh] flex flex-col bg-white rounded-none sm:rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-[#eff4ff]">
           <div className="min-w-0">
             <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-[#e5eeff] text-[#00677d] font-bold">
@@ -168,7 +168,7 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
           )}
         </div>
 
-        <div className="px-6 py-4 bg-[#f8f9ff] border-t border-slate-200 flex items-center justify-between gap-2">
+        <div className="px-6 py-4 bg-[#f8f9ff] border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
           <span className="font-['JetBrains_Mono'] text-xs text-slate-500 truncate">NCPOR Polar Knowledge Repository</span>
           <div className="flex items-center gap-2">
             {record && (

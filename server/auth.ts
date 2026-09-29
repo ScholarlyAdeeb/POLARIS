@@ -18,6 +18,7 @@ export type Role = (typeof ROLES)[number];
 export interface SessionUser {
   id: number;
   email: string;
+  username?: string | null;
   name: string;
   institution: string;
   role: Role;
@@ -70,7 +71,7 @@ function readCookie(req: Request, name: string): string {
   return '';
 }
 
-const toUser = (r: any): SessionUser => ({ id: r.id, email: r.email, name: r.name, institution: r.institution, role: r.role });
+const toUser = (r: any): SessionUser => ({ id: r.id, email: r.email, username: r.username ?? null, name: r.name, institution: r.institution, role: r.role });
 
 /** Resolves req.user from the session cookie or a bearer token (session token or ADMIN_TOKEN). */
 export function attachUser(db: DatabaseSync) {
@@ -112,6 +113,26 @@ function startSession(db: DatabaseSync, req: Request, res: Response, userId: num
   res.setHeader('Set-Cookie', `${COOKIE}=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${SESSION_DAYS * 86400}${secure}`);
 }
 
+/**
+ * Demo logins for presentations: user1 / 1234 (contributor) and admin / 0786 (admin).
+ * On by default for local use; set DEMO_ACCOUNTS=off on any public deployment.
+ */
+export const demoAccountsEnabled = () => (process.env.DEMO_ACCOUNTS ?? 'on') !== 'off';
+const DEMO = [
+  { username: 'user1', password: '1234', email: 'user1@demo.polaris.local', name: 'Demo Contributor', institution: 'POLARIS demo', role: 'contributor' },
+  { username: 'admin', password: '0786', email: 'admin@demo.polaris.local', name: 'Demo Admin', institution: 'POLARIS demo', role: 'admin' },
+];
+
+export function seedDemoAccounts(db: DatabaseSync) {
+  if (!demoAccountsEnabled()) return;
+  for (const d of DEMO) {
+    if (db.prepare('SELECT 1 FROM users WHERE username = ? OR email = ?').get(d.username, d.email)) continue;
+    db.prepare('INSERT INTO users (email, username, name, institution, role, password_hash) VALUES (?, ?, ?, ?, ?, ?)').run(
+      d.email, d.username, d.name, d.institution, d.role, hashPassword(d.password)
+    );
+  }
+}
+
 export function createAuthRouter(db: DatabaseSync) {
   const r = express.Router();
   const limit = rateLimit(20, 10 * 60 * 1000);
@@ -140,10 +161,11 @@ export function createAuthRouter(db: DatabaseSync) {
     '/login',
     limit,
     wrap((req, res) => {
-      const email = str(req.body?.email, 'email', { required: true, max: 160 }).toLowerCase();
+      // Sign in with email or username.
+      const login = str(req.body?.email ?? req.body?.username, 'email', { required: true, max: 160 }).toLowerCase();
       const password = typeof req.body?.password === 'string' ? req.body.password : '';
-      const row = db.prepare('SELECT * FROM users WHERE email = ?').get(email) as any;
-      if (!row || !verifyPassword(password, row.password_hash)) throw new HttpError(401, 'Email or password is wrong');
+      const row = db.prepare('SELECT * FROM users WHERE email = ? OR username = ?').get(login, login) as any;
+      if (!row || !verifyPassword(password, row.password_hash)) throw new HttpError(401, 'Username/email or password is wrong');
       startSession(db, req, res, row.id);
       res.json(toUser(row));
     })
@@ -157,6 +179,7 @@ export function createAuthRouter(db: DatabaseSync) {
   });
 
   r.get('/me', (req, res) => res.json(req.user ?? null));
+  r.get('/config', (_req, res) => res.json({ demoAccounts: demoAccountsEnabled() ? DEMO.map((d) => ({ username: d.username, password: d.password, role: d.role })) : [] }));
   return r;
 }
 
@@ -167,7 +190,7 @@ export function createUsersRouter(db: DatabaseSync) {
   r.get('/', (_req, res) => {
     const rows = db
       .prepare(
-        `SELECT u.id, u.email, u.name, u.institution, u.role, u.created_at,
+        `SELECT u.id, u.email, u.username, u.name, u.institution, u.role, u.created_at,
                 (SELECT COUNT(*) FROM archive_items a WHERE a.owner_id = u.id) AS records
          FROM users u ORDER BY u.id`
       )

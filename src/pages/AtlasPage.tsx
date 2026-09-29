@@ -16,7 +16,9 @@ import { DataStatusBadge, ErrorNote, Page, PageHeader } from '../components/ui';
 
 const LAND = feature(land50 as any, (land50 as any).objects.land) as unknown as FeatureCollection;
 const W = 900;
-const H = 640;
+/** Taller canvas on phones so the polar disc fills the screen width. */
+const heightFor = (narrow: boolean) => (narrow ? 900 : 640);
+const isNarrow = () => typeof window !== 'undefined' && window.innerWidth < 768;
 
 type View = 'south' | 'north' | 'himalaya' | 'world';
 const VIEWS: { id: View; label: string }[] = [
@@ -42,7 +44,7 @@ const FAMILY_STYLE = {
 } as const;
 const TYPES: ArchiveType[] = ['expedition', 'report', 'activity', 'dataset', 'publication', 'photo', 'video'];
 
-function projectionFor(view: View, zoom: number): GeoProjection {
+function projectionFor(view: View, zoom: number, H: number): GeoProjection {
   const pad = 16;
   const extent: [[number, number], [number, number]] = [
     [pad, pad],
@@ -83,6 +85,15 @@ export function AtlasPage({ onOpenRecord, onOpenDataset }: { onOpenRecord: (id: 
   const [contributedOnly, setContributedOnly] = useState(false);
   const [hover, setHover] = useState<{ g: Group; x: number; y: number } | null>(null);
   const [selected, setSelected] = useState<Group | null>(null);
+  const [narrow, setNarrow] = useState(isNarrow);
+  useEffect(() => {
+    const onResize = () => setNarrow(isNarrow());
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+  const H = heightFor(narrow);
+  // Marks and labels are drawn in viewBox units; on a phone the viewBox shrinks ~2.5x, so draw them larger.
+  const k = narrow ? 2.2 : 1;
 
   useEffect(() => {
     api.atlas().then(setData).catch((e) => setError(e.message));
@@ -92,7 +103,7 @@ export function AtlasPage({ onOpenRecord, onOpenDataset }: { onOpenRecord: (id: 
     setSelected(null);
   }, [view]);
 
-  const projection = useMemo(() => projectionFor(view, zoom), [view, zoom]);
+  const projection = useMemo(() => projectionFor(view, zoom, H), [view, zoom, H]);
   const path = useMemo(() => geoPath(projection), [projection]);
   const landPath = useMemo(() => path(LAND) ?? '', [path]);
   const gratPath = useMemo(() => path(geoGraticule10()) ?? '', [path]);
@@ -144,14 +155,14 @@ export function AtlasPage({ onOpenRecord, onOpenDataset }: { onOpenRecord: (id: 
       <ErrorNote error={error} />
 
       <div className="flex flex-wrap items-center gap-2 mb-3" role="group" aria-label="Filters">
-        <div className="flex rounded-lg sci-well p-1 text-xs">
+        <div className="flex rounded-lg sci-well p-1 text-xs max-w-full overflow-x-auto scrollbar-none">
           {VIEWS.map((v) => (
-            <button key={v.id} onClick={() => setView(v.id)} aria-pressed={view === v.id} className={`px-2.5 py-1 rounded ${view === v.id ? 'bg-white font-semibold' : 'sci-muted'}`}>
+            <button key={v.id} onClick={() => setView(v.id)} aria-pressed={view === v.id} className={`px-2.5 py-1.5 rounded whitespace-nowrap ${view === v.id ? 'bg-white font-semibold' : 'sci-muted'}`}>
               {v.label}
             </button>
           ))}
         </div>
-        <div className="flex flex-wrap gap-1.5 text-xs">
+        <div className="flex gap-1.5 text-xs w-full md:w-auto overflow-x-auto scrollbar-none md:flex-wrap pb-1 md:pb-0">
           {TYPES.map((ty) => {
             const on = types.has(ty);
             return (
@@ -163,7 +174,7 @@ export function AtlasPage({ onOpenRecord, onOpenDataset }: { onOpenRecord: (id: 
                   on ? n.delete(ty) : n.add(ty);
                   return n;
                 })}
-                className={`px-2 py-1 rounded-full border flex items-center gap-1.5 ${on ? 'bg-white sci-border' : 'border-transparent sci-muted line-through'}`}
+                className={`px-2.5 py-1.5 rounded-full border flex items-center gap-1.5 whitespace-nowrap shrink-0 ${on ? 'bg-white sci-border' : 'border-transparent sci-muted line-through'}`}
               >
                 <span className="w-2.5 h-2.5 rounded-full" style={{ background: FAMILY_STYLE[FAMILY[ty]].color }} />
                 {t(`type.${ty}`)}
@@ -198,6 +209,7 @@ export function AtlasPage({ onOpenRecord, onOpenDataset }: { onOpenRecord: (id: 
                   onClick={() => setSelected(active ? null : g)}
                   data-testid="atlas-marker"
                 >
+                  <g transform={`scale(${k})`}>
                   <circle r={r + 6} fill="transparent" />
                   <circle r={r} fill={color} fillOpacity={0.85} stroke={active ? '#0b1c30' : '#fff'} strokeWidth={active ? 3 : 2} />
                   {n > 1 && (
@@ -205,6 +217,7 @@ export function AtlasPage({ onOpenRecord, onOpenDataset }: { onOpenRecord: (id: 
                       {n}
                     </text>
                   )}
+                  </g>
                 </g>
               );
             })}
@@ -213,10 +226,12 @@ export function AtlasPage({ onOpenRecord, onOpenDataset }: { onOpenRecord: (id: 
               if (!xy) return null;
               return (
                 <g key={s.id} transform={`translate(${xy[0]},${xy[1]})`} pointerEvents="none">
+                  <g transform={`scale(${k})`}>
                   <path d="M0,-7 L6,4 L-6,4 Z" fill="#0b1c30" stroke="#fff" strokeWidth={1.5} />
                   <text x={11} y={-8} fontSize={12} fontWeight={600} fill="#0b1c30" stroke="#fff" strokeWidth={3} paintOrder="stroke">
                     {s.name.replace(/ (Research )?Station$/, '')}
                   </text>
+                  </g>
                 </g>
               );
             })}
@@ -265,7 +280,7 @@ export function AtlasPage({ onOpenRecord, onOpenDataset }: { onOpenRecord: (id: 
           </div>
         </div>
 
-        <aside className="xl:col-span-4 sci-card p-3 flex flex-col gap-2 max-h-[80vh]">
+        <aside className="xl:col-span-4 sci-card p-3 flex flex-col gap-2 max-h-[70vh] xl:max-h-[80vh]">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-sm">{selected ? `${selected.points.length} records at ${selected.lat.toFixed(2)}°, ${selected.lon.toFixed(2)}°` : 'Records in this view'}</h2>
             {selected && (

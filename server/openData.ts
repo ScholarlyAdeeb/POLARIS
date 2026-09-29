@@ -3,7 +3,8 @@ import path from 'path';
 import crypto from 'crypto';
 import type { DatabaseSync } from 'node:sqlite';
 import { insertItem, listStations } from './db.ts';
-import { nearestStation, regionFor } from './geo.ts';
+import { nearestStation, regionFor, stationLocation } from './geo.ts';
+import { ERA5_SOURCE, fixedStation } from './realdata.ts';
 
 /**
  * Loads real open metadata (server/data/open-data.json, refreshed by scripts/import-open-data.ts)
@@ -100,6 +101,31 @@ export function loadOpenData(db: DatabaseSync): number {
           licence: d.license || 'See dataset page',
           method: 'PANGAEA search for Indian polar stations and NCPOR / NCAOR, kept if located in a polar or Himalayan region',
           note: 'Metadata and position only. Download the data from PANGAEA at the DOI.',
+        },
+      });
+      added++;
+    }
+    // One real climate record per fixed station: daily ERA5 values since 1981, fetched live on download.
+    for (const s of stations.filter(fixedStation)) {
+      const id = `CLIMATE-${s.id.toUpperCase()}`;
+      const loc = stationLocation(s);
+      if (exists.get(id) || !loc) continue;
+      insertItem(db, {
+        id,
+        type: 'dataset',
+        title: `Daily surface climate at ${s.name}, 1981 to present (ERA5)`,
+        summary: `Daily mean, minimum and maximum air temperature, maximum wind speed and precipitation at ${s.name} (${loc.lat}, ${loc.lon}) from 1981 to about a week ago, from the ERA5 reanalysis.`,
+        domain: s.domain,
+        stationId: s.id,
+        year: new Date().getFullYear(),
+        tags: ['open data', 'climate', 'era5', 'temperature', 'reanalysis'],
+        url: 'https://open-meteo.com/en/docs/historical-weather-api',
+        meta: { climateStation: s.id, registry: 'Open-Meteo (ERA5)', publisher: 'Copernicus Climate Change Service / ECMWF', format: 'CSV', license: 'CC BY 4.0', location: loc, openData: true, temporalCoverage: '1981-01-01/present' },
+        dataStatus: 'EXTERNAL',
+        provenance: {
+          source: ERA5_SOURCE,
+          method: 'Daily aggregates for the reanalysis grid cell containing the station coordinates',
+          note: 'Reanalysis values, not station instrument records. Refreshed on every download.',
         },
       });
       added++;

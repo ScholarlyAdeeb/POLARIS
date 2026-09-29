@@ -15,8 +15,8 @@ export const PaperModal: React.FC<PaperModalProps> = ({ paper, onClose, onOpenDa
   const downloadBibtex = () => download(downloadUrls.citation(paper.id));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-3xl max-h-[85vh] flex flex-col bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-3xl h-[100dvh] sm:h-auto sm:max-h-[85vh] flex flex-col bg-white rounded-none sm:rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-[#eff4ff]">
           <div className="flex items-center gap-2.5">

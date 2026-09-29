@@ -86,6 +86,7 @@ export function ExplorePage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
 
   const years = facets?.years.min && facets.years.max ? Array.from({ length: facets.years.max - facets.years.min + 1 }, (_, i) => String(facets.years.min! + i)) : [];
   const active = FILTER_KEYS.filter((k) => filters[k]).length;
+  const [showFilters, setShowFilters] = useState(false);
 
   return (
     <Page>
@@ -114,7 +115,19 @@ export function ExplorePage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
         </button>
       </form>
 
-      <div className="sci-card p-3 mb-5 grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-3">
+      <button
+        type="button"
+        className="md:hidden sci-btn-ghost w-full mb-3 justify-between"
+        aria-expanded={showFilters}
+        onClick={() => setShowFilters(!showFilters)}
+      >
+        <span className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-[18px]">tune</span>
+          Filters{active ? ` (${active})` : ''}
+        </span>
+        <span className="material-symbols-outlined text-[18px]">{showFilters ? 'expand_less' : 'expand_more'}</span>
+      </button>
+      <div className={`sci-card p-3 mb-5 grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-3 ${showFilters ? 'grid' : 'hidden md:grid'}`}>
         {select('domain', 'Region', (facets?.domains ?? []).map((d) => ({ value: d, label: d.charAt(0) + d.slice(1).toLowerCase() })))}
         {select('station', 'Station', (facets?.stations ?? []).map((s) => ({ value: s.id, label: s.name })))}
         {select('yearFrom', 'From year', years.map((y) => ({ value: y, label: y })))}

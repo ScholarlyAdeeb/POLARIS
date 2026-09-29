@@ -660,11 +660,14 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs  font-bold text-slate-400">
-                    Sample readings
+                    {(activeStation as any).readingsSource ? 'Current conditions' : 'Sample readings'}
                   </span>
-                  <span className="font-['JetBrains_Mono'] text-[10px] text-[#10b981] flex items-center gap-1 font-bold">
+                  <span
+                    className="font-['JetBrains_Mono'] text-[10px] text-[#10b981] flex items-center gap-1 font-bold"
+                    title={(activeStation as any).readingsSource ?? 'Illustrative values'}
+                  >
                     <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]"></span>
-                    Sample values
+                    {(activeStation as any).readingsSource ? `Live model · ${String((activeStation as any).readingsTime).slice(11, 16)} UTC` : 'Sample values'}
                   </span>
                 </div>
 
@@ -729,7 +732,7 @@ export const PolarMapView: React.FC<PolarMapViewProps> = ({
                   <button
                     onClick={() => {
                       download(downloadUrls.synoptic(activeStation.id));
-                      onShowToast?.(`Downloading the last 72 h of hourly surface records for ${activeStation.name} (CSV, sample values).`, 'SYNOPTIC EXPORT', 'success');
+                      onShowToast?.(`Downloading the last 72 h of hourly surface records for ${activeStation.name} (CSV, ${(activeStation as any).readingsSource ? 'Open-Meteo model values' : 'sample values'}).`, 'SYNOPTIC EXPORT', 'success');
                     }}
                     className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-slate-200 text-[#00677d] hover:bg-[#eff4ff] transition-colors font-semibold"
                   >

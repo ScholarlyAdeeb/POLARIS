@@ -41,8 +41,8 @@ export const SkycamModal: React.FC<SkycamModalProps> = ({ isOpen, onClose }) => 
   const currentCam = cameras.find((c) => c.id === activeCam) || cameras[0];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-4xl flex flex-col bg-[#0b132b] rounded-3xl shadow-2xl border border-slate-700 overflow-hidden text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-4xl flex flex-col bg-[#0b132b] rounded-none sm:rounded-3xl shadow-2xl border border-slate-700 overflow-hidden text-white max-h-[100dvh] overflow-y-auto">
         {/* Top Control Bar */}
         <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-black/40">
           <div className="flex items-center gap-3">

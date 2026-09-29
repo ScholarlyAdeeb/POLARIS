@@ -12,10 +12,11 @@ import { answerQuestion } from './rag.ts';
 import { providerStatus } from './llm.ts';
 import { embedTexts, mlStatus } from './ml.ts';
 import { HttpError, intOrNull, publicBase, rateLimit, sendDownload, str, tag, wrap } from './http.ts';
-import { attachUser, createAuthRouter, createUsersRouter, isReviewer, requireRole } from './auth.ts';
+import { attachUser, createAuthRouter, createUsersRouter, isReviewer, requireRole, seedDemoAccounts } from './auth.ts';
 import { checkAgainst, createContributorRouter, createDraft, createPublicContentRouter } from './contrib.ts';
 import { countUsage, createExtrasRouter } from './extras.ts';
 import { rawBody, saveUpload } from './uploads.ts';
+import { climateCsv, fixedStation, liveReadings, recentHourlyCsv, withLive } from './realdata.ts';
 
 export { UPLOAD_DIR } from './uploads.ts';
 
@@ -68,6 +69,17 @@ function visibleItem(req: Request, id: string): ArchiveItem | null {
 }
 
 /** Links including unapproved records, for reviewers looking at a submission. */
+/** Stations with live Open-Meteo readings where available (3 s budget; falls back to the stored values). */
+async function liveStations() {
+  const stations = listStations();
+  try {
+    const live = await Promise.race([liveReadings(stations), new Promise<never>((_, rej) => setTimeout(() => rej(new Error('timeout')), 3000))]);
+    return stations.map((s) => withLive(s, live[s.id]));
+  } catch {
+    return stations;
+  }
+}
+
 function linksForAll(id: string) {
   return getDb()
     .prepare(
@@ -133,6 +145,9 @@ function stationRow(id: string) {
 export function createApiRouter() {
   const api = express.Router();
   const db = getDb();
+  seedDemoAccounts(db);
+  // Warm the live-weather cache so the first page load already shows real values.
+  liveReadings(listStations()).catch(() => undefined);
 
   // Parse JSON here (not app-wide) so parse errors reach the JSON error handler below.
   // Uploads carry raw bytes and are parsed by their own route.
@@ -151,7 +166,7 @@ export function createApiRouter() {
   });
 
   // Everything the SPA needs for first paint, in the shapes of src/types/polaris.ts.
-  api.get('/bootstrap', (_req, res) => {
+  api.get('/bootstrap', wrap(async (_req, res) => {
     const hotspots: Record<number, HotspotInfo> = {};
     for (const r of db.prepare('SELECT id, data FROM hotspots ORDER BY id').all() as any[]) hotspots[r.id] = JSON.parse(r.data);
     const milestones = (db.prepare(
@@ -164,8 +179,8 @@ export function createApiRouter() {
       JSON.parse(r.data)
     );
     const valueGraph = (db.prepare('SELECT data FROM value_graph_steps ORDER BY step').all() as any[]).map((r) => JSON.parse(r.data));
-    res.json({ stations: listStations(), hotspots, milestones, papers, simulations, valueGraph });
-  });
+    res.json({ stations: await liveStations(), hotspots, milestones, papers, simulations, valueGraph });
+  }));
 
   api.get('/stats', (_req, res) => {
     const byType = Object.fromEntries(
@@ -178,19 +193,20 @@ export function createApiRouter() {
   });
 
   // --- stations ---------------------------------------------------------------
-  api.get('/stations', (_req, res) => res.json(listStations()));
+  api.get('/stations', wrap(async (_req, res) => res.json(await liveStations())));
 
   api.get(
     '/stations/:id',
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       const row = stationRow(req.params.id);
       if (!row) throw new HttpError(404, 'Station not found');
+      const live = (await liveStations()).find((s) => s.id === req.params.id) as any;
       const counts = Object.fromEntries(
         (db.prepare(`SELECT type, COUNT(*) AS n FROM archive_items a WHERE station_id = ? AND ${PUBLIC_SQL} GROUP BY type`).all(req.params.id) as any[]).map(
           (r) => [r.type, r.n]
         )
       );
-      res.json({ ...JSON.parse(row.data), archiveCounts: counts, dataStatus: row.data_status, readingsStatus: row.readings_status });
+      res.json({ ...JSON.parse(row.data), ...(live ?? {}), archiveCounts: counts, dataStatus: row.data_status, readingsStatus: live?.readingsSource ? 'EXTERNAL' : row.readings_status });
     })
   );
 
@@ -222,11 +238,19 @@ export function createApiRouter() {
 
   api.get(
     '/stations/:id/synoptic.csv',
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       const row = db.prepare('SELECT data FROM stations WHERE id = ?').get(req.params.id) as any;
       if (!row) throw new HttpError(404, 'Station not found');
       const st: StationData = JSON.parse(row.data);
-      sendDownload(res, `${st.id}-synoptic-72h.csv`, 'text/csv; charset=utf-8', synopticCsv(st));
+      // Real hourly model values for fixed stations; the labelled synthetic extract only for the ship or when offline.
+      if (fixedStation(st)) {
+        try {
+          return sendDownload(res, `${st.id}-hourly-72h.csv`, 'text/csv; charset=utf-8', await recentHourlyCsv(st));
+        } catch {
+          /* offline: fall through to the labelled sample */
+        }
+      }
+      sendDownload(res, `${st.id}-synoptic-72h.sample.csv`, 'text/csv; charset=utf-8', synopticCsv(st));
     })
   );
 
@@ -336,12 +360,17 @@ export function createApiRouter() {
 
   api.get(
     '/datasets/:ref/download',
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       const item = findDataset(req.params.ref);
       if (!item) throw new HttpError(404, 'Dataset not found');
       db.prepare('UPDATE archive_items SET downloads = downloads + 1 WHERE id = ?').run(item.id);
       countUsage(db, 'download', item.id);
       // Real datasets: the contributor's uploaded file, or the publisher's landing page. Never generated values.
+      if (item.meta.climateStation) {
+        const st = listStations().find((s) => s.id === item.meta.climateStation);
+        if (!st) throw new HttpError(404, 'Station not found');
+        return sendDownload(res, `${st.id}-era5-daily-1981-present.csv`, 'text/csv; charset=utf-8', await climateCsv(st));
+      }
       if (!item.meta.sample) {
         if (item.url) return res.redirect(item.url);
         throw new HttpError(404, 'No downloadable file is stored for this dataset');

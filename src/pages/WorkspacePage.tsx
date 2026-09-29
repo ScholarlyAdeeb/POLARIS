@@ -50,6 +50,23 @@ function ShareForm({ onCreated }: { onCreated: (r: ArchiveItem) => void }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const [locating, setLocating] = useState(false);
+  const locate = () => {
+    if (!navigator.geolocation) return setError('This device cannot share its location.');
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (p) => {
+        setForm((f) => ({ ...f, lat: p.coords.latitude.toFixed(5), lon: p.coords.longitude.toFixed(5) }));
+        setLocating(false);
+      },
+      (e) => {
+        setError(`Location unavailable: ${e.message}`);
+        setLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 15000 }
+    );
+  };
 
   const set = (k: keyof typeof EMPTY) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const location = form.lat !== '' && form.lon !== '' ? { lat: Number(form.lat), lon: Number(form.lon) } : null;
@@ -163,6 +180,17 @@ function ShareForm({ onCreated }: { onCreated: (r: ArchiveItem) => void }) {
         <p className="text-sm font-semibold">{uploading ? t('common.loading') : file ? file.originalName : t('ws.drop')}</p>
         <p className="text-[11px] sci-muted">{file ? `${file.kind} · ${(file.bytes / 1024).toFixed(0)} KB · uploaded` : t('ws.allowed')}</p>
       </div>
+      <div className="flex gap-2 md:hidden">
+        <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
+        <button type="button" className="sci-btn-ghost flex-1" onClick={() => cameraRef.current?.click()}>
+          <span className="material-symbols-outlined text-[18px]">photo_camera</span>
+          {t('ws.takePhoto')}
+        </button>
+        <button type="button" className="sci-btn-ghost flex-1" onClick={locate} disabled={locating}>
+          <span className="material-symbols-outlined text-[18px]">my_location</span>
+          {locating ? t('common.loading') : t('ws.useLocation')}
+        </button>
+      </div>
       {file?.kind === 'image' && <img src={file.url} alt="" className="max-h-48 rounded-lg object-cover w-full" />}
       {file?.kind === 'video' && <video src={file.url} controls className="max-h-48 rounded-lg w-full bg-black" />}
 
@@ -209,7 +237,12 @@ function ShareForm({ onCreated }: { onCreated: (r: ArchiveItem) => void }) {
           <input value={form.tags} onChange={set('tags')} className="sci-input" placeholder="glacier, aerosol, winter-over" />
         </label>
         <fieldset className="md:col-span-2 grid grid-cols-2 gap-3">
-          <legend className="text-xs sci-muted mb-1">{t('ws.location')}</legend>
+          <legend className="text-xs sci-muted mb-1 w-full flex items-center justify-between">
+            {t('ws.location')}
+            <button type="button" className="hidden md:inline text-xs underline sci-accent" onClick={locate} disabled={locating}>
+              {locating ? t('common.loading') : t('ws.useLocation')}
+            </button>
+          </legend>
           <input type="number" step="any" min={-90} max={90} value={form.lat} onChange={set('lat')} className="sci-input" placeholder={`${t('ws.lat')} (−70.77)`} aria-label={t('ws.lat')} />
           <input type="number" step="any" min={-180} max={180} value={form.lon} onChange={set('lon')} className="sci-input" placeholder={`${t('ws.lon')} (11.73)`} aria-label={t('ws.lon')} />
         </fieldset>

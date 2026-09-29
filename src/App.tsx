@@ -7,6 +7,7 @@ import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { NavTab, ScientificPaper, SimulationMission } from './types/polaris';
 import { Header } from './components/Header';
+import { MobileNav } from './components/MobileNav';
 import { ExploreView } from './components/ExploreView';
 import { PolarMapView } from './components/PolarMapView';
 import { Footer } from './components/Footer';
@@ -179,7 +180,7 @@ export default function App() {
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
       />
 
-      <main className="w-full pt-24 flex-1">
+      <main className="w-full pt-16 md:pt-24 pb-20 md:pb-0 flex-1">
         <Suspense fallback={loading}>
           <Routes>
             <Route
@@ -224,6 +225,7 @@ export default function App() {
       </main>
 
       <Footer />
+      <MobileNav />
 
       <SimulationModal mission={activeSimulation} onClose={() => setActiveSimulation(null)} />
       <SkycamModal isOpen={skycamOpen} onClose={() => setSkycamOpen(false)} />

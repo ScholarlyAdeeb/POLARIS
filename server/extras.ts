@@ -7,6 +7,7 @@ import { isReviewer, requireRole } from './auth.ts';
 import { itemLocation, stationLocation } from './geo.ts';
 import { syntheticSeries } from './files.ts';
 import { uploadPath } from './uploads.ts';
+import { stationClimate } from './realdata.ts';
 
 // --- usage counters (no personal data: day + kind + key only) -------------------------
 
@@ -256,10 +257,36 @@ export function createExtrasRouter(db: DatabaseSync) {
   );
 
   r.get(
+    '/stations/:id/climate',
+    wrap(async (req, res) => {
+      const st = listStations().find((s) => s.id === req.params.id);
+      if (!st) throw new HttpError(404, 'Station not found');
+      try {
+        res.json(await stationClimate(st));
+      } catch (e) {
+        throw new HttpError(502, `Climate history unavailable: ${(e as Error).message}`);
+      }
+    })
+  );
+
+  r.get(
     '/archive/:id/series',
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       const item = visible(req, req.params.id);
       if (!item) throw new HttpError(404, 'Record not found');
+      if (item.meta.climateStation) {
+        const st = listStations().find((s) => s.id === item.meta.climateStation);
+        if (!st) throw new HttpError(404, 'Station not found');
+        const c = await stationClimate(st);
+        return res.json({
+          x: 'year',
+          columns: ['Annual mean air temperature (°C)', 'Coldest day minimum (°C)', 'Annual precipitation (mm)', 'Strongest daily wind (km/h)'],
+          rows: c.annual.map((a) => ({ x: String(a.year), values: [a.tempMean, a.tempMin, a.precip, a.windMax] })),
+          truncated: false,
+          source: c.source,
+          dataStatus: 'EXTERNAL',
+        });
+      }
       const file = uploadPath(item.url);
       if (file && /\.csv$/i.test(file)) {
         const parsed = parseCsv(fs.readFileSync(file, 'utf8'));

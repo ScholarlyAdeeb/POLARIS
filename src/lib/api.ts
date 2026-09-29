@@ -210,6 +210,7 @@ export type Role = 'contributor' | 'reviewer' | 'admin';
 export interface User {
   id: number;
   email: string;
+  username?: string | null;
   name: string;
   institution: string;
   role: Role;
@@ -292,6 +293,20 @@ export interface StationWeather {
   source: string;
   note: string;
   fetchedAt: string;
+}
+
+export interface StationClimate {
+  stationId: string;
+  location: { lat: number; lon: number };
+  from: string;
+  to: string;
+  annual: { year: number; tempMean: number; tempMin: number; tempMax: number; windMax: number; precip: number; days: number }[];
+  baseline: { period: string; tempMean: number };
+  trendPerDecade: number;
+  latestYear: { year: number; tempMean: number } | null;
+  anomaly: number | null;
+  source: string;
+  note: string;
 }
 
 export interface QuizQuestion {
@@ -377,6 +392,7 @@ export const api = {
     register: (b: { name: string; email: string; password: string; institution?: string }) =>
       request<User>('/auth/register', { method: 'POST', body: JSON.stringify(b) }),
     logout: () => request<null>('/auth/logout', { method: 'POST' }),
+    config: () => request<{ demoAccounts: { username: string; password: string; role: Role }[] }>('/auth/config'),
   },
   me: {
     upload: (file: File) => uploadFile('/me/uploads', file),
@@ -398,6 +414,7 @@ export const api = {
     request<{ stations: { id: string; name: string; domain: string; status: string; lat: number; lon: number }[]; points: AtlasPoint[]; unmapped: number }>('/atlas'),
   learn: (seed?: number) => request<{ packs: LessonPack[]; quiz: QuizQuestion[]; seed: number }>(`/learn?${qs({ seed })}`),
   weather: (stationId: string) => request<StationWeather>(`/stations/${encodeURIComponent(stationId)}/weather`),
+  climate: (stationId: string) => request<StationClimate>(`/stations/${encodeURIComponent(stationId)}/climate`),
   cite: (id: string, format: 'apa' | 'bibtex' | 'ris') => request<{ format: string; text: string }>(`/archive/${encodeURIComponent(id)}/cite?format=${format}`),
   series: (id: string) => request<Series>(`/archive/${encodeURIComponent(id)}/series`),
   event: (path: string) => {

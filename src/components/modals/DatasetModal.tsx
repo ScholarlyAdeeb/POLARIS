@@ -51,8 +51,8 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
       ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-3xl max-h-[85vh] flex flex-col bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-3xl h-[100dvh] sm:h-auto sm:max-h-[85vh] flex flex-col bg-white rounded-none sm:rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-[#eff4ff]">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -152,7 +152,7 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-[#f8f9ff] border-t border-slate-200 flex items-center justify-between">
+        <div className="px-6 py-4 bg-[#f8f9ff] border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
           <span className="font-['JetBrains_Mono'] text-xs text-slate-500">
             {dataset?.dataStatus === 'OFFICIAL' || dataset?.dataStatus === 'VERIFIED'
               ? 'Checked against its source by a POLARIS reviewer'
@@ -160,7 +160,7 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
               ? `Metadata from ${dataset.meta.registry ?? 'an open registry'}; data stays with the publisher`
               : 'Not an official NCPOR data product'}
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => {
                 if (!dataset) return;

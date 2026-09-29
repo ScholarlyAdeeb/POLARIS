@@ -16,3 +16,6 @@ services:
         sync: false
       - key: GEMINI_API_KEY
         sync: false
+      # Demo logins (user1 / 1234, admin / 0786). Keep off on a public URL, or turn on only for a judged demo.
+      - key: DEMO_ACCOUNTS
+        value: "off"
