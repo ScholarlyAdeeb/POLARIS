@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api, downloadUrls, download, type ArchiveItem, type Hotspot } from '../lib/api';
 import { usePolarisData } from '../context/PolarisDataContext';
 import { DataStatusBadge, ErrorNote, Page } from '../components/ui';
+import { WeatherCard } from '../components/WeatherCard';
 
 const StationScene = lazy(() => import('../components/StationScene'));
 
@@ -81,6 +82,8 @@ export function StationPage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
       </Page>
     );
 
+  // Fixed stations get live model weather; the ship has no fixed position, so it keeps the labelled sample readings.
+  const live = !station.id.includes('sagar');
   const readings: [string, string, string][] = [
     ['Surface temperature', station.temp, station.windChill ? `Wind chill ${station.windChill}` : ''],
     ['Wind', station.windSpeed, station.windDir],
@@ -219,8 +222,16 @@ export function StationPage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
         </aside>
       </div>
 
+      {/* Live model weather at fixed stations (a ship has no fixed position) */}
+      {live && (
+        <div className="mt-6">
+          <WeatherCard stationId={station.id} />
+        </div>
+      )}
+
       {/* Station readings + records */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-6">
+        {!live && (
         <section className="sci-card p-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold">Station conditions</h2>
@@ -242,8 +253,9 @@ export function StationPage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
             Download 72 h sample CSV
           </button>
         </section>
+        )}
 
-        <section className="sci-card p-4 lg:col-span-2">
+        <section className={`sci-card p-4 ${live ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
           <h2 className="text-sm font-semibold mb-3">Records at this station ({records.length})</h2>
           <ul className="divide-y sci-border">
             {records.map((r) => (

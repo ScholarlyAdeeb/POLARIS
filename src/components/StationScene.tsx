@@ -176,6 +176,7 @@ function hotspotPosition(i: number, n: number): [number, number, number] {
 const STATUS_COLOR: Record<string, string> = {
   OFFICIAL: '#10b981',
   VERIFIED: '#14b8a6',
+  EXTERNAL: '#6366f1',
   UNVERIFIED: '#94a3b8',
   SAMPLE: '#f59e0b',
   SYNTHETIC: '#f97316',

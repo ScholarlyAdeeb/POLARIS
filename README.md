@@ -6,8 +6,24 @@
 **SIH 2026 · Problem Statement 26063** · Ministry of Earth Sciences (MoES) · National Centre for Polar and Ocean Research (NCPOR) · Theme: Smart Education
 
 A portal that archives expedition reports, scientific datasets, publications, photographs,
-videos and institutional activities, links them to each other, and generates content for
-websites and social media from any archived record.
+videos and institutional activities, maps and links them, and generates website and social
+media content from them, credited to the people who contributed the work.
+
+## How it works for contributors
+
+1. **Sign up** at `/login` (scientists, expedition members, outreach staff). New accounts are *contributors*.
+2. **Share work** in `/workspace`: upload a photo, video, PDF, CSV/NetCDF dataset or report and describe it.
+3. **Auto-mapping**: POLARIS suggests the station (nearest to your coordinates, or named in your text), the region,
+   and related records (hybrid search) with a relation for each (`documents`, `collected_during`, `uses_data`, …). You tick the right ones.
+4. **Review**: the record stays private until a *reviewer* approves it under Admin → Contributor submissions.
+   Then it appears on the atlas, knowledge graph, search, station pages and timeline.
+5. **Content**: from your record, generate a website article and X / LinkedIn / Instagram posts. Every post is
+   fact-checked sentence by sentence against the record and credited to you.
+6. **Publish**: a reviewer approves the post in the Outreach studio; it then appears in the public `/newsroom`
+   and on your profile at `/contributors/<id>`.
+
+Roles: `contributor` → `reviewer` (approves records and posts) → `admin` (also manages accounts).
+The `ADMIN_TOKEN` from `.env` still works as an admin login for the review tools.
 
 ## Run it
 
@@ -29,6 +45,9 @@ admin token is printed in the server log.
 | `npm run build` | Production frontend build into `dist/` |
 | `NODE_ENV=production npm start` | Serves the API and `dist/` |
 | `npm run lint` | Type-check frontend and server |
+| `npm run import:open-data` | Refresh `server/data/open-data.json` from Crossref + PANGAEA |
+
+Deployment (Docker, Render blueprint): see [DEPLOY.md](DEPLOY.md).
 
 ## Architecture
 
@@ -36,7 +55,11 @@ admin token is printed in the server log.
 server.ts                Express: /api, /uploads, Vite (dev) or dist/ (prod)
 server/db.ts             SQLite schema: archive_items + FTS5 index, item_links, proposals, outreach_posts
 server/seed.ts           First-run seed from src/data/polarisData.ts + demo records
-server/api.ts            REST routes, validation, admin auth, search
+server/api.ts            REST routes, validation, search, reviewer endpoints
+server/auth.ts           Accounts (scrypt), sessions (HttpOnly cookie), roles
+server/contrib.ts        Contributor workspace: uploads, records, auto-mapping, per-user posts, newsroom
+server/extras.ts         Live weather, citations, chart series, atlas, lessons + quiz, usage counters
+server/openData.ts       Loads real open metadata (Crossref, PANGAEA) as EXTERNAL records
 server/files.ts          Generated downloads: dataset extracts, synoptic CSV, BibTeX, ISO 19115 metadata
 server/outreach.ts       Website / X / LinkedIn / Instagram copy generator (template-based)
 src/lib/api.ts           Typed API client used by the React app
@@ -116,11 +139,25 @@ The new record is immediately searchable, appears in the media gallery, and can 
 social posts from its record view. Generated posts link back to `/?record=<id>`, which opens that
 record in the portal.
 
+## Open data, live data and honesty labels
+
+- **Open registry records** (`EXTERNAL`): NCPOR-affiliated journal articles from Crossref and polar datasets from
+  PANGAEA, metadata only (title, authors, DOI, date, position, licence), loaded from `server/data/open-data.json`.
+  The data itself stays with the publisher; "Get the data" links to the DOI.
+- **Live conditions** on station pages come from the Open-Meteo forecast model at the station coordinates and are
+  labelled as model values, not station instrument readings.
+- Demo records remain labelled `SAMPLE` / `SYNTHETIC`; only those get generated sample downloads.
+
+## Languages
+
+Interface in English, Hindi and Tamil (header switch). Hindi and Tamil strings were drafted for the prototype and
+need review by native speakers. Record content stays in the language it was submitted in.
+
 ## Not yet built
 
-- An admin **UI**. Archive management, proposal review and the outreach approval queue are API-only.
-- Real telemetry. Station readings are the static values from the original design.
-- Hindi versions of generated outreach copy.
+- Email verification and password reset for accounts.
+- Translation of record content and generated posts.
+- Direct posting to social networks (posts are copied or shared via the network's share link).
 
 ## Routes, provenance and Polar AI
 
@@ -133,9 +170,15 @@ record in the portal.
 | `/knowledge-graph` | React Flow graph of stations, expeditions, datasets and publications from `item_links` + `station_id` |
 | `/ai` | Polar Science Assistant: retrieve → generate (Gemini → offline extractive) → sentence-level claim check → cited answer |
 | `/content/review` | Outreach studio: AI/template draft → claim check → named human reviewer → publish (never automatic) |
-| `/admin` | Provider/ML status, embedding rebuild, data-status and review editing, proposals |
+| `/admin` | Contributor submissions review, accounts and roles, usage analytics, ML status, provenance, proposals |
+| `/atlas` | Every approved record with a place, on polar / Himalaya / world maps (Natural Earth coastlines) |
+| `/timeline` | Expeditions and activities by year |
+| `/newsroom` | Published, reviewed posts with contributor credit |
+| `/learn` | Lesson packs per region and a quiz generated from database fields |
+| `/workspace` | Contributor upload → mapping → content workflow |
+| `/login`, `/contributors/:id` | Accounts and public contributor profiles |
 
-Every archive record carries `data_status` (`OFFICIAL`, `VERIFIED`, `SAMPLE`, `SYNTHETIC`, `AI_GENERATED`, `UNVERIFIED`),
+Every archive record carries `data_status` (`OFFICIAL`, `VERIFIED`, `EXTERNAL`, `SAMPLE`, `SYNTHETIC`, `AI_GENERATED`, `UNVERIFIED`),
 `provenance` and `review_status`, added by explicit migrations in `server/migrations.ts` (tracked in `schema_migrations`;
 existing rows are back-filled, never dropped). Demo downloads are labelled `SYNTHETIC SAMPLE EXTRACT`.
 

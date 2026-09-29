@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, type ArchiveItem } from '../lib/api';
 import { AdminGate, DataStatusBadge, ErrorNote, Page, PageHeader } from '../components/ui';
+import { AnalyticsPanel, SubmissionsPanel, UsersPanel } from '../components/AdminPanels';
+import { useAuth } from '../lib/auth';
 
-const DATA_STATUSES = ['OFFICIAL', 'VERIFIED', 'SAMPLE', 'SYNTHETIC', 'AI_GENERATED', 'UNVERIFIED'];
+const DATA_STATUSES = ['OFFICIAL', 'VERIFIED', 'EXTERNAL', 'SAMPLE', 'SYNTHETIC', 'AI_GENERATED', 'UNVERIFIED'];
 const REVIEW = ['PENDING_REVIEW', 'APPROVED', 'CHANGES_REQUESTED', 'REJECTED'];
 const PROPOSAL = ['SUBMITTED', 'UNDER_REVIEW', 'SHORTLISTED', 'ACCEPTED', 'DECLINED'];
 
@@ -16,7 +18,8 @@ function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
-function Console({ logout }: { logout: () => void }) {
+function Console({ logout, onOpenRecord }: { logout: () => void; onOpenRecord?: (id: string) => void }) {
+  const { user } = useAuth();
   const [ov, setOv] = useState<any>(null);
   const [items, setItems] = useState<ArchiveItem[]>([]);
   const [proposals, setProposals] = useState<any[]>([]);
@@ -63,9 +66,17 @@ function Console({ logout }: { logout: () => void }) {
         <Link to="/content/review" className="sci-btn">
           Open outreach review queue
         </Link>
-        <button className="sci-btn-ghost" onClick={logout}>
-          Sign out
-        </button>
+        {!user && (
+          <button className="sci-btn-ghost" onClick={logout}>
+            Forget admin token
+          </button>
+        )}
+      </div>
+
+      <SubmissionsPanel onOpenRecord={onOpenRecord} />
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+        <AnalyticsPanel />
+        {(!user || user.role === 'admin') && <UsersPanel />}
       </div>
 
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -108,7 +119,7 @@ function Console({ logout }: { logout: () => void }) {
       <ErrorNote error={error} />
 
       <section className="sci-card p-4 overflow-x-auto">
-        <h2 className="font-semibold mb-1">Archive provenance</h2>
+        <h2 className="font-semibold mb-1">Archive provenance (latest 100 records)</h2>
         <p className="text-xs sci-muted mb-3">Set the data status only after checking a record against its source. Changes are saved immediately.</p>
         <table className="w-full text-sm min-w-[720px]">
           <thead className="text-xs sci-muted text-left">
@@ -187,11 +198,11 @@ function Console({ logout }: { logout: () => void }) {
   );
 }
 
-export function AdminPage() {
+export function AdminPage({ onOpenRecord }: { onOpenRecord?: (id: string) => void }) {
   return (
     <Page>
-      <PageHeader title="Admin" text="Provenance, review queues and service status for the POLARIS repository." />
-      <AdminGate>{(logout) => <Console logout={logout} />}</AdminGate>
+      <PageHeader title="Admin" text="Review contributor submissions, manage accounts, check usage, provenance and service status." />
+      <AdminGate>{(logout) => <Console logout={logout} onOpenRecord={onOpenRecord} />}</AdminGate>
     </Page>
   );
 }

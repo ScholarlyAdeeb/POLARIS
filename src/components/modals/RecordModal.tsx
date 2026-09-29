@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { api, download, downloadUrls, type ArchiveItem, type LinkedRecord } from '../../lib/api';
+import { Link } from 'react-router-dom';
 import { OutreachPanel } from './OutreachPanel';
+import { DataStatusBadge } from '../ui';
+import { SeriesChart } from '../SeriesChart';
+import { CitePanel } from '../CitePanel';
 
 interface RecordModalProps {
   recordId: string | null;
@@ -96,6 +100,21 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
                 )}
               </div>
 
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <DataStatusBadge status={record.dataStatus} />
+                {record.meta.contributor?.name && record.ownerId ? (
+                  <span className="sci-muted">
+                    Shared by{' '}
+                    <Link to={`/contributors/${record.ownerId}`} className="underline" onClick={onClose}>
+                      {record.meta.contributor.name}
+                    </Link>
+                    {record.meta.contributor.institution ? `, ${record.meta.contributor.institution}` : ''}
+                  </span>
+                ) : (
+                  record.provenance?.source && <span className="sci-muted">Source: {record.provenance.source}</span>
+                )}
+              </div>
+
               <p className="text-sm text-slate-700 leading-relaxed">{record.summary}</p>
               {record.body && <p className="text-sm text-slate-600 leading-relaxed">{record.body}</p>}
 
@@ -133,6 +152,16 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
                   </div>
                 </div>
               )}
+
+              {record.url && !isVideoFile && !image && (
+                <a href={record.url} target="_blank" rel="noopener noreferrer" className="sci-btn-ghost text-xs w-fit">
+                  <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                  {record.url.startsWith('/uploads/') ? 'Open the uploaded file' : record.doi ? `Open at doi.org/${record.doi}` : 'Open source link'}
+                </a>
+              )}
+
+              <SeriesChart recordId={record.id} />
+              <CitePanel recordId={record.id} />
 
               <OutreachPanel key={record.id} itemId={record.id} />
             </>

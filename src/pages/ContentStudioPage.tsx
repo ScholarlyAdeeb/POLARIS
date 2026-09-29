@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { api, type OutreachChannel, type OutreachPost, type SearchResult } from '../lib/api';
 import { AdminGate, DataStatusBadge, ErrorNote, Page, PageHeader } from '../components/ui';
+import { useAuth } from '../lib/auth';
 
 const CHANNELS: OutreachChannel[] = ['website', 'x', 'linkedin', 'instagram'];
 const REVIEW_LABEL: Record<string, string> = {
@@ -33,6 +34,7 @@ function ClaimList({ post }: { post: OutreachPost }) {
 }
 
 function Studio({ logout }: { logout: () => void }) {
+  const { user } = useAuth();
   const [params] = useSearchParams();
   const [itemId, setItemId] = useState(params.get('item') ?? '');
   const [itemQuery, setItemQuery] = useState('');
@@ -44,6 +46,7 @@ function Studio({ logout }: { logout: () => void }) {
   const [openId, setOpenId] = useState<number | null>(null);
   const [edit, setEdit] = useState('');
   const [reviewer, setReviewer] = useState(() => {
+    if (user) return user.name;
     try {
       return localStorage.getItem('polaris-reviewer') || '';
     } catch {
@@ -196,6 +199,7 @@ function Studio({ logout }: { logout: () => void }) {
                   <DataStatusBadge status={p.data_status} className="ml-auto" />
                 </div>
                 <div className="truncate font-semibold">{p.item_title}</div>
+                {p.author_name && <div className="truncate sci-muted">by {p.author_name}</div>}
                 <div className="sci-muted">
                   {REVIEW_LABEL[p.review_status]}
                   {p.status === 'PUBLISHED' ? ' · published' : ''}
@@ -220,6 +224,17 @@ function Studio({ logout }: { logout: () => void }) {
               <DataStatusBadge status={open.item_data_status} />
               <span className="ml-auto font-semibold">{REVIEW_LABEL[open.review_status]}</span>
             </div>
+            {open.author_name && (
+              <p className="text-xs sci-muted">
+                Contributed by {open.author_name}
+                {open.author_institution ? `, ${open.author_institution}` : ''}
+              </p>
+            )}
+            {open.item_review_status && open.item_review_status !== 'APPROVED' && (
+              <p className="text-xs" style={{ color: 'var(--pol-warn)' }}>
+                The source record is not approved yet. Approve it under Admin → Contributor submissions before publishing.
+              </p>
+            )}
             <textarea value={edit} onChange={(e) => setEdit(e.target.value)} rows={9} className="sci-input text-sm leading-relaxed" aria-label="Draft text" />
             <ClaimList post={open} />
             {open.reviewer && (
@@ -229,7 +244,7 @@ function Studio({ logout }: { logout: () => void }) {
               </p>
             )}
             <div className="grid grid-cols-2 gap-2">
-              <input value={reviewer} onChange={(e) => saveReviewer(e.target.value)} className="sci-input" placeholder="Reviewer name" aria-label="Reviewer name" />
+              <input value={reviewer} onChange={(e) => saveReviewer(e.target.value)} readOnly={!!user} className="sci-input" placeholder="Reviewer name" aria-label="Reviewer name" />
               <input value={note} onChange={(e) => setNote(e.target.value)} className="sci-input" placeholder="Review note (optional)" aria-label="Review note" />
             </div>
             <div className="flex flex-wrap gap-2">
@@ -247,7 +262,7 @@ function Studio({ logout }: { logout: () => void }) {
               </button>
               <button
                 className="sci-btn-ghost"
-                disabled={busy || open.review_status !== 'APPROVED' || open.status === 'PUBLISHED'}
+                disabled={busy || open.review_status !== 'APPROVED' || open.status === 'PUBLISHED' || (open.item_review_status !== undefined && open.item_review_status !== 'APPROVED')}
                 onClick={() => run(() => api.admin.review(open.id, { action: 'publish' }), 'Published.')}
               >
                 Publish

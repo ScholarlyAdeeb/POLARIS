@@ -14,6 +14,11 @@ import { ExplorePage } from './pages/ExplorePage';
 import { AssistantPage } from './pages/AssistantPage';
 import { ContentStudioPage } from './pages/ContentStudioPage';
 import { AdminPage } from './pages/AdminPage';
+import { LoginPage } from './pages/LoginPage';
+import { WorkspacePage } from './pages/WorkspacePage';
+import { ContributorPage, NewsroomPage } from './pages/NewsroomPage';
+import { TimelinePage } from './pages/TimelinePage';
+import { LearnPage } from './pages/LearnPage';
 
 // Modals
 import { SimulationModal } from './components/modals/SimulationModal';
@@ -32,6 +37,7 @@ import { api, type ArchiveItem } from './lib/api';
 const StationRoutes = lazy(() => import('./pages/StationPage').then((m) => ({ default: m.StationPage })));
 const StationsIndex = lazy(() => import('./pages/StationPage').then((m) => ({ default: m.StationsIndex })));
 const KnowledgeGraphPage = lazy(() => import('./pages/KnowledgeGraphPage'));
+const AtlasPage = lazy(() => import('./pages/AtlasPage'));
 
 function recordToPaper(r: ArchiveItem): ScientificPaper {
   return {
@@ -51,7 +57,6 @@ function recordToPaper(r: ArchiveItem): ScientificPaper {
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [language, setLanguage] = useState<'EN' | 'HI'>('EN');
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   const [activeSimulation, setActiveSimulation] = useState<SimulationMission | null>(null);
@@ -100,6 +105,11 @@ export default function App() {
     setMediaGalleryOpen(false);
     setSkycamOpen(false);
     setCommandPaletteOpen(false);
+  }, [location.pathname]);
+
+  // Anonymous page-view counter (path only) for the admin usage panel.
+  useEffect(() => {
+    api.event(location.pathname);
   }, [location.pathname]);
 
   // New page, new scroll position (hash links such as /#academy excepted).
@@ -166,8 +176,6 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-[#f8f9ff] text-[#0b1c30] transition-colors">
       <Header
-        language={language}
-        setLanguage={setLanguage}
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
       />
 
@@ -202,7 +210,14 @@ export default function App() {
             <Route path="/ai" element={<AssistantPage {...viewers} />} />
             <Route path="/content" element={<Navigate to="/content/review" replace />} />
             <Route path="/content/review" element={<ContentStudioPage />} />
-            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin" element={<AdminPage onOpenRecord={handleOpenRecord} />} />
+            <Route path="/atlas" element={<AtlasPage {...viewers} />} />
+            <Route path="/timeline" element={<TimelinePage onOpenRecord={handleOpenRecord} />} />
+            <Route path="/newsroom" element={<NewsroomPage />} />
+            <Route path="/learn" element={<LearnPage onOpenRecord={handleOpenRecord} />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/workspace" element={<WorkspacePage />} />
+            <Route path="/contributors/:id" element={<ContributorPage onOpenRecord={handleOpenRecord} />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>

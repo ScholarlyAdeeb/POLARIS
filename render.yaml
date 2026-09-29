@@ -1,0 +1,18 @@
+# Render blueprint: New > Blueprint > pick this repo. Creates one web service with a 1 GB disk.
+services:
+  - type: web
+    name: polaris
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/health
+    disk:
+      name: polaris-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: APP_URL
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false

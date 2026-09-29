@@ -329,7 +329,8 @@ export function createApiRouter() {
     wrap((req, res) => {
       const item = findDataset(req.params.ref);
       if (!item) throw new HttpError(404, 'Dataset not found');
-      res.json({ ...item, header: datasetHeader(item), links: linksFor(item.id) });
+      // Only POLARIS sample records get a generated CF header; real datasets are described by their own metadata.
+      res.json({ ...item, header: item.meta.sample ? datasetHeader(item) : '', links: linksFor(item.id) });
     })
   );
 
@@ -340,6 +341,11 @@ export function createApiRouter() {
       if (!item) throw new HttpError(404, 'Dataset not found');
       db.prepare('UPDATE archive_items SET downloads = downloads + 1 WHERE id = ?').run(item.id);
       countUsage(db, 'download', item.id);
+      // Real datasets: the contributor's uploaded file, or the publisher's landing page. Never generated values.
+      if (!item.meta.sample) {
+        if (item.url) return res.redirect(item.url);
+        throw new HttpError(404, 'No downloadable file is stored for this dataset');
+      }
       const file = datasetDownload(item);
       sendDownload(res, file.filename, file.contentType, file.body);
     })
