@@ -165,7 +165,7 @@ export interface AiSource {
 export interface AiAnswer {
   question: string;
   answer: string;
-  provider: 'gemini' | 'ollama' | 'deterministic';
+  provider: 'gemini' | 'deterministic';
   model: string | null;
   retrieval: { mode: 'hybrid' | 'lexical'; note: string | null };
   sources: AiSource[];
@@ -174,9 +174,8 @@ export interface AiAnswer {
 
 export interface AiStatus {
   llm: {
-    active: 'gemini' | 'ollama' | 'deterministic';
+    active: 'gemini' | 'deterministic';
     gemini: { configured: boolean; model: string };
-    ollama: { reachable: boolean; modelInstalled: boolean; url: string; model: string };
   };
   ml: { available: boolean; url: string; model?: string; dim?: number; backend?: string };
   embeddings: number;

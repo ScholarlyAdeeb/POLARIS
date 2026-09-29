@@ -131,7 +131,7 @@ record in the portal.
 | `/map` | Polar map |
 | `/stations/:id` | Data-driven station page with a WebGL (React Three Fiber) conceptual model and database-backed hotspots |
 | `/knowledge-graph` | React Flow graph of stations, expeditions, datasets and publications from `item_links` + `station_id` |
-| `/ai` | Polar Science Assistant: retrieve → generate (Gemini → Ollama → offline extractive) → sentence-level claim check → cited answer |
+| `/ai` | Polar Science Assistant: retrieve → generate (Gemini → offline extractive) → sentence-level claim check → cited answer |
 | `/content/review` | Outreach studio: AI/template draft → claim check → named human reviewer → publish (never automatic) |
 | `/admin` | Provider/ML status, embedding rebuild, data-status and review editing, proposals |
 
@@ -139,5 +139,5 @@ Every archive record carries `data_status` (`OFFICIAL`, `VERIFIED`, `SAMPLE`, `S
 `provenance` and `review_status`, added by explicit migrations in `server/migrations.ts` (tracked in `schema_migrations`;
 existing rows are back-filled, never dropped). Demo downloads are labelled `SYNTHETIC SAMPLE EXTRACT`.
 
-Optional services (see `.env.example`): `GEMINI_API_KEY`, a local Ollama model, and the embedding service in `ml/`
+Optional services (see `.env.example`): `GEMINI_API_KEY` and the embedding service in `ml/`
 (training on an RTX 4070 Laptop GPU: see `ml/README.md`). Without them the app runs fully offline.

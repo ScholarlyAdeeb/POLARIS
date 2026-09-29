@@ -74,7 +74,6 @@ function Console({ logout }: { logout: () => void }) {
           <div className="grid grid-cols-2 gap-2">
             <Stat label="Active generator" value={ov.llm.active} />
             <Stat label="Gemini key" value={ov.llm.gemini.configured ? `set · ${ov.llm.gemini.model}` : 'not set'} />
-            <Stat label="Ollama" value={!ov.llm.ollama.reachable ? 'not reachable' : ov.llm.ollama.modelInstalled ? `ready · ${ov.llm.ollama.model}` : `up, ${ov.llm.ollama.model} not pulled`} />
             <Stat label="Assistant queries logged" value={ov.aiQueries} />
           </div>
         </div>
