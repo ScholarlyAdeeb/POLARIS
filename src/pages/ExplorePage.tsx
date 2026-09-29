@@ -133,7 +133,7 @@ export function ExplorePage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
             {query ? ` for “${query}”` : ''}
           </span>
           {query && (
-            <span className={`px-2 py-0.5 rounded-md text-xs font-semibold ${res.mode === 'hybrid' ? 'bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300' : 'bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300'}`}>
+            <span className={`px-2 py-0.5 rounded-md text-xs font-semibold ${res.mode === 'hybrid' ? 'bg-violet-100 text-violet-800' : 'bg-slate-200 text-slate-700'}`}>
               {res.mode === 'hybrid' ? 'Hybrid: BM25 + semantic (RRF)' : 'Lexical: BM25'}
             </span>
           )}

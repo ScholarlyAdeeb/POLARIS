@@ -18,7 +18,7 @@ const PLATFORMS = [
 const EMPTY: ProposalInput = { title: '', piName: '', affiliation: '', email: '', platform: 'bharati', domain: '', summary: '', berths: 1 };
 
 const inputCls =
-  "w-full px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm text-[#0b1c30] dark:text-white focus:outline-none focus:border-[#00b4d8] font-['Inter']";
+  "w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-sm text-[#0b1c30] focus:outline-none focus:border-[#00b4d8] font-['Inter']";
 const labelCls = "block font-['JetBrains_Mono'] text-[11px] font-bold text-slate-500 mb-1";
 
 export const ProposalModal: React.FC<ProposalModalProps> = ({ isOpen, onClose }) => {
@@ -58,46 +58,46 @@ export const ProposalModal: React.FC<ProposalModalProps> = ({ isOpen, onClose })
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-2xl max-h-[90vh] bg-white dark:bg-[#0b132b] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+      <div className="relative w-full max-w-2xl max-h-[90vh] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-[#eff4ff] dark:bg-slate-900">
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-[#eff4ff]">
           <div className="flex items-center gap-2.5">
             <span className="p-2 rounded-xl bg-[#00677d] text-white">
               <span className="material-symbols-outlined text-[20px]">assignment</span>
             </span>
             <div>
-              <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">
+              <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-bold">
                 OPEN CALL FOR PROPOSALS
               </span>
-              <h3 className="font-['Space_Grotesk'] font-bold text-base text-[#0b1c30] dark:text-white mt-0.5">
+              <h3 className="font-['Space_Grotesk'] font-bold text-base text-[#0b1c30] mt-0.5">
                 46th ISEA & Upcoming Arctic Season
               </h3>
             </div>
           </div>
           <button
             onClick={close}
-            className="w-8 h-8 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 flex items-center justify-center text-slate-500"
+            className="w-8 h-8 rounded-lg hover:bg-slate-200 flex items-center justify-center text-slate-500"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4 font-['Inter'] text-sm leading-relaxed text-[#0b1c30] dark:text-slate-200">
+        <div className="flex-1 overflow-y-auto p-6 space-y-4 font-['Inter'] text-sm leading-relaxed text-[#0b1c30]">
           {view === 'info' && (
             <>
               <p>
                 The National Centre for Polar and Ocean Research (NCPOR), Ministry of Earth Sciences, invites research proposals from scientists, faculty, and research scholars of Indian universities and institutions for field campaigns at Bharati, Maitri, Himadri, and Southern Ocean cruises.
               </p>
 
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-['JetBrains_Mono'] text-xs space-y-2">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 font-['JetBrains_Mono'] text-xs space-y-2">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Proposal Portal Opens:</span>
-                  <span className="font-bold text-[#00677d] dark:text-[#4cd6fb]">To be announced</span>
+                  <span className="font-bold text-[#00677d]">To be announced</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Final Submission Deadline:</span>
-                  <span className="font-bold text-red-600 dark:text-red-400">To be announced</span>
+                  <span className="font-bold text-red-600">To be announced</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Medical & Pre-Antarctic Training:</span>
@@ -106,7 +106,7 @@ export const ProposalModal: React.FC<ProposalModalProps> = ({ isOpen, onClose })
               </div>
 
               <h4 className="font-['Space_Grotesk'] font-bold text-xs uppercase text-slate-500">Eligibility & Compliance:</h4>
-              <ul className="list-disc pl-5 space-y-1 text-xs text-slate-600 dark:text-slate-300">
+              <ul className="list-disc pl-5 space-y-1 text-xs text-slate-600">
                 <li>Permanent faculty or regular scientific staff of recognized Indian universities or national research institutes.</li>
                 <li>Adherence to Antarctic Treaty Environmental Protocol (Madrid Protocol 1991).</li>
                 <li>Commitment to submit raw and processed datasets to the NCPOR Polar Data Centre.</li>
@@ -160,7 +160,7 @@ export const ProposalModal: React.FC<ProposalModalProps> = ({ isOpen, onClose })
                 </label>
                 <textarea required rows={5} maxLength={2500} value={form.summary} onChange={set('summary')} className={inputCls} />
               </div>
-              {error && <p className="text-xs text-red-600 dark:text-red-400">{error}</p>}
+              {error && <p className="text-xs text-red-600">{error}</p>}
             </form>
           )}
 
@@ -168,17 +168,17 @@ export const ProposalModal: React.FC<ProposalModalProps> = ({ isOpen, onClose })
             <div className="py-6 text-center space-y-3">
               <span className="material-symbols-outlined text-[48px] text-emerald-500">task_alt</span>
               <h4 className="font-['Space_Grotesk'] font-bold text-lg">Proposal received</h4>
-              <p className="text-sm text-slate-600 dark:text-slate-300">Quote this reference in all correspondence with NCPOR:</p>
-              <p className="font-['JetBrains_Mono'] text-base font-bold text-[#00677d] dark:text-[#4cd6fb]">{reference}</p>
+              <p className="text-sm text-slate-600">Quote this reference in all correspondence with NCPOR:</p>
+              <p className="font-['JetBrains_Mono'] text-base font-bold text-[#00677d]">{reference}</p>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-[#f8f9ff] dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+        <div className="px-6 py-4 bg-[#f8f9ff] border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
           <button
             onClick={() => download(downloadUrls.proposalTemplate())}
-            className="px-4 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-['JetBrains_Mono'] text-xs font-bold flex items-center gap-1.5"
+            className="px-4 py-2 rounded-xl bg-white border border-slate-300 text-slate-700 font-['JetBrains_Mono'] text-xs font-bold flex items-center gap-1.5"
           >
             <span className="material-symbols-outlined text-[16px]">file_download</span>
             <span>Download Template (.txt)</span>
@@ -197,7 +197,7 @@ export const ProposalModal: React.FC<ProposalModalProps> = ({ isOpen, onClose })
               <>
                 <button
                   onClick={() => setView('info')}
-                  className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-['JetBrains_Mono'] text-xs font-bold"
+                  className="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-['JetBrains_Mono'] text-xs font-bold"
                 >
                   Back
                 </button>
@@ -214,7 +214,7 @@ export const ProposalModal: React.FC<ProposalModalProps> = ({ isOpen, onClose })
             {view !== 'form' && (
               <button
                 onClick={close}
-                className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-['JetBrains_Mono'] text-xs font-bold"
+                className="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-['JetBrains_Mono'] text-xs font-bold"
               >
                 Close
               </button>

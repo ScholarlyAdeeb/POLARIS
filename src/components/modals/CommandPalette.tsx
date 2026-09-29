@@ -81,9 +81,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-2xl bg-white dark:bg-[#0b132b] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col">
+      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
         {/* Search Input Bar */}
-        <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3">
+        <div className="px-4 py-3 border-b border-slate-200 flex items-center gap-3">
           <span className="material-symbols-outlined text-slate-400 text-[20px]">search</span>
           <input
             type="text"
@@ -91,18 +91,18 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Type a station, expedition, paper, or mission..."
-            className="flex-1 bg-transparent text-sm text-[#0b1c30] dark:text-white focus:outline-none placeholder:text-slate-400 font-['Inter']"
+            className="flex-1 bg-transparent text-sm text-[#0b1c30] focus:outline-none placeholder:text-slate-400 font-['Inter']"
           />
           <button
             onClick={onClose}
-            className="text-[11px] font-['JetBrains_Mono'] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500"
+            className="text-[11px] font-['JetBrains_Mono'] px-2 py-0.5 rounded bg-slate-100 text-slate-500"
           >
             ESC
           </button>
         </div>
 
         {/* Results List */}
-        <div className="max-h-96 overflow-y-auto p-2 divide-y divide-slate-100 dark:divide-slate-800/60 font-['Inter']">
+        <div className="max-h-96 overflow-y-auto p-2 divide-y divide-slate-100 font-['Inter']">
           {filtered.length === 0 ? (
             <div className="p-8 text-center text-sm text-slate-400">
               No polar records found for "{query}". Try "Bharati", "Maitri", or "Lidar".
@@ -112,17 +112,17 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               <div
                 key={index}
                 onClick={item.action}
-                className="px-3 py-2.5 rounded-xl hover:bg-[#eff4ff] dark:hover:bg-slate-800/80 cursor-pointer flex items-center justify-between transition-colors group"
+                className="px-3 py-2.5 rounded-xl hover:bg-[#eff4ff] cursor-pointer flex items-center justify-between transition-colors group"
               >
                 <div className="flex items-center gap-2.5">
                   <span className="material-symbols-outlined text-[#00b4d8] text-[18px]">
                     chevron_right
                   </span>
-                  <span className="text-sm font-medium text-[#0b1c30] dark:text-slate-200 group-hover:text-[#00677d] dark:group-hover:text-[#4cd6fb]">
+                  <span className="text-sm font-medium text-[#0b1c30] group-hover:text-[#00677d]">
                     {item.title}
                   </span>
                 </div>
-                <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">
                   {item.category}
                 </span>
               </div>
@@ -131,7 +131,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         </div>
 
         {/* Footer shortcuts */}
-        <div className="px-4 py-2.5 bg-[#f8f9ff] dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px] font-['JetBrains_Mono'] text-slate-400">
+        <div className="px-4 py-2.5 bg-[#f8f9ff] border-t border-slate-200 flex items-center justify-between text-[11px] font-['JetBrains_Mono'] text-slate-400">
           <span>Navigate with arrows or click</span>
           <span>POLARIS Knowledge Directory</span>
         </div>

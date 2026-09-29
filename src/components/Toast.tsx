@@ -20,7 +20,7 @@ export const Toast: React.FC<ToastProps> = ({ toasts, onDismiss }) => {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className="pointer-events-auto p-4 rounded-2xl bg-[#0b132b]/95 dark:bg-slate-900/95 text-white backdrop-blur-xl shadow-[-4px_-4px_12px_rgba(255,255,255,0.1),6px_6px_20px_rgba(0,0,0,0.35)] border border-slate-700/80 flex items-start gap-3 transform transition-all duration-300 animate-slide-in"
+          className="pointer-events-auto p-4 rounded-2xl bg-[#0b132b]/95 text-white backdrop-blur-xl shadow-[-4px_-4px_12px_rgba(255,255,255,0.1),6px_6px_20px_rgba(0,0,0,0.35)] border border-slate-700/80 flex items-start gap-3 transform transition-all duration-300 animate-slide-in"
         >
           <div className="mt-0.5 w-7 h-7 rounded-xl bg-[#00677d]/30 text-[#4cd6fb] flex items-center justify-center shrink-0 border border-[#00b4d8]/30">
             <span className="material-symbols-outlined text-[18px]">

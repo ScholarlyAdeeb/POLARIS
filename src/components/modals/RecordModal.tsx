@@ -44,19 +44,19 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-3xl max-h-[88vh] flex flex-col bg-white dark:bg-[#0b132b] rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-[#eff4ff] dark:bg-slate-900">
+      <div className="relative w-full max-w-3xl max-h-[88vh] flex flex-col bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-[#eff4ff]">
           <div className="min-w-0">
-            <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-[#e5eeff] dark:bg-slate-800 text-[#00677d] dark:text-[#4cd6fb] font-bold">
+            <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-[#e5eeff] text-[#00677d] font-bold">
               {record ? `${TYPE_LABEL[record.type] ?? record.type.toUpperCase()} • ${record.id}` : 'ARCHIVE RECORD'}
             </span>
-            <h3 className="font-['Space_Grotesk'] font-bold text-base text-[#0b1c30] dark:text-white mt-0.5 truncate">
+            <h3 className="font-['Space_Grotesk'] font-bold text-base text-[#0b1c30] mt-0.5 truncate">
               {record?.title ?? recordId}
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 flex items-center justify-center text-slate-500 shrink-0"
+            className="w-8 h-8 rounded-lg hover:bg-slate-200 flex items-center justify-center text-slate-500 shrink-0"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
@@ -64,7 +64,7 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
 
         <div className="flex-1 overflow-y-auto p-6 space-y-4 font-['Inter']">
           {error && (
-            <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-sm text-amber-800 dark:text-amber-200">
+            <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-sm text-amber-800">
               {error}
             </div>
           )}
@@ -88,19 +88,19 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
               )}
 
               <div className="flex flex-wrap items-center gap-2 font-['JetBrains_Mono'] text-[11px] text-slate-500">
-                {record.domain && <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">{record.domain}</span>}
-                {record.year && <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">{record.year}</span>}
-                {record.meta.leader && <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">Led by {record.meta.leader}</span>}
+                {record.domain && <span className="px-2 py-0.5 rounded bg-slate-100">{record.domain}</span>}
+                {record.year && <span className="px-2 py-0.5 rounded bg-slate-100">{record.year}</span>}
+                {record.meta.leader && <span className="px-2 py-0.5 rounded bg-slate-100">Led by {record.meta.leader}</span>}
                 {record.meta.sample && (
-                  <span className="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 font-bold">SAMPLE RECORD</span>
+                  <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-700 font-bold">SAMPLE RECORD</span>
                 )}
               </div>
 
-              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{record.summary}</p>
-              {record.body && <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{record.body}</p>}
+              <p className="text-sm text-slate-700 leading-relaxed">{record.summary}</p>
+              {record.body && <p className="text-sm text-slate-600 leading-relaxed">{record.body}</p>}
 
               {Array.isArray(record.meta.highlights) && (
-                <ul className="list-disc pl-5 space-y-1 text-xs text-slate-600 dark:text-slate-300">
+                <ul className="list-disc pl-5 space-y-1 text-xs text-slate-600">
                   {record.meta.highlights.map((h: string) => (
                     <li key={h}>{h}</li>
                   ))}
@@ -110,7 +110,7 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
               {record.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {record.tags.map((t) => (
-                    <span key={t} className="px-2 py-0.5 rounded-full bg-[#eff4ff] dark:bg-slate-800 font-['JetBrains_Mono'] text-[10px] text-[#00677d] dark:text-[#4cd6fb]">
+                    <span key={t} className="px-2 py-0.5 rounded-full bg-[#eff4ff] font-['JetBrains_Mono'] text-[10px] text-[#00677d]">
                       {t}
                     </span>
                   ))}
@@ -125,7 +125,7 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
                       <button
                         key={`${l.id}-${l.relation}`}
                         onClick={() => onOpenRecord(l.id)}
-                        className="px-3 py-1.5 rounded-lg bg-[#eff4ff] dark:bg-slate-800 font-['JetBrains_Mono'] text-[11px] text-[#00677d] dark:text-[#4cd6fb] hover:underline text-left"
+                        className="px-3 py-1.5 rounded-lg bg-[#eff4ff] font-['JetBrains_Mono'] text-[11px] text-[#00677d] hover:underline text-left"
                       >
                         {l.type}: {l.title}
                       </button>
@@ -139,7 +139,7 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
           )}
         </div>
 
-        <div className="px-6 py-4 bg-[#f8f9ff] dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
+        <div className="px-6 py-4 bg-[#f8f9ff] border-t border-slate-200 flex items-center justify-between gap-2">
           <span className="font-['JetBrains_Mono'] text-xs text-slate-500 truncate">NCPOR Polar Knowledge Repository</span>
           <div className="flex items-center gap-2">
             {record && (
@@ -153,7 +153,7 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
             )}
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-['JetBrains_Mono'] text-xs font-bold"
+              className="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-['JetBrains_Mono'] text-xs font-bold"
             >
               Close
             </button>

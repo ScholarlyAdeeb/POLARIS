@@ -254,8 +254,8 @@ export default function StationScene({
   return (
     <WebGlBoundary>
       <Canvas shadows dpr={[1, 2]} camera={{ position: [9, 7, 11], fov: 42 }} onPointerMissed={() => undefined}>
-        <color attach="background" args={['#0b1424']} />
-        <fog attach="fog" args={['#0b1424', 22, 48]} />
+        <color attach="background" args={['#dbe9f6']} />
+        <fog attach="fog" args={['#dbe9f6', 22, 48]} />
         <hemisphereLight args={['#dbeafe', '#1e293b', 0.7]} />
         <directionalLight position={[8, 12, 6]} intensity={1.4} castShadow shadow-mapSize={[1024, 1024]} />
         <Suspense fallback={null}>

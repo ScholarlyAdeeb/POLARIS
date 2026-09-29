@@ -111,7 +111,7 @@ export function StationPage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
               key={s.id}
               onClick={() => navigate(`/stations/${s.id}`)}
               className={`shrink-0 whitespace-nowrap px-3 py-1.5 rounded-lg text-sm border ${
-                s.id === id ? 'bg-[var(--pol-accent)] text-white dark:text-[#04121c] border-transparent' : 'sci-border sci-ink-2'
+                s.id === id ? 'bg-[var(--pol-accent)] text-white border-transparent' : 'sci-border sci-ink-2'
               }`}
             >
               {s.name.replace(/ (Research )?(Station|Observatory|Base)$/, '')}

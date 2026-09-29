@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+:root { color-scheme: light; }
+
 @theme {
   --color-surface: #f8f9ff;
   --color-surface-dim: #cbdbf5;
@@ -115,30 +117,6 @@
   background: #94a3b8;
 }
 
-/* Polar Night Dark Mode Override */
-.polar-night {
-  --color-surface: #070c18;
-  --color-surface-dim: #0b1326;
-  --color-surface-bright: #0f1a30;
-  --color-surface-container-lowest: #091020;
-  --color-surface-container-low: #0c162c;
-  --color-surface-container: #101d3a;
-  --color-surface-container-high: #152446;
-  --color-surface-container-highest: #1c2e56;
-
-  --color-on-surface: #e6f0ff;
-  --color-on-surface-variant: #94a3b8;
-
-  --color-snow-white: #0f1a30;
-  --color-ice-white: #0c162b;
-  --color-cool-arctic-grey: #1e293b;
-}
-
-.polar-night body {
-  background-color: #070c18;
-  color: #e6f0ff;
-}
-
 /* =========================================================================
    POLARIS design tokens (single source for new pages)
    Scientific neumorphism: soft, low-contrast relief for panels and wells,
@@ -161,24 +139,6 @@
   --pol-well: inset 2px 2px 5px rgba(15, 30, 55, 0.08), inset -2px -2px 5px rgba(255, 255, 255, 0.8);
   --pol-radius: 14px;
   --pol-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
-}
-
-.dark,
-.polar-night {
-  --pol-bg: #070c18;
-  --pol-surface: #0f1a2e;
-  --pol-surface-2: #0b1424;
-  --pol-ink: #e6f0ff;
-  --pol-ink-2: #b6c4d8;
-  --pol-muted: #8da0b8;
-  --pol-border: #1f2e48;
-  --pol-accent: #4cd6fb;
-  --pol-accent-2: #00b4d8;
-  --pol-ok: #34d399;
-  --pol-warn: #fbbf24;
-  --pol-bad: #f87171;
-  --pol-raise: 3px 3px 8px rgba(0, 0, 0, 0.45), -2px -2px 6px rgba(40, 60, 95, 0.18);
-  --pol-well: inset 2px 2px 6px rgba(0, 0, 0, 0.5), inset -2px -2px 5px rgba(40, 60, 95, 0.15);
 }
 
 .sci-page { background: var(--pol-bg); color: var(--pol-ink); }
@@ -212,7 +172,6 @@
   padding: 0.55rem 1rem; border-radius: 10px; font-size: 0.875rem; font-weight: 600;
   background: var(--pol-accent); color: #fff; transition: filter 0.15s;
 }
-.dark .sci-btn, .polar-night .sci-btn { color: #04121c; }
 .sci-btn:hover { filter: brightness(1.08); }
 .sci-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .sci-btn-ghost {

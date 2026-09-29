@@ -55,15 +55,15 @@ function SectionHeader({ title, text, action }: { title: string; text?: string; 
   return (
     <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
       <div className="max-w-2xl">
-        <h2 className="font-['Space_Grotesk'] text-xl sm:text-2xl md:text-3xl text-[#0b132b] dark:text-white font-bold tracking-tight">{title}</h2>
-        {text && <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{text}</p>}
+        <h2 className="font-['Space_Grotesk'] text-xl sm:text-2xl md:text-3xl text-[#0b132b] font-bold tracking-tight">{title}</h2>
+        {text && <p className="text-sm text-slate-600 mt-1">{text}</p>}
       </div>
       {action}
     </div>
   );
 }
 
-const CARD = 'rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80';
+const CARD = 'rounded-2xl bg-white border border-slate-200';
 
 export const ExploreView: React.FC<ExploreViewProps> = ({
   onNavigate,
@@ -114,14 +114,14 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   return (
     <div className="w-full flex flex-col font-['Inter']">
       {/* SECTION 1: HERO */}
-      <section className="w-full bg-[#eff4ff] dark:bg-[#0c162c] transition-colors">
+      <section className="w-full bg-[#eff4ff] transition-colors">
         <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-6 pb-10 md:pt-10 md:pb-14 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
           <div className="lg:col-span-7">
-            <p className="text-xs font-semibold text-[#00677d] dark:text-[#4cd6fb] mb-3">SIH 2026 prototype · built for NCPOR, MoES</p>
-            <h1 className="font-['Space_Grotesk'] text-[2rem] leading-[1.1] sm:text-5xl xl:text-6xl text-[#0b132b] dark:text-white tracking-tight font-bold mb-4">
-              Explore India’s science at the <span className="text-[#00677d] dark:text-[#00b4d8]">ends of the Earth.</span>
+            <p className="text-xs font-semibold text-[#00677d] mb-3">SIH 2026 prototype · built for NCPOR, MoES</p>
+            <h1 className="font-['Space_Grotesk'] text-[2rem] leading-[1.1] sm:text-5xl xl:text-6xl text-[#0b132b] tracking-tight font-bold mb-4">
+              Explore India’s science at the <span className="text-[#00677d]">ends of the Earth.</span>
             </h1>
-            <p className="text-base md:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mb-6 leading-relaxed">
+            <p className="text-base md:text-lg text-slate-600 max-w-2xl mb-6 leading-relaxed">
               Expeditions, research stations, datasets, publications and stories from India’s missions to Antarctica, the Arctic, the Himalayas and the Southern Ocean.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -137,7 +137,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   onNavigate('stations');
                   onSelectStation('bharati');
                 }}
-                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-600 hover:bg-white dark:hover:bg-slate-800 text-[#0b132b] dark:text-white text-sm font-semibold transition-colors"
+                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-slate-300 hover:bg-white text-[#0b132b] text-sm font-semibold transition-colors"
               >
                 <span className="material-symbols-outlined text-[20px]">travel_explore</span>
                 Visit Bharati station
@@ -166,7 +166,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
       </section>
 
       {/* SECTION 2: FOUR REGIONS */}
-      <section className="w-full py-10 md:py-14 bg-white dark:bg-[#0b132b] transition-colors">
+      <section className="w-full py-10 md:py-14 bg-white transition-colors">
         <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
           <SectionHeader title="Four polar regions" text="Where India’s polar research happens." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -179,11 +179,11 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 }}
                 className={`${CARD} p-4 md:p-5 text-left hover:border-[#00b4d8] transition-colors group`}
               >
-                <span className="text-xs font-semibold text-[#00677d] dark:text-[#4cd6fb]">{r.region}</span>
-                <h3 className="font-['Space_Grotesk'] text-base md:text-lg text-[#0b132b] dark:text-white font-bold mt-1">{r.title}</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">{r.place}</p>
-                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{r.text}</p>
-                <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#00677d] dark:text-[#4cd6fb] group-hover:underline">
+                <span className="text-xs font-semibold text-[#00677d]">{r.region}</span>
+                <h3 className="font-['Space_Grotesk'] text-base md:text-lg text-[#0b132b] font-bold mt-1">{r.title}</h3>
+                <p className="text-xs text-slate-500 mb-2">{r.place}</p>
+                <p className="text-sm text-slate-600 leading-relaxed">{r.text}</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#00677d] group-hover:underline">
                   Explore <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </span>
               </button>
@@ -194,16 +194,16 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
 
       {/* SECTION 3: HOW RECORDS CONNECT */}
-      <section className="w-full py-10 md:py-14 bg-[#eff4ff] dark:bg-[#0c162c] transition-colors">
+      <section className="w-full py-10 md:py-14 bg-[#eff4ff] transition-colors">
         <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
           <SectionHeader title="From one field photo to the classroom" text="Every record links to the ones around it, so a single observation can be followed all the way through." />
 
           <ol className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {valueGraph.map((step) => (
               <li key={step.step} className={`${CARD} p-4`}>
-                <span className="text-xs font-semibold text-[#00677d] dark:text-[#4cd6fb]">{step.step}</span>
-                <h3 className="font-['Space_Grotesk'] text-base text-[#0b132b] dark:text-white font-bold">{step.title}</h3>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-snug mt-1">{step.desc}</p>
+                <span className="text-xs font-semibold text-[#00677d]">{step.step}</span>
+                <h3 className="font-['Space_Grotesk'] text-base text-[#0b132b] font-bold">{step.title}</h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-snug mt-1">{step.desc}</p>
               </li>
             ))}
           </ol>
@@ -211,13 +211,13 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
       </section>
 
       {/* SECTION 4: ARCHIVE SEARCH */}
-      <section className="w-full bg-white dark:bg-[#0b132b] py-10 md:py-14 transition-colors">
+      <section className="w-full bg-white py-10 md:py-14 transition-colors">
         <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
           <div>
             <SectionHeader title="Search 40+ years of polar records" text="Reports, datasets, papers, photos and expedition logs, by keyword, place or year." />
 
             {/* Search box */}
-            <div className="flex items-center gap-2 p-1.5 pl-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus-within:border-[#00b4d8] mb-3">
+            <div className="flex items-center gap-2 p-1.5 pl-3 rounded-xl border border-slate-300 bg-white focus-within:border-[#00b4d8] mb-3">
               <span className="material-symbols-outlined text-slate-400 text-[22px]">search</span>
               <input
                 type="text"
@@ -226,7 +226,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 onKeyDown={(e) => e.key === 'Enter' && runSearch()}
                 placeholder="Try “ozone Maitri 2023” or “Himadri glacier”"
                 aria-label="Search the archive"
-                className="min-w-0 flex-1 bg-transparent text-[#0b132b] dark:text-white text-base sm:text-sm py-2 focus:outline-none"
+                className="min-w-0 flex-1 bg-transparent text-[#0b132b] text-base sm:text-sm py-2 focus:outline-none"
               />
               <button
                 onClick={() => runSearch()}
@@ -247,7 +247,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                     setSearchQuery(p);
                     runSearch(p);
                   }}
-                  className="px-3 py-1.5 rounded-full bg-[#eff4ff] dark:bg-slate-800 hover:bg-[#dce9ff] dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs transition-colors text-left"
+                  className="px-3 py-1.5 rounded-full bg-[#eff4ff] hover:bg-[#dce9ff] text-slate-700 text-xs transition-colors text-left"
                 >
                   {p}
                 </button>
@@ -256,11 +256,11 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
             {/* Search results */}
             {searchResults ? (
-              <div className="p-4 md:p-5 rounded-2xl bg-[#eff4ff] dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200/80 dark:border-slate-800">
+              <div className="p-4 md:p-5 rounded-2xl bg-[#eff4ff] border border-slate-200">
+                <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200/80">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="material-symbols-outlined text-[#00677d] dark:text-[#4cd6fb] text-[18px]">manage_search</span>
-                    <span className="text-sm font-semibold text-[#0b132b] dark:text-white truncate">
+                    <span className="material-symbols-outlined text-[#00677d] text-[18px]">manage_search</span>
+                    <span className="text-sm font-semibold text-[#0b132b] truncate">
                       {searchResults.total} record{searchResults.total === 1 ? '' : 's'} for “{searchResults.query}”
                     </span>
                   </div>
@@ -287,7 +287,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                           onNavigate('stations');
                           onSelectStation(s.id);
                         }}
-                        className="px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-[#00677d] dark:text-[#4cd6fb] font-semibold flex items-center gap-1 hover:border-[#00b4d8]"
+                        className="px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-[#00677d] font-semibold flex items-center gap-1 hover:border-[#00b4d8]"
                       >
                         <span className="material-symbols-outlined text-[14px]">home_pin</span>
                         {s.name}
@@ -306,21 +306,21 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                       <button
                         key={r.id}
                         onClick={() => openResult(r)}
-                        className="p-3 rounded-xl bg-white dark:bg-slate-800 flex items-start gap-2.5 text-left hover:border-[#00b4d8] border border-slate-200 dark:border-slate-700 transition-colors"
+                        className="p-3 rounded-xl bg-white flex items-start gap-2.5 text-left hover:border-[#00b4d8] border border-slate-200 transition-colors"
                       >
-                        <span className="material-symbols-outlined text-[#00677d] dark:text-[#4cd6fb] text-[20px]">
+                        <span className="material-symbols-outlined text-[#00677d] text-[20px]">
                           {RESULT_ICON[r.type] ?? 'description'}
                         </span>
                         <div className="min-w-0">
-                          <span className="text-xs text-slate-500 dark:text-slate-400 block capitalize">
+                          <span className="text-xs text-slate-500 block capitalize">
                             {r.type}
                             {r.year ? ` · ${r.year}` : ''}
                             {r.meta?.sample ? ' · sample' : ''}
                           </span>
-                          <span className="text-sm font-semibold text-slate-800 dark:text-white block">
+                          <span className="text-sm font-semibold text-slate-800 block">
                             {r.title}
                           </span>
-                          <span className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                          <span className="text-xs text-slate-500 line-clamp-2">
                             <Snippet text={r.snippet || r.summary} />
                           </span>
                         </div>
@@ -335,7 +335,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
       </section>
 
       {/* SECTION 5: POLAR ACADEMY */}
-      <section id="academy" className="w-full py-10 md:py-14 bg-[#eff4ff] dark:bg-[#0c162c] transition-colors">
+      <section id="academy" className="w-full py-10 md:py-14 bg-[#eff4ff] transition-colors">
         <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
           <SectionHeader title="Polar Academy" text="Student missions built on real polar data, from Grade 6 to undergraduate." />
 
@@ -351,28 +351,28 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                     alt={mission.title}
                     className="w-full h-full object-cover"
                   />
-                  <span className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-[#00677d] dark:text-[#4cd6fb] font-['Space_Grotesk'] text-[10px] font-bold">
+                  <span className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-md text-[#00677d] font-['Space_Grotesk'] text-[10px] font-bold">
                     {mission.category}
                   </span>
                 </div>
 
                 <div className="p-4 md:p-5 flex flex-col flex-grow justify-between">
                   <div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">
+                    <p className="text-xs text-slate-500 mb-1">
                       {mission.grades} · {mission.subtopic}
                     </p>
 
-                    <h3 className="font-['Space_Grotesk'] text-base font-bold text-[#0b132b] dark:text-white mb-2">
+                    <h3 className="font-['Space_Grotesk'] text-base font-bold text-[#0b132b] mb-2">
                       {mission.title}
                     </h3>
 
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-sm text-slate-600 leading-relaxed">
                       {mission.description}
                     </p>
                   </div>
 
                   <div className="flex items-center justify-between gap-3 pt-3">
-                    <span className="text-xs text-slate-500 dark:text-slate-400">{mission.duration}</span>
+                    <span className="text-xs text-slate-500">{mission.duration}</span>
                     <button
                       onClick={() => onOpenSimulation(mission)}
                       className="px-4 py-2 rounded-lg bg-[#00677d] hover:bg-[#005466] text-white text-sm font-semibold transition-colors"
@@ -388,7 +388,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
       </section>
 
       {/* SECTION 6: PUBLICATIONS AND MEDIA */}
-      <section className="w-full bg-white dark:bg-[#0b132b] py-10 md:py-14 transition-colors">
+      <section className="w-full bg-white py-10 md:py-14 transition-colors">
         <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
           <SectionHeader title="Publications and media" text="Recent papers with their data, plus photos and film from the expeditions." />
 
@@ -402,7 +402,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-semibold text-[#00677d] dark:text-[#4cd6fb]">
+                      <span className="text-xs font-semibold text-[#00677d]">
                         {paper.domain.charAt(0) + paper.domain.slice(1).toLowerCase()}
                       </span>
                       <span className="text-xs text-slate-400">
@@ -412,18 +412,18 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
                     <h4
                       onClick={() => onOpenPaper(paper)}
-                      className="font-['Space_Grotesk'] text-base text-[#0b132b] dark:text-white font-bold mb-2 leading-snug cursor-pointer hover:text-[#00b4d8]"
+                      className="font-['Space_Grotesk'] text-base text-[#0b132b] font-bold mb-2 leading-snug cursor-pointer hover:text-[#00b4d8]"
                     >
                       {paper.title}
                     </h4>
 
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-3 line-clamp-2">
+                    <p className="text-sm text-slate-600 mb-3 line-clamp-2">
                       {paper.abstract}
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs pt-3 border-t border-slate-100 dark:border-slate-700/60">
-                    <span className="text-slate-500 dark:text-slate-400">{paper.authors}</span>
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs pt-3 border-t border-slate-100">
+                    <span className="text-slate-500">{paper.authors}</span>
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => onOpenPaper(paper)}
@@ -433,7 +433,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                       </button>
                       <button
                         onClick={() => onOpenDataset(paper.dataFile)}
-                        className="text-[#00677d] dark:text-[#4cd6fb] font-bold hover:underline flex items-center gap-1"
+                        className="text-[#00677d] font-bold hover:underline flex items-center gap-1"
                       >
                         <span className="material-symbols-outlined text-[14px]">download</span>
                         Data ({paper.fileSize})
@@ -463,10 +463,10 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   </div>
                 </div>
                 <div className="p-3 flex items-center justify-between text-sm">
-                  <span className="text-slate-500 dark:text-slate-400">Photo archive</span>
+                  <span className="text-slate-500">Photo archive</span>
                   <button
                     onClick={onOpenMediaGallery}
-                    className="text-[#00677d] dark:text-[#4cd6fb] font-bold hover:underline"
+                    className="text-[#00677d] font-bold hover:underline"
                   >
                     Browse gallery →
                   </button>
@@ -494,10 +494,10 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   </div>
                 </div>
                 <div className="p-3 flex items-center justify-between text-sm">
-                  <span className="text-slate-500 dark:text-slate-400">English and Hindi transcripts</span>
+                  <span className="text-slate-500">English and Hindi transcripts</span>
                   <button
                     onClick={onOpenSkycam}
-                    className="text-[#00677d] dark:text-[#4cd6fb] font-bold hover:underline"
+                    className="text-[#00677d] font-bold hover:underline"
                   >
                     Watch →
                   </button>
@@ -509,7 +509,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
       </section>
 
       {/* SECTION 7: CALL FOR PROPOSALS */}
-      <section className="w-full py-10 md:py-14 bg-[#eff4ff] dark:bg-[#0c162c] transition-colors">
+      <section className="w-full py-10 md:py-14 bg-[#eff4ff] transition-colors">
         <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
           <div className="rounded-2xl p-6 md:p-10 bg-[#0b132b] text-white">
             <p className="text-xs font-semibold text-[#4cd6fb] mb-2">Call for research proposals · 46th ISEA and the next Arctic season</p>

@@ -21,21 +21,21 @@ const LINKS = [
   ['https://github.com/ScholarlyAdeeb/POLARIS', 'Source code'],
 ];
 
-const linkCls = 'text-left text-sm text-slate-600 dark:text-slate-400 hover:text-[#0b1c30] dark:hover:text-white';
-const headCls = 'text-sm font-semibold text-[#0b1c30] dark:text-white mb-1';
+const linkCls = 'text-left text-sm text-slate-600 hover:text-[#0b1c30]';
+const headCls = 'text-sm font-semibold text-[#0b1c30] mb-1';
 
 export const Footer: React.FC = () => (
-  <footer className="w-full bg-[#f4f7fb] dark:bg-[#070c18] border-t border-slate-200 dark:border-slate-800 pt-10 pb-8 transition-colors">
+  <footer className="w-full bg-[#f4f7fb] border-t border-slate-200 pt-10 pb-8 transition-colors">
     <div className="w-full max-w-[1440px] mx-auto px-4 md:px-8">
-      <div className="flex flex-col lg:flex-row items-start justify-between gap-8 pb-8 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col lg:flex-row items-start justify-between gap-8 pb-8 border-b border-slate-200">
         <div className="max-w-sm">
           <div className="flex items-center gap-2 mb-2">
-            <span className="h-7 w-7 rounded-md bg-white p-0.5 ring-1 ring-slate-200 dark:ring-slate-700">
+            <span className="h-7 w-7 rounded-md bg-white p-0.5 ring-1 ring-slate-200">
               <img alt="" className="h-full w-full object-contain" src="/polaris-emblem.svg" />
             </span>
-            <span className="font-['Space_Grotesk'] text-lg font-bold text-[#0b1c30] dark:text-white">POLARIS</span>
+            <span className="font-['Space_Grotesk'] text-lg font-bold text-[#0b1c30]">POLARIS</span>
           </div>
-          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          <p className="text-sm text-slate-600 leading-relaxed">
             One place to archive, search and share India’s polar science. A Smart India Hackathon 2026 prototype by Team Pehchaan.
           </p>
         </div>
@@ -68,7 +68,7 @@ export const Footer: React.FC = () => (
         </div>
       </div>
 
-      <p className="pt-6 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+      <p className="pt-6 text-xs text-slate-500 leading-relaxed">
         © 2026 Team Pehchaan · SIH 2026 prototype for NCPOR, MoES. Not an official Government of India website. Records marked “sample” are illustrative.
       </p>
     </div>

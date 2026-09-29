@@ -51,7 +51,6 @@ function recordToPaper(r: ArchiveItem): ScientificPaper {
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isPolarNight, setIsPolarNight] = useState(false);
   const [language, setLanguage] = useState<'EN' | 'HI'>('EN');
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
@@ -91,11 +90,6 @@ export default function App() {
     selectStation(id);
     navigate(`/stations/${id}`);
   };
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', isPolarNight);
-    document.documentElement.classList.toggle('polar-night', isPolarNight);
-  }, [isPolarNight]);
 
   // Leaving a page closes any open viewer so it never covers the next page.
   useEffect(() => {
@@ -170,10 +164,8 @@ export default function App() {
   const loading = <div className="sci-page min-h-[60vh] flex items-center justify-center text-sm sci-muted">Loading…</div>;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f8f9ff] dark:bg-[#070c18] text-[#0b1c30] dark:text-[#e6f0ff] transition-colors">
+    <div className="min-h-screen flex flex-col bg-[#f8f9ff] text-[#0b1c30] transition-colors">
       <Header
-        isPolarNight={isPolarNight}
-        setIsPolarNight={setIsPolarNight}
         language={language}
         setLanguage={setLanguage}
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}

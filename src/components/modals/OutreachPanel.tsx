@@ -45,7 +45,7 @@ export const OutreachPanel: React.FC<{ itemId: string }> = ({ itemId }) => {
 
   if (!content) {
     return (
-      <div className="p-4 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 flex flex-wrap items-center justify-between gap-3">
+      <div className="p-4 rounded-xl border border-dashed border-slate-300 flex flex-wrap items-center justify-between gap-3">
         <div>
           <span className="font-['Space_Grotesk'] font-bold text-xs uppercase tracking-wider text-slate-500 block">
             Outreach & Media Dissemination
@@ -68,8 +68,8 @@ export const OutreachPanel: React.FC<{ itemId: string }> = ({ itemId }) => {
   }
 
   return (
-    <div className="rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
-      <div className="flex flex-wrap items-center gap-1 p-1.5 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+    <div className="rounded-xl border border-slate-200 overflow-hidden">
+      <div className="flex flex-wrap items-center gap-1 p-1.5 bg-slate-50 border-b border-slate-200">
         {content.map((c) => (
           <button
             key={c.channel}
@@ -77,7 +77,7 @@ export const OutreachPanel: React.FC<{ itemId: string }> = ({ itemId }) => {
             className={`px-2.5 py-1 rounded-lg font-['JetBrains_Mono'] text-[11px] font-bold transition-colors ${
               active === c.channel
                 ? 'bg-[#00677d] text-white'
-                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800'
+                : 'text-slate-600 hover:bg-slate-200'
             }`}
           >
             {CHANNEL_LABEL[c.channel]}
