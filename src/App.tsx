@@ -39,6 +39,17 @@ function recordToPaper(r: ArchiveItem): ScientificPaper {
   };
 }
 
+const VIEW_FOR_TAB: Record<NavTab, 'explore' | 'station' | 'map'> = {
+  explore: 'explore',
+  knowledge: 'explore',
+  learn: 'explore',
+  stations: 'station',
+  media: 'station',
+  map: 'map',
+  expeditions: 'map',
+  data: 'map',
+};
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('explore');
   const [activeDomain, setActiveDomain] = useState<DomainType>('ANTARCTICA');
@@ -64,23 +75,13 @@ export default function App() {
 
   // Apply polar night dark class to HTML
   useEffect(() => {
-    if (isPolarNight) {
-      document.documentElement.classList.add('dark', 'polar-night');
-    } else {
-      document.documentElement.classList.remove('dark', 'polar-night');
-    }
+    document.documentElement.classList.toggle('dark', isPolarNight);
+    document.documentElement.classList.toggle('polar-night', isPolarNight);
   }, [isPolarNight]);
 
-  const handleOpenSimulation = (mission: SimulationMission) => {
-    setActiveSimulation(mission);
-  };
-
-  const handleOpenPaper = (paper: ScientificPaper) => {
-    setActivePaper(paper);
-  };
-
-  const handleOpenDataset = (datasetName: string) => {
-    setActiveDataset(datasetName);
+  const openStation = (id: string) => {
+    setSelectedStationId(id);
+    setActiveTab('stations');
   };
 
   /** Open any archive record in the most specific viewer available. */
@@ -150,98 +151,42 @@ export default function App() {
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
       />
 
-      {/* Main View Area */}
+      {/* Main View Area: several tabs share a view; key={activeTab} remounts it on every tab switch */}
       <main className="w-full pt-24 flex-1">
-        {activeTab === 'explore' && (
+        {VIEW_FOR_TAB[activeTab] === 'explore' && (
           <ExploreView
+            key={activeTab}
             onNavigate={setActiveTab}
-            onSelectStation={(id) => {
-              setSelectedStationId(id);
-              setActiveTab('stations');
-            }}
-            onOpenSimulation={handleOpenSimulation}
-            onOpenPaper={handleOpenPaper}
+            onSelectStation={openStation}
+            onOpenSimulation={setActiveSimulation}
+            onOpenPaper={setActivePaper}
             onOpenSkycam={() => setSkycamOpen(true)}
             onOpenProposal={() => setProposalModalOpen(true)}
-            onOpenDataset={handleOpenDataset}
+            onOpenDataset={setActiveDataset}
             onOpenRecord={handleOpenRecord}
             onOpenMediaGallery={() => setMediaGalleryOpen(true)}
             onShowToast={handleShowToast}
           />
         )}
 
-        {activeTab === 'stations' && (
+        {VIEW_FOR_TAB[activeTab] === 'station' && (
           <BharatiStationView
+            key={activeTab}
             onNavigate={setActiveTab}
-            onOpenSimulation={handleOpenSimulation}
-            onOpenPaper={handleOpenPaper}
+            onOpenSimulation={setActiveSimulation}
+            onOpenPaper={setActivePaper}
             onOpenSkycam={() => setSkycamOpen(true)}
-            onOpenDataset={handleOpenDataset}
+            onOpenDataset={setActiveDataset}
             onShowToast={handleShowToast}
           />
         )}
 
-        {(activeTab === 'map' || activeTab === 'expeditions') && (
+        {VIEW_FOR_TAB[activeTab] === 'map' && (
           <PolarMapView
+            key={activeTab}
             onNavigate={setActiveTab}
-            onSelectStation={(id) => setSelectedStationId(id)}
+            onSelectStation={setSelectedStationId}
             selectedStationId={selectedStationId}
-            onShowToast={handleShowToast}
-          />
-        )}
-
-        {activeTab === 'knowledge' && (
-          <ExploreView
-            onNavigate={setActiveTab}
-            onSelectStation={(id) => {
-              setSelectedStationId(id);
-              setActiveTab('stations');
-            }}
-            onOpenSimulation={handleOpenSimulation}
-            onOpenPaper={handleOpenPaper}
-            onOpenSkycam={() => setSkycamOpen(true)}
-            onOpenProposal={() => setProposalModalOpen(true)}
-            onOpenDataset={handleOpenDataset}
-            onOpenRecord={handleOpenRecord}
-            onOpenMediaGallery={() => setMediaGalleryOpen(true)}
-            onShowToast={handleShowToast}
-          />
-        )}
-
-        {activeTab === 'data' && (
-          <PolarMapView
-            onNavigate={setActiveTab}
-            onSelectStation={(id) => setSelectedStationId(id)}
-            selectedStationId={selectedStationId}
-            onShowToast={handleShowToast}
-          />
-        )}
-
-        {activeTab === 'media' && (
-          <BharatiStationView
-            onNavigate={setActiveTab}
-            onOpenSimulation={handleOpenSimulation}
-            onOpenPaper={handleOpenPaper}
-            onOpenSkycam={() => setSkycamOpen(true)}
-            onOpenDataset={handleOpenDataset}
-            onShowToast={handleShowToast}
-          />
-        )}
-
-        {activeTab === 'learn' && (
-          <ExploreView
-            onNavigate={setActiveTab}
-            onSelectStation={(id) => {
-              setSelectedStationId(id);
-              setActiveTab('stations');
-            }}
-            onOpenSimulation={handleOpenSimulation}
-            onOpenPaper={handleOpenPaper}
-            onOpenSkycam={() => setSkycamOpen(true)}
-            onOpenProposal={() => setProposalModalOpen(true)}
-            onOpenDataset={handleOpenDataset}
-            onOpenRecord={handleOpenRecord}
-            onOpenMediaGallery={() => setMediaGalleryOpen(true)}
             onShowToast={handleShowToast}
           />
         )}
@@ -250,10 +195,7 @@ export default function App() {
       {/* Global Footer */}
       <Footer
         onNavigate={setActiveTab}
-        onSelectStation={(id) => {
-          setSelectedStationId(id);
-          setActiveTab('stations');
-        }}
+        onSelectStation={openStation}
       />
 
       {/* Interactive Global Modals */}
@@ -270,7 +212,7 @@ export default function App() {
       <PaperModal
         paper={activePaper}
         onClose={() => setActivePaper(null)}
-        onOpenDataset={handleOpenDataset}
+        onOpenDataset={setActiveDataset}
       />
 
       <DatasetModal
@@ -283,7 +225,7 @@ export default function App() {
         isOpen={commandPaletteOpen}
         onClose={() => setCommandPaletteOpen(false)}
         onNavigate={setActiveTab}
-        onSelectStation={(id) => setSelectedStationId(id)}
+        onSelectStation={setSelectedStationId}
         onOpenResult={openArchiveRecord}
       />
 
