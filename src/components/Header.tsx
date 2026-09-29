@@ -59,11 +59,9 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => setActiveTab('explore')}
             className="flex items-center gap-2 sm:gap-3 cursor-pointer group select-none min-w-0"
           >
-            <img 
-              alt="POLARIS Emblem" 
-              className="h-9 w-auto object-contain transition-transform group-hover:scale-105 drop-shadow-xs" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiCBf_fzJC3otVNs1O9mCueDKQUMFMNJEFCJwZG96OrIBQ7BdEP_vSewEjY5S2L7fMPwfq3yElY69bgXFV4VFNOcC1nZy067m9MUybBc-QhaHRr8wj0BrZtAn4arOe9eRUfDu3XJLspiwqWfNCG4szkh77nx2WDh-JOHLmMCUpVuDSbxW5SrjepdM2rtcnJCGl02KCw-d-upkanY9D9JbD9KKqw-xrq0K1gDPrOaTulCg3TJaivjFjjw" 
-            />
+            <span className="h-9 w-9 shrink-0 rounded-lg bg-white p-0.5 ring-1 ring-slate-200 dark:ring-slate-700 flex items-center justify-center">
+              <img alt="POLARIS emblem" className="h-full w-full object-contain" src="/polaris-emblem.svg" />
+            </span>
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="font-['Space_Grotesk'] text-lg md:text-xl tracking-tight text-[#0b1c30] dark:text-white font-bold leading-none">
