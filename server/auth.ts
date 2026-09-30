@@ -2,6 +2,7 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import crypto from 'crypto';
 import { NOW, type Db } from './pg.ts';
 import { HttpError, intOrNull, rateLimit, str, wrap } from './http.ts';
+import { blobEnabled } from './uploads.ts';
 
 /**
  * Accounts and sessions.
@@ -188,7 +189,12 @@ export function createAuthRouter(db: Db) {
   );
 
   r.get('/me', (req, res) => res.json(req.user ?? null));
-  r.get('/config', (_req, res) => res.json({ demoAccounts: demoAccountsEnabled() ? DEMO.map((d) => ({ username: d.username, password: d.password, role: d.role })) : [] }));
+  r.get('/config', (_req, res) =>
+    res.json({
+      demoAccounts: demoAccountsEnabled() ? DEMO.map((d) => ({ username: d.username, password: d.password, role: d.role })) : [],
+      blobUploads: blobEnabled(),
+    })
+  );
   return r;
 }
 

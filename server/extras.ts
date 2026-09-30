@@ -1,12 +1,11 @@
 import express, { type Request } from 'express';
-import fs from 'fs';
 import type { Db } from './pg.ts';
 import { getItem, listStations, rowToItem, type ArchiveItem } from './db.ts';
 import { HttpError, intOrNull, rateLimit, sendDownload, wrap } from './http.ts';
 import { isReviewer, requireRole } from './auth.ts';
 import { itemLocation, stationLocation } from './geo.ts';
 import { syntheticSeries } from './files.ts';
-import { uploadPath } from './uploads.ts';
+import { readUploadText } from './uploads.ts';
 import { stationClimate } from './realdata.ts';
 
 // --- usage counters (no personal data: day + kind + key only) -------------------------
@@ -292,9 +291,9 @@ export function createExtrasRouter(db: Db) {
           dataStatus: 'EXTERNAL',
         });
       }
-      const file = uploadPath(item.url);
-      if (file && /\.csv$/i.test(file)) {
-        const parsed = parseCsv(fs.readFileSync(file, 'utf8'));
+      const text = /\.csv$/i.test(item.url || '') ? await readUploadText(item.url) : null;
+      if (text !== null) {
+        const parsed = parseCsv(text);
         if (!parsed) throw new HttpError(422, 'The uploaded CSV has no numeric columns to chart');
         return res.json({ ...parsed, source: 'Uploaded file', dataStatus: item.dataStatus });
       }

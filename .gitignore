@@ -12,3 +12,5 @@ coverage/
 # Android app: generated launcher config and local SDK path
 mobile-shell/config.js
 android/local.properties
+
+.vercel

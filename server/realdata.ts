@@ -1,4 +1,5 @@
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import type { StationData } from '../src/types/polaris.ts';
 import { stationLocation, type LatLon } from './geo.ts';
@@ -16,7 +17,10 @@ export const ERA5_SOURCE = 'ERA5 reanalysis (Copernicus / ECMWF) via Open-Meteo,
 /** Ships have no fixed position, so they get no location-based data. */
 export const fixedStation = (s: StationData) => !/sagar|ship|orv/i.test(`${s.id} ${s.name}`);
 
-const CACHE_DIR = path.resolve(process.cwd(), process.env.DB_PATH ? path.dirname(process.env.DB_PATH) : 'data', 'cache');
+// Serverless hosts (Vercel) only allow writes under the temp directory.
+const CACHE_DIR = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'polaris-cache')
+  : path.resolve(process.cwd(), process.env.DB_PATH ? path.dirname(process.env.DB_PATH) : 'data', 'cache');
 
 async function getJson(url: string, timeoutMs = 10_000): Promise<any> {
   const res = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });

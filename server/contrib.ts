@@ -5,7 +5,7 @@ import { NOW } from './pg.ts';
 import { ARCHIVE_TYPES, getItem, insertItem, listStations, rowToItem, type ArchiveItem, type ArchiveType } from './db.ts';
 import { HttpError, intOrNull, publicBase, str, tag, wrap } from './http.ts';
 import { requireRole, type SessionUser } from './auth.ts';
-import { rawBody, saveUpload } from './uploads.ts';
+import { blobUploadToken, describeBlobUpload, rawBody, saveUpload } from './uploads.ts';
 import { search } from './search.ts';
 import { nearestStation, regionFor, validLatLon } from './geo.ts';
 import { CHANNELS, generateContent, type Channel } from './outreach.ts';
@@ -154,7 +154,10 @@ export function createContributorRouter(db: Db) {
   r.use(requireRole());
   r.use((req, _res, next) => (req.user!.id > 0 ? next() : next(new HttpError(403, 'The admin token cannot own work. Create a contributor account to upload.'))));
 
-  r.post('/uploads', rawBody, wrap((req, res) => res.status(201).json(saveUpload(req))));
+  r.post('/uploads', rawBody, wrap(async (req, res) => res.status(201).json(await saveUpload(req))));
+  // Direct browser → Vercel Blob uploads: token exchange, then register the finished file.
+  r.post('/uploads/blob', wrap(async (req, res) => res.json(await blobUploadToken(req))));
+  r.post('/uploads/complete', wrap((req, res) => res.status(201).json(describeBlobUpload(req.body))));
 
   r.post(
     '/suggest',

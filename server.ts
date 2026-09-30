@@ -2,24 +2,18 @@ import 'dotenv/config'; // must run before ./server/api.ts reads ADMIN_TOKEN, DA
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createApiRouter, UPLOAD_DIR } from './server/api.ts';
-import { initDb } from './server/db.ts';
+import { createApp } from './server/app.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
 const port = parseInt(process.env.PORT || '3000', 10);
 const isProduction = process.env.NODE_ENV === 'production';
-
-app.disable('x-powered-by');
 
 // Setup dev server with Vite or production static handler
 async function startServer() {
   // REST API (PostgreSQL knowledge repository) and uploaded media
-  await initDb();
-  app.use('/api', await createApiRouter());
-  app.use('/uploads', express.static(UPLOAD_DIR, { fallthrough: false, dotfiles: 'deny' }));
+  const app = await createApp();
 
   if (!isProduction) {
     const { createServer: createViteServer } = await import('vite');

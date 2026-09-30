@@ -628,7 +628,7 @@ export async function createApiRouter() {
     })
   );
 
-  admin.post('/uploads', rawBody, wrap((req, res) => res.status(201).json(saveUpload(req))));
+  admin.post('/uploads', rawBody, wrap(async (req, res) => res.status(201).json(await saveUpload(req))));
 
   admin.get('/proposals', wrap(async (_req, res) => res.json(await db.all('SELECT * FROM proposals ORDER BY id DESC'))));
 

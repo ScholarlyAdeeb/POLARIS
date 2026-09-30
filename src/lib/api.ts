@@ -332,11 +332,25 @@ const qs = (params: Record<string, string | number | undefined | null>) =>
 const adminRequest = <T,>(path: string, init?: RequestInit) =>
   request<T>(`/admin${path}`, { ...init, headers: { ...(adminToken.get() ? { authorization: `Bearer ${adminToken.get()}` } : {}), ...init?.headers } });
 
+type Uploaded = { url: string; kind: 'image' | 'video' | 'document' | 'data'; bytes: number; originalName: string };
+
 async function uploadFile(path: string, file: File) {
   const res = await fetch(`/api${path}`, { method: 'POST', body: file, headers: { 'x-filename': file.name } });
   const body = await res.json().catch(() => null);
   if (!res.ok) throw new ApiError(res.status, body?.error || `Upload failed (${res.status})`);
-  return body as { url: string; kind: 'image' | 'video' | 'document' | 'data'; bytes: number; originalName: string };
+  return body as Uploaded;
+}
+
+// When the server has a Vercel Blob store, the browser uploads straight to Blob (no 4.5 MB function limit)
+// and then registers the finished file; otherwise the bytes are posted to the API as before.
+let blobUploads: Promise<boolean> | null = null;
+async function contributorUpload(file: File): Promise<Uploaded> {
+  blobUploads ??= request<{ blobUploads?: boolean }>('/auth/config').then((c) => Boolean(c.blobUploads)).catch(() => false);
+  if (!(await blobUploads)) return uploadFile('/me/uploads', file);
+  const { upload } = await import('@vercel/blob/client');
+  const safe = file.name.replace(/[^A-Za-z0-9._-]+/g, '-');
+  const blob = await upload(`uploads/${safe}`, file, { access: 'public', handleUploadUrl: '/api/me/uploads/blob', multipart: file.size > 20 * 1024 * 1024 });
+  return request<Uploaded>('/me/uploads/complete', { method: 'POST', body: JSON.stringify({ url: blob.url, originalName: file.name, bytes: file.size }) });
 }
 
 export const api = {
@@ -355,10 +369,10 @@ export const api = {
     register: (b: { name: string; email: string; password: string; institution?: string }) =>
       request<User>('/auth/register', { method: 'POST', body: JSON.stringify(b) }),
     logout: () => request<null>('/auth/logout', { method: 'POST' }),
-    config: () => request<{ demoAccounts: { username: string; password: string; role: Role }[] }>('/auth/config'),
+    config: () => request<{ demoAccounts: { username: string; password: string; role: Role }[]; blobUploads?: boolean }>('/auth/config'),
   },
   me: {
-    upload: (file: File) => uploadFile('/me/uploads', file),
+    upload: (file: File) => contributorUpload(file),
     suggest: (b: Partial<RecordInput> & { excludeId?: string }) => request<MappingSuggestion>('/me/suggest', { method: 'POST', body: JSON.stringify(b) }),
     records: () => request<ArchiveItem[]>('/me/records'),
     record: (id: string) => request<ArchiveItem & { links: LinkedRecord[] }>(`/me/records/${encodeURIComponent(id)}`),
