@@ -44,7 +44,7 @@ export function ExplorePage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
       setBusy(true);
       api
         .archive({ ...filters, limit: 40 })
-        .then((r) => live && setRes({ query: '', mode: 'lexical', matchedAllTerms: true, total: r.total, results: r.items.map((i) => ({ ...i, snippet: i.summary })), stations: [] }))
+        .then((r) => live && setRes({ query: '', matchedAllTerms: true, total: r.total, results: r.items.map((i) => ({ ...i, snippet: i.summary })), stations: [] }))
         .catch((e) => live && setError(e.message))
         .finally(() => live && setBusy(false));
       return () => {
@@ -92,7 +92,7 @@ export function ExplorePage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
     <Page>
       <PageHeader
         title="Explore the archive"
-        text="Hybrid search: BM25 keyword ranking over SQLite FTS5, fused with semantic embeddings when the ML service is running."
+        text="Full-text search over every approved record, ranked by relevance. Filter by region, station, year, theme, type and data status."
       />
 
       <form
@@ -145,11 +145,6 @@ export function ExplorePage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
             {res.total} {res.total === 1 ? 'record' : 'records'}
             {query ? ` for “${query}”` : ''}
           </span>
-          {query && (
-            <span className={`px-2 py-0.5 rounded-md text-xs font-semibold ${res.mode === 'hybrid' ? 'bg-violet-100 text-violet-800' : 'bg-slate-200 text-slate-700'}`}>
-              {res.mode === 'hybrid' ? 'Hybrid: BM25 + semantic (RRF)' : 'Lexical: BM25'}
-            </span>
-          )}
           {active > 0 && (
             <button
               className="text-xs sci-accent hover:underline"
@@ -162,7 +157,6 @@ export function ExplorePage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
               Clear {active} filter{active > 1 ? 's' : ''}
             </button>
           )}
-          {res.semanticNote && <span className="text-xs sci-muted basis-full">{res.semanticNote}</span>}
           {query && !res.matchedAllTerms && res.total > 0 && <span className="text-xs sci-muted basis-full">No record matched every term; showing the closest matches.</span>}
         </div>
       )}
@@ -183,12 +177,6 @@ export function ExplorePage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
               <p className="text-sm sci-ink-2 mt-1 line-clamp-2">
                 <Snippet text={r.snippet || r.summary} />
               </p>
-              {query && (
-                <p className="text-[11px] sci-mono sci-muted mt-2">
-                  BM25 rank {r.lexicalRank ?? '—'} · semantic rank {r.semanticRank ?? '—'}
-                  {r.semanticScore != null ? ` (cos ${r.semanticScore})` : ''}
-                </p>
-              )}
             </button>
           </li>
         ))}

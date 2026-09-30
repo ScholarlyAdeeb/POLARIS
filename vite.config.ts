@@ -13,11 +13,5 @@ export default defineConfig(() => {
         '@': path.resolve(import.meta.dirname, '.'),
       },
     },
-    server: {
-      // Set DISABLE_HMR=true to turn off hot module reload.
-      hmr: process.env.DISABLE_HMR !== 'true',
-      // File watching is also disabled when DISABLE_HMR is true.
-      watch: process.env.DISABLE_HMR === 'true' ? null : {},
-    },
   };
 });

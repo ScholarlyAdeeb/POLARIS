@@ -9,11 +9,10 @@ interface DatasetModalProps {
   datasetName: string | null;
   onClose: () => void;
   onOpenRecord?: (id: string) => void;
-  onAsk?: (question: string) => void;
   onDraft?: (itemId: string) => void;
 }
 
-export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose, onOpenRecord, onAsk, onDraft }) => {
+export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose, onOpenRecord, onDraft }) => {
   const [dataset, setDataset] = useState<DatasetDetail | null>(null);
   const [error, setError] = useState('');
 
@@ -176,11 +175,6 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
               <span className="material-symbols-outlined text-[16px]">{opensPublisher ? 'open_in_new' : 'download'}</span>
               <span>{opensPublisher ? 'Get the data' : 'Download dataset'}</span>
             </button>
-            {dataset && onAsk && (
-              <button onClick={() => onAsk(`What does the archive say about ${dataset.title}?`)} className="px-3 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold">
-                Ask assistant
-              </button>
-            )}
             {dataset && onDraft && (
               <button onClick={() => onDraft(dataset.id)} className="px-3 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold">
                 Draft outreach

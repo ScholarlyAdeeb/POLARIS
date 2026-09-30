@@ -1,8 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { NavTab, ScientificPaper, SimulationMission } from './types/polaris';
@@ -12,7 +7,6 @@ import { ExploreView } from './components/ExploreView';
 import { PolarMapView } from './components/PolarMapView';
 import { Footer } from './components/Footer';
 import { ExplorePage } from './pages/ExplorePage';
-import { AssistantPage } from './pages/AssistantPage';
 import { ContentStudioPage } from './pages/ContentStudioPage';
 import { AdminPage } from './pages/AdminPage';
 import { LoginPage } from './pages/LoginPage';
@@ -208,7 +202,6 @@ export default function App() {
             <Route path="/stations" element={<StationsIndex />} />
             <Route path="/stations/:id" element={<StationRoutes {...viewers} />} />
             <Route path="/knowledge-graph" element={<KnowledgeGraphPage {...viewers} />} />
-            <Route path="/ai" element={<AssistantPage {...viewers} />} />
             <Route path="/content" element={<Navigate to="/content/review" replace />} />
             <Route path="/content/review" element={<ContentStudioPage />} />
             <Route path="/admin" element={<AdminPage onOpenRecord={handleOpenRecord} />} />
@@ -234,10 +227,6 @@ export default function App() {
         datasetName={activeDataset}
         onClose={() => setActiveDataset(null)}
         onOpenRecord={handleOpenRecord}
-        onAsk={(q) => {
-          setActiveDataset(null);
-          navigate(`/ai?q=${encodeURIComponent(q)}`);
-        }}
         onDraft={(id) => {
           setActiveDataset(null);
           navigate(`/content/review?item=${encodeURIComponent(id)}`);

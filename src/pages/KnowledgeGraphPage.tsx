@@ -17,7 +17,7 @@ const COLOR: Record<string, string> = {
   video: '#64748b',
   activity: '#64748b',
 };
-const STATUS_RING: Record<string, string> = { SAMPLE: '#f59e0b', SYNTHETIC: '#f97316', AI_GENERATED: '#8b5cf6', OFFICIAL: '#10b981', VERIFIED: '#14b8a6' };
+const STATUS_RING: Record<string, string> = { SAMPLE: '#f59e0b', SYNTHETIC: '#f97316', OFFICIAL: '#10b981', VERIFIED: '#14b8a6' };
 
 function layout(nodes: GraphNode[], edges: GraphEdge[]): { nodes: Node[]; edges: Edge[] } {
   const rows: Record<number, number> = {};

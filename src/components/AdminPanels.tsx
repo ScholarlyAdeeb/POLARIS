@@ -212,12 +212,11 @@ export function AnalyticsPanel() {
       <ErrorNote error={error} />
       {a && (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {[
               ['Page views', a.totals.page ?? 0],
               ['Searches', a.totals.search ?? 0],
               ['Downloads', a.totals.download ?? 0],
-              ['Assistant questions', a.totals.ask ?? 0],
             ].map(([k, v]) => (
               <div key={k} className="sci-well p-3">
                 <p className="text-[11px] sci-muted">{k}</p>

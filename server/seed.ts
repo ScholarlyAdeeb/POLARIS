@@ -1,4 +1,4 @@
-import type { DatabaseSync } from 'node:sqlite';
+import type { Db } from './pg.ts';
 import {
   HOTSPOT_DATA,
   STATIONS_DATA,
@@ -7,7 +7,7 @@ import {
   SIMULATION_MISSIONS,
   VALUE_GRAPH_STEPS,
 } from '../src/data/polarisData.ts';
-import { insertItem, type ArchiveInput } from './db.ts';
+import { insertItems, type ArchiveInput } from './db.ts';
 
 // Every record added here (beyond what the frontend already shipped) is demo
 // content and carries meta.sample = true so it is never mistaken for real
@@ -31,21 +31,14 @@ function expeditionId(year: number, title: string) {
   return `exp-${year}-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 24).replace(/-$/, '')}`;
 }
 
-export function seedDatabase(db: DatabaseSync): void {
-  db.exec('BEGIN');
-  try {
+/** Seeds an empty database. Runs inside the caller's transaction. */
+export async function seedDatabase(db: Db): Promise<void> {
+  {
     // --- Site structure -----------------------------------------------------
-    const insStation = db.prepare('INSERT INTO stations (id, domain, sort, data) VALUES (?, ?, ?, ?)');
-    STATIONS_DATA.forEach((s, i) => insStation.run(s.id, s.domain, i, JSON.stringify(s)));
-
-    const insHotspot = db.prepare('INSERT INTO hotspots (id, station_id, data) VALUES (?, ?, ?)');
-    Object.entries(HOTSPOT_DATA).forEach(([k, h]) => insHotspot.run(Number(k), 'bharati', JSON.stringify(h)));
-
-    const insSim = db.prepare('INSERT INTO simulations (id, sort, data) VALUES (?, ?, ?)');
-    SIMULATION_MISSIONS.forEach((m, i) => insSim.run(m.id, i, JSON.stringify(m)));
-
-    const insStep = db.prepare('INSERT INTO value_graph_steps (step, data) VALUES (?, ?)');
-    VALUE_GRAPH_STEPS.forEach((s) => insStep.run(s.step, JSON.stringify(s)));
+    for (const [i, s] of STATIONS_DATA.entries()) await db.run('INSERT INTO stations (id, domain, sort, data) VALUES (?, ?, ?, ?)', s.id, s.domain, i, JSON.stringify(s));
+    for (const [k, h] of Object.entries(HOTSPOT_DATA)) await db.run('INSERT INTO hotspots (id, station_id, data) VALUES (?, ?, ?)', Number(k), 'bharati', JSON.stringify(h));
+    for (const [i, m] of SIMULATION_MISSIONS.entries()) await db.run('INSERT INTO simulations (id, sort, data) VALUES (?, ?, ?)', m.id, i, JSON.stringify(m));
+    for (const s of VALUE_GRAPH_STEPS) await db.run('INSERT INTO value_graph_steps (step, data) VALUES (?, ?)', s.step, JSON.stringify(s));
 
     const items: ArchiveInput[] = [];
     const links: [string, string, string][] = [];
@@ -311,13 +304,10 @@ export function seedDatabase(db: DatabaseSync): void {
       }
     );
 
-    for (const item of items) insertItem(db, item);
-    const insLink = db.prepare('INSERT OR IGNORE INTO item_links (from_id, to_id, relation) VALUES (?, ?, ?)');
-    for (const [a, b, r] of links) insLink.run(a, b, r);
-
-    db.exec('COMMIT');
-  } catch (err) {
-    db.exec('ROLLBACK');
-    throw err;
+    await insertItems(db, items);
+    await db.run(
+      `INSERT INTO item_links (from_id, to_id, relation) VALUES ${links.map(() => '(?, ?, ?)').join(', ')} ON CONFLICT DO NOTHING`,
+      ...links.flat()
+    );
   }
 }

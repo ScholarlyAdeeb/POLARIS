@@ -1,6 +1,6 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
 import crypto from 'crypto';
-import type { DatabaseSync } from 'node:sqlite';
+import { NOW, type Db } from './pg.ts';
 import { HttpError, intOrNull, rateLimit, str, wrap } from './http.ts';
 
 /**
@@ -74,23 +74,27 @@ function readCookie(req: Request, name: string): string {
 const toUser = (r: any): SessionUser => ({ id: r.id, email: r.email, username: r.username ?? null, name: r.name, institution: r.institution, role: r.role });
 
 /** Resolves req.user from the session cookie or a bearer token (session token or ADMIN_TOKEN). */
-export function attachUser(db: DatabaseSync) {
-  const bySession = db.prepare(
-    `SELECT u.* FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ? AND s.expires_at > strftime('%Y-%m-%dT%H:%M:%fZ','now')`
-  );
-  return (req: Request, _res: Response, next: NextFunction) => {
-    const header = req.get('authorization') || '';
-    const bearer = header.startsWith('Bearer ') ? header.slice(7).trim() : '';
-    if (bearer && sameToken(bearer, ADMIN_TOKEN)) {
-      req.user = TOKEN_ADMIN;
-      return next();
+export function attachUser(db: Db) {
+  return async (req: Request, _res: Response, next: NextFunction) => {
+    try {
+      const header = req.get('authorization') || '';
+      const bearer = header.startsWith('Bearer ') ? header.slice(7).trim() : '';
+      if (bearer && sameToken(bearer, ADMIN_TOKEN)) {
+        req.user = TOKEN_ADMIN;
+        return next();
+      }
+      const token = bearer || readCookie(req, COOKIE);
+      if (token) {
+        const row = await db.get(
+          `SELECT u.* FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ? AND s.expires_at > ${NOW}`,
+          sha256(token)
+        );
+        if (row) req.user = toUser(row);
+      }
+      next();
+    } catch (err) {
+      next(err);
     }
-    const token = bearer || readCookie(req, COOKIE);
-    if (token) {
-      const row = bySession.get(sha256(token));
-      if (row) req.user = toUser(row);
-    }
-    next();
   };
 }
 
@@ -104,11 +108,11 @@ export function requireRole(...roles: Role[]) {
 
 export const isReviewer = (u?: SessionUser) => u?.role === 'reviewer' || u?.role === 'admin';
 
-function startSession(db: DatabaseSync, req: Request, res: Response, userId: number) {
+async function startSession(db: Db, req: Request, res: Response, userId: number) {
   const token = crypto.randomBytes(32).toString('base64url');
   const expires = new Date(Date.now() + SESSION_DAYS * 86400_000);
-  db.prepare(`DELETE FROM sessions WHERE expires_at < strftime('%Y-%m-%dT%H:%M:%fZ','now')`).run();
-  db.prepare('INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)').run(sha256(token), userId, expires.toISOString());
+  await db.run(`DELETE FROM sessions WHERE expires_at < ${NOW}`);
+  await db.run('INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)', sha256(token), userId, expires.toISOString());
   const secure = req.secure || req.get('x-forwarded-proto') === 'https' ? '; Secure' : '';
   res.setHeader('Set-Cookie', `${COOKIE}=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${SESSION_DAYS * 86400}${secure}`);
 }
@@ -123,24 +127,25 @@ const DEMO = [
   { username: 'admin', password: '0786', email: 'admin@demo.polaris.local', name: 'Demo Admin', institution: 'POLARIS demo', role: 'admin' },
 ];
 
-export function seedDemoAccounts(db: DatabaseSync) {
+export async function seedDemoAccounts(db: Db) {
   if (!demoAccountsEnabled()) return;
   for (const d of DEMO) {
-    if (db.prepare('SELECT 1 FROM users WHERE username = ? OR email = ?').get(d.username, d.email)) continue;
-    db.prepare('INSERT INTO users (email, username, name, institution, role, password_hash) VALUES (?, ?, ?, ?, ?, ?)').run(
-      d.email, d.username, d.name, d.institution, d.role, hashPassword(d.password)
+    await db.run(
+      `INSERT INTO users (email, username, name, institution, role, password_hash)
+       SELECT ?, ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM users WHERE lower(username) = lower(?) OR lower(email) = lower(?))`,
+      d.email, d.username, d.name, d.institution, d.role, hashPassword(d.password), d.username, d.email
     );
   }
 }
 
-export function createAuthRouter(db: DatabaseSync) {
+export function createAuthRouter(db: Db) {
   const r = express.Router();
   const limit = rateLimit(20, 10 * 60 * 1000);
 
   r.post(
     '/register',
     limit,
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       const name = str(req.body?.name, 'name', { required: true, max: 80 });
       const email = str(req.body?.email, 'email', { required: true, max: 160 }).toLowerCase();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new HttpError(400, 'Enter a valid email address');
@@ -148,35 +153,39 @@ export function createAuthRouter(db: DatabaseSync) {
       if (password.length < 8) throw new HttpError(400, 'Password must be at least 8 characters');
       if (password.length > 200) throw new HttpError(400, 'Password is too long');
       const institution = str(req.body?.institution, 'institution', { max: 160 });
-      if (db.prepare('SELECT 1 FROM users WHERE email = ?').get(email)) throw new HttpError(409, 'An account with this email already exists');
-      const { lastInsertRowid } = db
-        .prepare(`INSERT INTO users (email, name, institution, role, password_hash) VALUES (?, ?, ?, 'contributor', ?)`)
-        .run(email, name, institution, hashPassword(password));
-      startSession(db, req, res, Number(lastInsertRowid));
-      res.status(201).json(toUser(db.prepare('SELECT * FROM users WHERE id = ?').get(lastInsertRowid)));
+      if (await db.get('SELECT 1 FROM users WHERE lower(email) = lower(?)', email)) throw new HttpError(409, 'An account with this email already exists');
+      const row = await db.get(
+        `INSERT INTO users (email, name, institution, role, password_hash) VALUES (?, ?, ?, 'contributor', ?) RETURNING *`,
+        email, name, institution, hashPassword(password)
+      );
+      await startSession(db, req, res, row.id);
+      res.status(201).json(toUser(row));
     })
   );
 
   r.post(
     '/login',
     limit,
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       // Sign in with email or username.
       const login = str(req.body?.email ?? req.body?.username, 'email', { required: true, max: 160 }).toLowerCase();
       const password = typeof req.body?.password === 'string' ? req.body.password : '';
-      const row = db.prepare('SELECT * FROM users WHERE email = ? OR username = ?').get(login, login) as any;
+      const row = await db.get('SELECT * FROM users WHERE lower(email) = ? OR lower(username) = ?', login, login);
       if (!row || !verifyPassword(password, row.password_hash)) throw new HttpError(401, 'Username/email or password is wrong');
-      startSession(db, req, res, row.id);
+      await startSession(db, req, res, row.id);
       res.json(toUser(row));
     })
   );
 
-  r.post('/logout', (req, res) => {
-    const token = readCookie(req, COOKIE);
-    if (token) db.prepare('DELETE FROM sessions WHERE token_hash = ?').run(sha256(token));
-    res.setHeader('Set-Cookie', `${COOKIE}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0`);
-    res.status(204).end();
-  });
+  r.post(
+    '/logout',
+    wrap(async (req, res) => {
+      const token = readCookie(req, COOKIE);
+      if (token) await db.run('DELETE FROM sessions WHERE token_hash = ?', sha256(token));
+      res.setHeader('Set-Cookie', `${COOKIE}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0`);
+      res.status(204).end();
+    })
+  );
 
   r.get('/me', (req, res) => res.json(req.user ?? null));
   r.get('/config', (_req, res) => res.json({ demoAccounts: demoAccountsEnabled() ? DEMO.map((d) => ({ username: d.username, password: d.password, role: d.role })) : [] }));
@@ -184,29 +193,31 @@ export function createAuthRouter(db: DatabaseSync) {
 }
 
 /** Admin-only user management, mounted under /api/admin/users. */
-export function createUsersRouter(db: DatabaseSync) {
+export function createUsersRouter(db: Db) {
   const r = express.Router();
   r.use(requireRole('admin'));
-  r.get('/', (_req, res) => {
-    const rows = db
-      .prepare(
-        `SELECT u.id, u.email, u.username, u.name, u.institution, u.role, u.created_at,
-                (SELECT COUNT(*) FROM archive_items a WHERE a.owner_id = u.id) AS records
-         FROM users u ORDER BY u.id`
-      )
-      .all();
-    res.json(rows);
-  });
+  r.get(
+    '/',
+    wrap(async (_req, res) => {
+      res.json(
+        await db.all(
+          `SELECT u.id, u.email, u.username, u.name, u.institution, u.role, u.created_at,
+                  (SELECT COUNT(*) FROM archive_items a WHERE a.owner_id = u.id) AS records
+           FROM users u ORDER BY u.id`
+        )
+      );
+    })
+  );
   r.patch(
     '/:id',
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       const id = intOrNull(req.params.id, 'id');
       const role = str(req.body?.role, 'role', { required: true }) as Role;
       if (!ROLES.includes(role)) throw new HttpError(400, `role must be one of: ${ROLES.join(', ')}`);
       if (req.user?.id === id && role !== 'admin') throw new HttpError(409, 'You cannot remove your own admin role');
-      const { changes } = db.prepare('UPDATE users SET role = ? WHERE id = ?').run(role, id);
-      if (!changes) throw new HttpError(404, 'User not found');
-      res.json(toUser(db.prepare('SELECT * FROM users WHERE id = ?').get(id)));
+      const row = await db.get('UPDATE users SET role = ? WHERE id = ? RETURNING *', role, id);
+      if (!row) throw new HttpError(404, 'User not found');
+      res.json(toUser(row));
     })
   );
   return r;

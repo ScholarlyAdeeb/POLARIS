@@ -1,28 +1,12 @@
-import { DatabaseSync } from 'node:sqlite';
-import fs from 'fs';
-import path from 'path';
+import type { StationData } from '../src/types/polaris.ts';
+import { connect, NOW, type Db } from './pg.ts';
 import { seedDatabase } from './seed.ts';
 import { loadOpenData } from './openData.ts';
-import { runMigrations, deriveDataStatus, deriveProvenance, type DataStatus } from './migrations.ts';
+import { deriveDataStatus, deriveProvenance, type DataStatus } from './migrations.ts';
 
-export type ArchiveType =
-  | 'expedition'
-  | 'report'
-  | 'dataset'
-  | 'publication'
-  | 'photo'
-  | 'video'
-  | 'activity';
+export type ArchiveType = 'expedition' | 'report' | 'dataset' | 'publication' | 'photo' | 'video' | 'activity';
 
-export const ARCHIVE_TYPES: ArchiveType[] = [
-  'expedition',
-  'report',
-  'dataset',
-  'publication',
-  'photo',
-  'video',
-  'activity',
-];
+export const ARCHIVE_TYPES: ArchiveType[] = ['expedition', 'report', 'dataset', 'publication', 'photo', 'video', 'activity'];
 
 export interface ArchiveItem {
   id: string;
@@ -49,18 +33,26 @@ export interface ArchiveItem {
   updatedAt: string;
 }
 
+/**
+ * PostgreSQL schema. JSON payloads (meta, provenance, station data) are stored as text and parsed in
+ * rowToItem; queries that filter on them cast to jsonb. `search` is a weighted full-text vector
+ * (title > tags > summary > body/domain) kept up to date by Postgres itself.
+ */
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS stations (
   id TEXT PRIMARY KEY,
   domain TEXT NOT NULL,
   sort INTEGER NOT NULL,
-  data TEXT NOT NULL
+  data TEXT NOT NULL,
+  data_status TEXT NOT NULL DEFAULT 'UNVERIFIED',
+  readings_status TEXT NOT NULL DEFAULT 'SYNTHETIC'
 );
 
 CREATE TABLE IF NOT EXISTS hotspots (
   id INTEGER PRIMARY KEY,
   station_id TEXT NOT NULL,
-  data TEXT NOT NULL
+  data TEXT NOT NULL,
+  data_status TEXT NOT NULL DEFAULT 'SAMPLE'
 );
 
 CREATE TABLE IF NOT EXISTS simulations (
@@ -74,8 +66,27 @@ CREATE TABLE IF NOT EXISTS value_graph_steps (
   data TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL,
+  username TEXT,
+  name TEXT NOT NULL,
+  institution TEXT NOT NULL DEFAULT '',
+  role TEXT NOT NULL DEFAULT 'contributor',
+  password_hash TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT ${NOW}
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users (lower(email));
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users (lower(username));
+
+CREATE TABLE IF NOT EXISTS sessions (
+  token_hash TEXT PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  expires_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS archive_items (
-  rowid INTEGER PRIMARY KEY AUTOINCREMENT,
+  rowid BIGSERIAL PRIMARY KEY,
   id TEXT NOT NULL UNIQUE,
   type TEXT NOT NULL,
   title TEXT NOT NULL,
@@ -91,32 +102,27 @@ CREATE TABLE IF NOT EXISTS archive_items (
   doi TEXT,
   meta TEXT NOT NULL DEFAULT '{}',
   downloads INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
-  updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+  data_status TEXT NOT NULL DEFAULT 'UNVERIFIED',
+  provenance TEXT NOT NULL DEFAULT '{}',
+  review_status TEXT NOT NULL DEFAULT 'APPROVED',
+  review_note TEXT,
+  owner_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  created_at TEXT NOT NULL DEFAULT ${NOW},
+  updated_at TEXT NOT NULL DEFAULT ${NOW},
+  search tsvector GENERATED ALWAYS AS (
+    setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
+    setweight(to_tsvector('english', coalesce(tags, '')), 'B') ||
+    setweight(to_tsvector('english', coalesce(summary, '')), 'C') ||
+    setweight(to_tsvector('english', coalesce(body, '') || ' ' || coalesce(domain, '')), 'D')
+  ) STORED
 );
 CREATE INDEX IF NOT EXISTS idx_archive_type ON archive_items(type);
 CREATE INDEX IF NOT EXISTS idx_archive_station ON archive_items(station_id);
 CREATE INDEX IF NOT EXISTS idx_archive_year ON archive_items(year);
-
-CREATE VIRTUAL TABLE IF NOT EXISTS archive_fts USING fts5(
-  title, summary, body, tags, domain,
-  content='archive_items', content_rowid='rowid',
-  tokenize='unicode61 remove_diacritics 2'
-);
-CREATE TRIGGER IF NOT EXISTS archive_ai AFTER INSERT ON archive_items BEGIN
-  INSERT INTO archive_fts(rowid, title, summary, body, tags, domain)
-  VALUES (new.rowid, new.title, new.summary, new.body, new.tags, new.domain);
-END;
-CREATE TRIGGER IF NOT EXISTS archive_ad AFTER DELETE ON archive_items BEGIN
-  INSERT INTO archive_fts(archive_fts, rowid, title, summary, body, tags, domain)
-  VALUES ('delete', old.rowid, old.title, old.summary, old.body, old.tags, old.domain);
-END;
-CREATE TRIGGER IF NOT EXISTS archive_au AFTER UPDATE ON archive_items BEGIN
-  INSERT INTO archive_fts(archive_fts, rowid, title, summary, body, tags, domain)
-  VALUES ('delete', old.rowid, old.title, old.summary, old.body, old.tags, old.domain);
-  INSERT INTO archive_fts(rowid, title, summary, body, tags, domain)
-  VALUES (new.rowid, new.title, new.summary, new.body, new.tags, new.domain);
-END;
+CREATE INDEX IF NOT EXISTS idx_archive_status ON archive_items(data_status);
+CREATE INDEX IF NOT EXISTS idx_archive_review ON archive_items(review_status);
+CREATE INDEX IF NOT EXISTS idx_archive_owner ON archive_items(owner_id);
+CREATE INDEX IF NOT EXISTS idx_archive_search ON archive_items USING GIN (search);
 
 -- Directed links between records ("value graph": photo -> expedition -> dataset -> paper -> lesson)
 CREATE TABLE IF NOT EXISTS item_links (
@@ -127,7 +133,7 @@ CREATE TABLE IF NOT EXISTS item_links (
 );
 
 CREATE TABLE IF NOT EXISTS proposals (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id SERIAL PRIMARY KEY,
   reference TEXT NOT NULL UNIQUE,
   title TEXT NOT NULL,
   pi_name TEXT NOT NULL,
@@ -138,35 +144,79 @@ CREATE TABLE IF NOT EXISTS proposals (
   summary TEXT NOT NULL,
   berths INTEGER,
   status TEXT NOT NULL DEFAULT 'SUBMITTED',
-  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+  created_at TEXT NOT NULL DEFAULT ${NOW}
 );
 
 CREATE TABLE IF NOT EXISTS outreach_posts (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id SERIAL PRIMARY KEY,
   item_id TEXT NOT NULL REFERENCES archive_items(id) ON DELETE CASCADE,
   channel TEXT NOT NULL,
   language TEXT NOT NULL DEFAULT 'EN',
   content TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'DRAFT',
-  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
-  updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+  data_status TEXT NOT NULL DEFAULT 'TEMPLATE',
+  review_status TEXT NOT NULL DEFAULT 'PENDING_REVIEW',
+  provider TEXT NOT NULL DEFAULT 'template',
+  claim_check TEXT NOT NULL DEFAULT '{}',
+  reviewer TEXT,
+  review_note TEXT,
+  reviewed_at TEXT,
+  created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  published_at TEXT,
+  created_at TEXT NOT NULL DEFAULT ${NOW},
+  updated_at TEXT NOT NULL DEFAULT ${NOW}
+);
+
+CREATE TABLE IF NOT EXISTS usage_counts (
+  day TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  key TEXT NOT NULL,
+  n INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (day, kind, key)
+);
+
+CREATE TABLE IF NOT EXISTS schema_migrations (
+  version INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  applied_at TEXT NOT NULL DEFAULT ${NOW}
 );
 `;
 
-let db: DatabaseSync | null = null;
+let db: Db | null = null;
+let stationCache: StationData[] = [];
 
-export function getDb(): DatabaseSync {
+/** Connects, creates the schema, seeds an empty database and loads open data. Call once at start-up. */
+export async function initDb(): Promise<Db> {
   if (db) return db;
-  const dbPath = process.env.DB_PATH || path.resolve(process.cwd(), 'data', 'polaris.db');
-  if (dbPath !== ':memory:') fs.mkdirSync(path.dirname(dbPath), { recursive: true });
-  db = new DatabaseSync(dbPath);
-  db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
-  db.exec(SCHEMA);
-  runMigrations(db);
-  const { n } = db.prepare('SELECT COUNT(*) AS n FROM stations').get() as { n: number };
-  if (n === 0) seedDatabase(db);
-  if (process.env.OPEN_DATA !== 'off') loadOpenData(db);
+  const url = process.env.DATABASE_URL;
+  if (!url) throw new Error('DATABASE_URL is not set. Add your PostgreSQL connection string to .env.');
+  const conn = connect(url);
+  // Serialise schema creation across processes starting at the same time.
+  await conn.tx(async (t) => {
+    await t.exec('SELECT pg_advisory_xact_lock(76010)');
+    await t.exec(SCHEMA);
+    await t.run(`INSERT INTO schema_migrations (version, name) VALUES (1, 'postgres baseline') ON CONFLICT (version) DO NOTHING`);
+    const { n } = (await t.get<{ n: number }>('SELECT COUNT(*) AS n FROM stations'))!;
+    if (n === 0) await seedDatabase(t);
+  });
+  db = conn;
+  await refreshStations();
+  if (process.env.OPEN_DATA !== 'off') await loadOpenData(conn);
+  return conn;
+}
+
+export function getDb(): Db {
+  if (!db) throw new Error('Database not initialised; call initDb() first');
   return db;
+}
+
+async function refreshStations() {
+  stationCache = (await getDb().all('SELECT data FROM stations ORDER BY sort')).map((r) => JSON.parse(r.data));
+}
+
+/** Stations never change after seeding, so they are read once and served from memory. */
+export function listStations(): StationData[] {
+  return stationCache;
 }
 
 export function rowToItem(row: any): ArchiveItem {
@@ -217,11 +267,11 @@ export interface ArchiveInput {
   reviewStatus?: string;
 }
 
-export function insertItem(d: DatabaseSync, item: ArchiveInput): void {
-  d.prepare(
-    `INSERT INTO archive_items (id, type, title, summary, body, domain, station_id, year, date, tags, url, thumbnail_url, doi, meta, data_status, provenance, owner_id, review_status)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-  ).run(
+const ITEM_COLUMNS =
+  'id, type, title, summary, body, domain, station_id, year, date, tags, url, thumbnail_url, doi, meta, data_status, provenance, owner_id, review_status';
+
+function itemValues(item: ArchiveInput): unknown[] {
+  return [
     item.id,
     item.type,
     item.title,
@@ -239,15 +289,27 @@ export function insertItem(d: DatabaseSync, item: ArchiveInput): void {
     item.dataStatus ?? deriveDataStatus(item.type, item.meta ?? {}),
     JSON.stringify(item.provenance ?? deriveProvenance(item.type, item.meta ?? {})),
     item.ownerId ?? null,
-    item.reviewStatus ?? 'APPROVED'
-  );
+    item.reviewStatus ?? 'APPROVED',
+  ];
 }
 
-export function listStations(): import('../src/types/polaris.ts').StationData[] {
-  return (getDb().prepare('SELECT data FROM stations ORDER BY sort').all() as any[]).map((r) => JSON.parse(r.data));
+export async function insertItem(d: Db, item: ArchiveInput): Promise<void> {
+  await d.run(`INSERT INTO archive_items (${ITEM_COLUMNS}) VALUES (${Array(18).fill('?').join(', ')})`, ...itemValues(item));
 }
 
-export function getItem(id: string): ArchiveItem | null {
-  const row = getDb().prepare('SELECT * FROM archive_items WHERE id = ?').get(id);
+/** Many records in one statement (seed, open data). Existing ids are left untouched. Returns how many were added. */
+export async function insertItems(d: Db, items: ArchiveInput[], chunk = 50): Promise<number> {
+  let added = 0;
+  for (let i = 0; i < items.length; i += chunk) {
+    const part = items.slice(i, i + chunk);
+    const rows = part.map(() => `(${Array(18).fill('?').join(', ')})`).join(', ');
+    const r = await d.run(`INSERT INTO archive_items (${ITEM_COLUMNS}) VALUES ${rows} ON CONFLICT (id) DO NOTHING`, ...part.flatMap(itemValues));
+    added += r.changes;
+  }
+  return added;
+}
+
+export async function getItem(id: string, d: Db = getDb()): Promise<ArchiveItem | null> {
+  const row = await d.get('SELECT * FROM archive_items WHERE id = ?', id);
   return row ? rowToItem(row) : null;
 }

@@ -1,4 +1,4 @@
-# Render blueprint: New > Blueprint > pick this repo. Creates one web service with a 1 GB disk.
+# Render blueprint: New > Blueprint > pick this repo. Creates one web service with a 1 GB disk for uploads; set DATABASE_URL to a PostgreSQL database.
 services:
   - type: web
     name: polaris
@@ -14,7 +14,7 @@ services:
         generateValue: true
       - key: APP_URL
         sync: false
-      - key: GEMINI_API_KEY
+      - key: DATABASE_URL
         sync: false
       # Demo logins (user1 / 1234, admin / 0786). Keep off on a public URL, or turn on only for a judged demo.
       - key: DEMO_ACCOUNTS

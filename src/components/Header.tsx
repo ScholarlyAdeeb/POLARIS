@@ -111,7 +111,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCommandPalette }) => {
     { to: '/timeline', key: 'nav.timeline' },
     { to: '/newsroom', key: 'nav.newsroom' },
     { to: '/learn', key: 'nav.learn' },
-    { to: '/ai', key: 'nav.assistant' },
     { to: '/workspace', key: 'nav.workspace' },
     { to: '/content/review', key: 'nav.studio', show: !user || isReviewerRole(user) },
     { to: '/admin', key: 'nav.admin', show: !user || isReviewerRole(user) },

@@ -202,13 +202,7 @@ export function StationPage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
                     Open {active.itemType ?? 'record'}
                   </button>
                 )}
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    className="sci-btn-ghost"
-                    onClick={() => navigate(`/ai?q=${encodeURIComponent(`What does the archive say about ${active.title}?`)}&station=${station.id}`)}
-                  >
-                    Ask assistant
-                  </button>
+                <div className="grid grid-cols-1 gap-2">
                   <button
                     className="sci-btn-ghost"
                     disabled={!active.itemId}

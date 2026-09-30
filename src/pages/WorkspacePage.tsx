@@ -454,7 +454,7 @@ function Submission({ r, onChanged, onPosts }: { r: ArchiveItem; onChanged: () =
               setBusy(true);
               setError(null);
               try {
-                await api.me.generate(r.id, channels, 'ai');
+                await api.me.generate(r.id, channels);
                 setOpen(false);
                 onPosts();
               } catch (e: any) {

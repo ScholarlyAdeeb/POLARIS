@@ -10,9 +10,13 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "import:open-data": "tsx scripts/import-open-data.ts"
+    "import:open-data": "tsx scripts/import-open-data.ts",
+    "android:sync": "node scripts/android-config.mjs && cap sync android",
+    "android:apk": "npm run android:sync && cd android && gradlew assembleDebug"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.1",
     "@tailwindcss/vite": "^4.3.3",
@@ -23,6 +27,7 @@
     "express": "^4.21.2",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
+    "pg": "^8.23.0",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "react-router-dom": "^7.18.4",
@@ -32,10 +37,12 @@
     "world-atlas": "^2.0.2"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.2",
     "@types/d3-geo": "^3.1.1",
     "@types/express": "^4.17.21",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^22.14.0",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@types/three": "^0.186.0",

@@ -1,4 +1,4 @@
-# Give .env a persistent ADMIN_TOKEN (needed by the outreach studio, admin page and embedding rebuild).
+# Give .env a persistent ADMIN_TOKEN (needed by the outreach studio and admin page).
 # Leaves an existing non-empty token untouched. Writes UTF-8 without BOM.
 param([string]$EnvFile = '.env')
 $path = (Resolve-Path $EnvFile).Path

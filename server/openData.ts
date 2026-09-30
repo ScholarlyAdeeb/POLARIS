@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import type { DatabaseSync } from 'node:sqlite';
-import { insertItem, listStations } from './db.ts';
+import type { Db } from './pg.ts';
+import { insertItems, listStations, type ArchiveInput } from './db.ts';
 import { nearestStation, regionFor, stationLocation } from './geo.ts';
 import { ERA5_SOURCE, fixedStation } from './realdata.ts';
 
@@ -32,20 +32,17 @@ function domainFor(text: string): string {
 
 const shortAuthors = (a: string[]) => (a.length > 6 ? `${a.slice(0, 6).join('; ')}; et al.` : a.join('; '));
 
-export function loadOpenData(db: DatabaseSync): number {
+export async function loadOpenData(db: Db): Promise<number> {
   if (!fs.existsSync(SNAPSHOT)) return 0;
   const snap = JSON.parse(fs.readFileSync(SNAPSHOT, 'utf8'));
   const stations = listStations();
-  const exists = db.prepare('SELECT 1 FROM archive_items WHERE id = ?');
-  let added = 0;
-  db.exec('BEGIN');
-  try {
+  const items: ArchiveInput[] = [];
+  {
     for (const p of snap.papers ?? []) {
       const id = `OPEN-CR-${crypto.createHash('sha1').update(p.doi).digest('hex').slice(0, 10).toUpperCase()}`;
-      if (exists.get(id)) continue;
       const station = STATION_WORDS.find(([re]) => re.test(p.title))?.[1] ?? null;
       const st = stations.find((s) => s.id === station);
-      insertItem(db, {
+      items.push({
         id,
         type: 'publication',
         title: p.title,
@@ -66,15 +63,13 @@ export function loadOpenData(db: DatabaseSync): number {
           note: 'Metadata only. Read the article at its DOI.',
         },
       });
-      added++;
     }
     for (const d of snap.datasets ?? []) {
       const id = `OPEN-PG-${d.doi.split('pangaea.').pop()?.toUpperCase()}`;
-      if (exists.get(id)) continue;
       const near = d.location ? nearestStation(d.location, stations, 150) : null;
       const station = STATION_WORDS.find(([re]) => re.test(d.title))?.[1] ?? near?.station.id ?? null;
       const st = stations.find((s) => s.id === station);
-      insertItem(db, {
+      items.push({
         id,
         type: 'dataset',
         title: d.title,
@@ -103,14 +98,13 @@ export function loadOpenData(db: DatabaseSync): number {
           note: 'Metadata and position only. Download the data from PANGAEA at the DOI.',
         },
       });
-      added++;
     }
     // One real climate record per fixed station: daily ERA5 values since 1981, fetched live on download.
     for (const s of stations.filter(fixedStation)) {
       const id = `CLIMATE-${s.id.toUpperCase()}`;
       const loc = stationLocation(s);
-      if (exists.get(id) || !loc) continue;
-      insertItem(db, {
+      if (!loc) continue;
+      items.push({
         id,
         type: 'dataset',
         title: `Daily surface climate at ${s.name}, 1981 to present (ERA5)`,
@@ -128,13 +122,9 @@ export function loadOpenData(db: DatabaseSync): number {
           note: 'Reanalysis values, not station instrument records. Refreshed on every download.',
         },
       });
-      added++;
     }
-    db.exec('COMMIT');
-  } catch (err) {
-    db.exec('ROLLBACK');
-    throw err;
   }
+  const added = await insertItems(db, items);
   if (added) console.log(`[POLARIS] Loaded ${added} open-data records (Crossref + PANGAEA)`);
   return added;
 }

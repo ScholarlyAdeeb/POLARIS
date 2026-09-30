@@ -1,14 +1,15 @@
 import express from 'express';
 import crypto from 'crypto';
-import type { DatabaseSync } from 'node:sqlite';
+import type { Db } from './pg.ts';
+import { NOW } from './pg.ts';
 import { ARCHIVE_TYPES, getItem, insertItem, listStations, rowToItem, type ArchiveItem, type ArchiveType } from './db.ts';
 import { HttpError, intOrNull, publicBase, str, tag, wrap } from './http.ts';
 import { requireRole, type SessionUser } from './auth.ts';
 import { rawBody, saveUpload } from './uploads.ts';
-import { hybridSearch } from './search.ts';
+import { search } from './search.ts';
 import { nearestStation, regionFor, validLatLon } from './geo.ts';
 import { CHANNELS, generateContent, type Channel } from './outreach.ts';
-import { draftOutreachWithLlm, toSource, verifyClaims } from './rag.ts';
+import { toSource, verifyClaims } from './claims.ts';
 
 /**
  * Contributor workflow:
@@ -29,51 +30,40 @@ export function suggestRelation(from: ArchiveType, to: ArchiveType): string {
 }
 const RELATIONS = ['documents', 'collected_during', 'uses_data', 'describes', 'part_of', 'related_to'];
 
-const postRow = (db: DatabaseSync, id: unknown) => {
-  const p = db
-    .prepare(
-      `SELECT p.*, a.title AS item_title, a.data_status AS item_data_status, a.review_status AS item_review_status,
-              u.name AS author_name, u.institution AS author_institution
-       FROM outreach_posts p JOIN archive_items a ON a.id = p.item_id
-       LEFT JOIN users u ON u.id = COALESCE(p.created_by, a.owner_id) WHERE p.id = ?`
-    )
-    .get(id as any) as any;
+export const postRow = async (db: Db, id: unknown) => {
+  const p = await db.get(
+    `SELECT p.*, a.title AS item_title, a.data_status AS item_data_status, a.review_status AS item_review_status,
+            u.name AS author_name, u.institution AS author_institution
+     FROM outreach_posts p JOIN archive_items a ON a.id = p.item_id
+     LEFT JOIN users u ON u.id = COALESCE(p.created_by, a.owner_id) WHERE p.id = ?`,
+    id
+  );
   return p ? { ...p, claim_check: JSON.parse(p.claim_check || '{}') } : null;
 };
 
-export const checkAgainst = (itemId: string, content: string) => {
-  const item = getItem(itemId);
+export const checkAgainst = async (itemId: string, content: string) => {
+  const item = await getItem(itemId);
   return item ? verifyClaims(content, [toSource(item, 0)]) : null;
 };
 
-/** One draft for one channel: LLM if available (and wanted), else the deterministic template. Always claim-checked. */
-export async function createDraft(db: DatabaseSync, item: ArchiveItem, channel: Channel, wantAi: boolean, base: string, createdBy: number | null) {
-  let content = '';
-  let provider = 'template';
-  let dataStatus = 'TEMPLATE';
-  if (wantAi) {
-    const { gen } = await draftOutreachWithLlm(item, channel);
-    if (gen) {
-      content = gen.text.replace(/\[S1\]/g, '').replace(/[ \t]+\n/g, '\n').trim();
-      provider = `${gen.provider}:${gen.model}`;
-      dataStatus = 'AI_GENERATED';
-    }
-  }
-  if (!content) {
-    const t = generateContent(item, `${base}/?record=${encodeURIComponent(item.id)}`, [channel])[0];
-    content = [channel === 'website' ? '' : t.title, t.text].filter(Boolean).join('\n\n');
-  }
-  const { lastInsertRowid } = db
-    .prepare(
-      `INSERT INTO outreach_posts (item_id, channel, content, status, data_status, review_status, provider, claim_check, created_by)
-       VALUES (?, ?, ?, 'DRAFT', ?, 'PENDING_REVIEW', ?, ?, ?)`
-    )
-    .run(item.id, channel, content, dataStatus, provider, JSON.stringify(checkAgainst(item.id, content) ?? {}), createdBy);
-  return { ...postRow(db, lastInsertRowid), aiRequested: wantAi, aiUsed: dataStatus === 'AI_GENERATED' };
+/** One draft for one channel, written from the record by the template generator and fact-checked against it. */
+export async function createDraft(db: Db, item: ArchiveItem, channel: Channel, base: string, createdBy: number | null) {
+  const t = generateContent(item, `${base}/?record=${encodeURIComponent(item.id)}`, [channel])[0];
+  const content = [channel === 'website' ? '' : t.title, t.text].filter(Boolean).join('\n\n');
+  const row = await db.get(
+    `INSERT INTO outreach_posts (item_id, channel, content, status, data_status, review_status, provider, claim_check, created_by)
+     VALUES (?, ?, ?, 'DRAFT', 'TEMPLATE', 'PENDING_REVIEW', 'template', ?, ?) RETURNING id`,
+    item.id,
+    channel,
+    content,
+    JSON.stringify((await checkAgainst(item.id, content)) ?? {}),
+    createdBy
+  );
+  return postRow(db, row.id);
 }
 
-function ownRecord(db: DatabaseSync, user: SessionUser, id: string): ArchiveItem {
-  const item = getItem(id);
+async function ownRecord(user: SessionUser, id: string): Promise<ArchiveItem> {
+  const item = await getItem(id);
   if (!item || item.ownerId !== user.id) throw new HttpError(404, 'Record not found in your workspace');
   return item;
 }
@@ -89,7 +79,7 @@ interface MappingInput {
 }
 
 /** Where the work belongs: station, region and related records, each with the reason. */
-async function suggestMapping(db: DatabaseSync, m: MappingInput) {
+async function suggestMapping(db: Db, m: MappingInput) {
   const stations = listStations();
   let station: { id: string; name: string; reason: string } | null = null;
   if (m.stationId) {
@@ -108,7 +98,7 @@ async function suggestMapping(db: DatabaseSync, m: MappingInput) {
   const st = station ? stations.find((s) => s.id === station!.id) : null;
   const region = st?.domain || (m.location ? regionFor(m.location) : '') || '';
   const query = [m.title, m.summary, m.tags.join(' ')].join(' ').slice(0, 200);
-  const found = query.trim() ? await hybridSearch(db, query, {}, 8) : { results: [] as any[] };
+  const found = query.trim() ? await search(db, query, {}, 8) : { results: [] as any[] };
   const related = found.results
     .filter((r: any) => r.id !== m.excludeId)
     .slice(0, 6)
@@ -118,7 +108,7 @@ async function suggestMapping(db: DatabaseSync, m: MappingInput) {
       title: r.title,
       year: r.year,
       relation: suggestRelation(m.type, r.type),
-      reason: r.semanticRank ? 'Similar meaning and wording' : 'Shares key words with your description',
+      reason: 'Shares key words with your description',
     }));
   return { station, region, related };
 }
@@ -148,7 +138,18 @@ function readRecordBody(b: any, partial = false) {
   };
 }
 
-export function createContributorRouter(db: DatabaseSync) {
+async function writeLinks(t: Db, id: string, type: ArchiveType, links: any[]) {
+  for (const l of links) {
+    const to = str(l?.id, 'links[].id', { required: true, max: 120 });
+    const target = await getItem(to, t);
+    if (!target || target.reviewStatus !== 'APPROVED') throw new HttpError(400, `Linked record ${to} does not exist`);
+    const relation = str(l?.relation, 'links[].relation', { max: 40 }) || suggestRelation(type, target.type);
+    if (!RELATIONS.includes(relation)) throw new HttpError(400, `relation must be one of: ${RELATIONS.join(', ')}`);
+    await t.run('INSERT INTO item_links (from_id, to_id, relation) VALUES (?, ?, ?) ON CONFLICT DO NOTHING', id, to, relation);
+  }
+}
+
+export function createContributorRouter(db: Db) {
   const r = express.Router();
   r.use(requireRole());
   r.use((req, _res, next) => (req.user!.id > 0 ? next() : next(new HttpError(403, 'The admin token cannot own work. Create a contributor account to upload.'))));
@@ -174,40 +175,30 @@ export function createContributorRouter(db: DatabaseSync) {
     })
   );
 
-  r.get('/records', (req, res) => {
-    const rows = db.prepare('SELECT * FROM archive_items WHERE owner_id = ? ORDER BY rowid DESC').all(req.user!.id) as any[];
-    res.json(rows.map(rowToItem));
-  });
+  r.get(
+    '/records',
+    wrap(async (req, res) => {
+      const rows = await db.all('SELECT * FROM archive_items WHERE owner_id = ? ORDER BY rowid DESC', req.user!.id);
+      res.json(rows.map(rowToItem));
+    })
+  );
 
   r.get(
     '/records/:id',
-    wrap((req, res) => {
-      const item = ownRecord(db, req.user!, req.params.id);
-      const links = db
-        .prepare(
-          `SELECT a.id, a.type, a.title, l.relation, 'out' AS direction FROM item_links l JOIN archive_items a ON a.id = l.to_id WHERE l.from_id = ?
-           UNION ALL SELECT a.id, a.type, a.title, l.relation, 'in' AS direction FROM item_links l JOIN archive_items a ON a.id = l.from_id WHERE l.to_id = ?`
-        )
-        .all(item.id, item.id);
+    wrap(async (req, res) => {
+      const item = await ownRecord(req.user!, req.params.id);
+      const links = await db.all(
+        `SELECT a.id, a.type, a.title, l.relation, 'out' AS direction FROM item_links l JOIN archive_items a ON a.id = l.to_id WHERE l.from_id = ?1
+         UNION ALL SELECT a.id, a.type, a.title, l.relation, 'in' AS direction FROM item_links l JOIN archive_items a ON a.id = l.from_id WHERE l.to_id = ?1`,
+        item.id
+      );
       res.json({ ...item, links });
     })
   );
 
-  const writeLinks = (id: string, type: ArchiveType, links: any[]) => {
-    const ins = db.prepare('INSERT OR IGNORE INTO item_links (from_id, to_id, relation) VALUES (?, ?, ?)');
-    for (const l of links) {
-      const to = str(l?.id, 'links[].id', { required: true, max: 120 });
-      const target = getItem(to);
-      if (!target || target.reviewStatus !== 'APPROVED') throw new HttpError(400, `Linked record ${to} does not exist`);
-      const relation = str(l?.relation, 'links[].relation', { max: 40 }) || suggestRelation(type, target.type);
-      if (!RELATIONS.includes(relation)) throw new HttpError(400, `relation must be one of: ${RELATIONS.join(', ')}`);
-      ins.run(id, to, relation);
-    }
-  };
-
   r.post(
     '/records',
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       const u = req.user!;
       const b = readRecordBody(req.body ?? {});
       const stations = listStations();
@@ -216,9 +207,8 @@ export function createContributorRouter(db: DatabaseSync) {
       const domain = st?.domain || (b.location ? regionFor(b.location) : '') || str(req.body?.domain, 'domain', { max: 80 });
       const id = `USR-${b.type!.toUpperCase().slice(0, 4)}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
       const isImage = b.url && /\.(jpe?g|png|webp|gif)$/i.test(b.url);
-      db.exec('BEGIN');
-      try {
-        insertItem(db, {
+      await db.tx(async (t) => {
+        await insertItem(t, {
           id,
           type: b.type!,
           title: b.title!,
@@ -244,78 +234,80 @@ export function createContributorRouter(db: DatabaseSync) {
           ownerId: u.id,
           reviewStatus: 'PENDING_REVIEW',
         });
-        writeLinks(id, b.type!, b.links);
-        db.exec('COMMIT');
-      } catch (err) {
-        db.exec('ROLLBACK');
-        throw err;
-      }
-      res.status(201).json(getItem(id));
+        await writeLinks(t, id, b.type!, b.links);
+      });
+      res.status(201).json(await getItem(id));
     })
   );
 
   r.patch(
     '/records/:id',
-    wrap((req, res) => {
-      const item = ownRecord(db, req.user!, req.params.id);
+    wrap(async (req, res) => {
+      const item = await ownRecord(req.user!, req.params.id);
       const b = readRecordBody({ ...item, ...(req.body ?? {}), location: req.body?.location ?? item.meta.location ?? null, links: req.body?.links }, true);
       const meta = { ...item.meta, location: b.location ?? undefined };
-      db.prepare(
-        `UPDATE archive_items SET title = ?, summary = ?, body = ?, station_id = ?, year = ?, date = ?, tags = ?, url = ?, thumbnail_url = ?, doi = ?,
-           meta = ?, review_status = 'PENDING_REVIEW', updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id = ?`
-      ).run(b.title ?? item.title, b.summary, b.body, b.stationId, b.year, b.date, b.tags.join(', '), b.url, b.thumbnailUrl, b.doi, JSON.stringify(meta), item.id);
-      if (b.links.length) writeLinks(item.id, item.type, b.links);
-      res.json(getItem(item.id));
+      await db.tx(async (t) => {
+        await t.run(
+          `UPDATE archive_items SET title = ?, summary = ?, body = ?, station_id = ?, year = ?, date = ?, tags = ?, url = ?, thumbnail_url = ?, doi = ?,
+             meta = ?, review_status = 'PENDING_REVIEW', updated_at = ${NOW} WHERE id = ?`,
+          b.title ?? item.title, b.summary, b.body, b.stationId, b.year, b.date, b.tags.join(', '), b.url, b.thumbnailUrl, b.doi, JSON.stringify(meta), item.id
+        );
+        if (b.links.length) await writeLinks(t, item.id, item.type, b.links);
+      });
+      res.json(await getItem(item.id));
     })
   );
 
   r.delete(
     '/records/:id',
-    wrap((req, res) => {
-      const item = ownRecord(db, req.user!, req.params.id);
+    wrap(async (req, res) => {
+      const item = await ownRecord(req.user!, req.params.id);
       if (item.reviewStatus === 'APPROVED') throw new HttpError(409, 'Approved records are part of the archive; ask a reviewer to remove it');
-      db.prepare('DELETE FROM archive_items WHERE id = ?').run(item.id);
+      await db.run('DELETE FROM archive_items WHERE id = ?', item.id);
       res.status(204).end();
     })
   );
 
-  // Content from your own record: one draft per channel, each claim-checked and queued for review.
+  // Content from your own record: one draft per channel, each fact-checked and queued for review.
   r.post(
     '/records/:id/content',
     wrap(async (req, res) => {
-      const item = ownRecord(db, req.user!, req.params.id);
+      const item = await ownRecord(req.user!, req.params.id);
       const channels: Channel[] = Array.isArray(req.body?.channels) && req.body.channels.length ? req.body.channels : CHANNELS;
       for (const c of channels) if (!CHANNELS.includes(c)) throw new HttpError(400, `Unknown channel: ${c}`);
-      const wantAi = req.body?.mode !== 'template';
       const out = [];
-      for (const c of channels) out.push(await createDraft(db, item, c, wantAi, publicBase(req), req.user!.id));
+      for (const c of channels) out.push(await createDraft(db, item, c, publicBase(req), req.user!.id));
       res.status(201).json(out);
     })
   );
 
-  r.get('/content', (req, res) => {
-    const rows = db
-      .prepare(
+  r.get(
+    '/content',
+    wrap(async (req, res) => {
+      const rows = await db.all(
         `SELECT p.id FROM outreach_posts p JOIN archive_items a ON a.id = p.item_id
-         WHERE p.created_by = ?1 OR a.owner_id = ?1 ORDER BY p.id DESC`
-      )
-      .all(req.user!.id) as any[];
-    res.json(rows.map((r) => postRow(db, r.id)));
-  });
+         WHERE p.created_by = ?1 OR a.owner_id = ?1 ORDER BY p.id DESC`,
+        req.user!.id
+      );
+      res.json(await Promise.all(rows.map((r) => postRow(db, r.id))));
+    })
+  );
 
   r.patch(
     '/content/:id',
-    wrap((req, res) => {
-      const post = postRow(db, intOrNull(req.params.id, 'id'));
-      const item = post ? getItem(post.item_id) : null;
+    wrap(async (req, res) => {
+      const post = await postRow(db, intOrNull(req.params.id, 'id'));
+      const item = post ? await getItem(post.item_id) : null;
       if (!post || !(post.created_by === req.user!.id || item?.ownerId === req.user!.id)) throw new HttpError(404, 'Post not found in your workspace');
       if (post.status === 'PUBLISHED') throw new HttpError(409, 'Published posts cannot be edited');
       const content = str(req.body?.content, 'content', { required: true, max: 20000 });
-      db.prepare(
-        `UPDATE outreach_posts SET content = ?, claim_check = ?, review_status = 'PENDING_REVIEW', status = 'DRAFT',
-           updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id = ?`
-      ).run(content, JSON.stringify(checkAgainst(post.item_id, content) ?? {}), post.id);
-      res.json(postRow(db, post.id));
+      await db.run(
+        `UPDATE outreach_posts SET content = ?, claim_check = ?, review_status = 'PENDING_REVIEW', status = 'DRAFT', updated_at = ${NOW} WHERE id = ?`,
+        content,
+        JSON.stringify((await checkAgainst(post.item_id, content)) ?? {}),
+        post.id
+      );
+      res.json(await postRow(db, post.id));
     })
   );
 
@@ -323,12 +315,12 @@ export function createContributorRouter(db: DatabaseSync) {
 }
 
 /** Public: the newsroom (published posts) and contributor profiles. Only name and institution are exposed. */
-export function createPublicContentRouter(db: DatabaseSync) {
+export function createPublicContentRouter(db: Db) {
   const r = express.Router();
 
   r.get(
     '/content/published',
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       const where = [`p.status = 'PUBLISHED'`, `a.review_status = 'APPROVED'`];
       const params: any[] = [];
       if (req.query.channel) {
@@ -342,32 +334,31 @@ export function createPublicContentRouter(db: DatabaseSync) {
         where.push('COALESCE(p.created_by, a.owner_id) = ?');
         params.push(user);
       }
-      const rows = db
-        .prepare(
+      res.json(
+        await db.all(
           `SELECT p.id, p.item_id, p.channel, p.content, p.data_status, p.reviewer, p.published_at, p.updated_at,
                   a.title AS item_title, a.type AS item_type, a.thumbnail_url AS item_thumbnail, a.station_id AS item_station,
                   u.id AS author_id, u.name AS author_name, u.institution AS author_institution
            FROM outreach_posts p JOIN archive_items a ON a.id = p.item_id
            LEFT JOIN users u ON u.id = COALESCE(p.created_by, a.owner_id)
-           WHERE ${where.join(' AND ')} ORDER BY COALESCE(p.published_at, p.updated_at) DESC LIMIT 100`
+           WHERE ${where.join(' AND ')} ORDER BY COALESCE(p.published_at, p.updated_at) DESC LIMIT 100`,
+          ...params
         )
-        .all(...params);
-      res.json(rows);
+      );
     })
   );
 
   r.get(
     '/contributors/:id',
-    wrap((req, res) => {
-      const u = db.prepare('SELECT id, name, institution, role, created_at FROM users WHERE id = ?').get(intOrNull(req.params.id, 'id')) as any;
+    wrap(async (req, res) => {
+      const u = await db.get('SELECT id, name, institution, role, created_at FROM users WHERE id = ?', intOrNull(req.params.id, 'id'));
       if (!u) throw new HttpError(404, 'Contributor not found');
-      const records = (db.prepare(`SELECT * FROM archive_items WHERE owner_id = ? AND review_status = 'APPROVED' ORDER BY rowid DESC`).all(u.id) as any[]).map(rowToItem);
-      const { posts } = db
-        .prepare(
-          `SELECT COUNT(*) AS posts FROM outreach_posts p JOIN archive_items a ON a.id = p.item_id
-           WHERE p.status = 'PUBLISHED' AND COALESCE(p.created_by, a.owner_id) = ?`
-        )
-        .get(u.id) as any;
+      const records = (await db.all(`SELECT * FROM archive_items WHERE owner_id = ? AND review_status = 'APPROVED' ORDER BY rowid DESC`, u.id)).map(rowToItem);
+      const { posts } = (await db.get(
+        `SELECT COUNT(*) AS posts FROM outreach_posts p JOIN archive_items a ON a.id = p.item_id
+         WHERE p.status = 'PUBLISHED' AND COALESCE(p.created_by, a.owner_id) = ?`,
+        u.id
+      ))!;
       res.json({ ...u, records, publishedPosts: posts });
     })
   );

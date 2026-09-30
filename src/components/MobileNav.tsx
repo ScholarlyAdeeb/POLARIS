@@ -38,7 +38,6 @@ export function MobileNav() {
     { to: '/knowledge-graph', key: 'nav.graph', icon: 'hub' },
     { to: '/timeline', key: 'nav.timeline', icon: 'timeline' },
     { to: '/learn', key: 'nav.learn', icon: 'school' },
-    { to: '/ai', key: 'nav.assistant', icon: 'forum' },
     ...(user && !isReviewerRole(user)
       ? []
       : [

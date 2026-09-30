@@ -180,7 +180,6 @@ const STATUS_COLOR: Record<string, string> = {
   UNVERIFIED: '#94a3b8',
   SAMPLE: '#f59e0b',
   SYNTHETIC: '#f97316',
-  AI_GENERATED: '#8b5cf6',
 };
 
 function Hotspots({ hotspots, selected, onSelect }: { hotspots: Hotspot[]; selected: string | null; onSelect: (key: string) => void }) {

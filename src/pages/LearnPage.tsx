@@ -92,7 +92,7 @@ function Quiz({ quiz, onNew }: { quiz: QuizQuestion[]; onNew: () => void }) {
               </button>
             )}
           </div>
-          <p className="text-[11px] sci-muted">Questions and answers are generated from station and expedition records in the database, not written by an AI.</p>
+          <p className="text-[11px] sci-muted">Questions and answers come straight from the station and expedition records in the database.</p>
         </>
       )}
     </section>

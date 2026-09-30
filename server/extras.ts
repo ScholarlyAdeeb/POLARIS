@@ -1,6 +1,6 @@
 import express, { type Request } from 'express';
 import fs from 'fs';
-import type { DatabaseSync } from 'node:sqlite';
+import type { Db } from './pg.ts';
 import { getItem, listStations, rowToItem, type ArchiveItem } from './db.ts';
 import { HttpError, intOrNull, rateLimit, sendDownload, wrap } from './http.ts';
 import { isReviewer, requireRole } from './auth.ts';
@@ -11,16 +11,21 @@ import { stationClimate } from './realdata.ts';
 
 // --- usage counters (no personal data: day + kind + key only) -------------------------
 
-export function countUsage(db: DatabaseSync, kind: string, key: string) {
+/** Fire-and-forget: a failed counter never breaks the request that triggered it. */
+export function countUsage(db: Db, kind: string, key: string) {
   if (!key) return;
-  db.prepare(
-    `INSERT INTO usage_counts (day, kind, key, n) VALUES (date('now'), ?, ?, 1)
-     ON CONFLICT(day, kind, key) DO UPDATE SET n = n + 1`
-  ).run(kind, key.slice(0, 80));
+  const day = new Date().toISOString().slice(0, 10);
+  db.run(
+    `INSERT INTO usage_counts (day, kind, key, n) VALUES (?, ?, ?, 1)
+     ON CONFLICT (day, kind, key) DO UPDATE SET n = usage_counts.n + 1`,
+    day,
+    kind,
+    key.slice(0, 80)
+  ).catch((err) => console.warn('[POLARIS] usage counter:', err.message));
 }
 
-function visible(req: Request, id: string): ArchiveItem | null {
-  const item = getItem(id);
+async function visible(req: Request, id: string): Promise<ArchiveItem | null> {
+  const item = await getItem(id);
   if (!item) return null;
   return item.reviewStatus === 'APPROVED' || isReviewer(req.user) || (req.user && item.ownerId === req.user.id) ? item : null;
 }
@@ -164,7 +169,7 @@ function shuffle<T>(a: T[], r: () => number): T[] {
   return x;
 }
 
-function buildQuiz(db: DatabaseSync, seed: number) {
+async function buildQuiz(db: Db, seed: number) {
   const r = seeded(seed);
   const stations = listStations();
   const year = (s: string) => s.match(/(19|20)\d{2}/)?.[0] ?? null;
@@ -190,7 +195,7 @@ function buildQuiz(db: DatabaseSync, seed: number) {
       sourceId: `station:${s.id}`,
     });
   }
-  const milestones = (db.prepare(`SELECT * FROM archive_items WHERE type = 'expedition' AND review_status = 'APPROVED' AND year IS NOT NULL ORDER BY year`).all() as any[]).map(rowToItem);
+  const milestones = (await db.all(`SELECT * FROM archive_items WHERE type = 'expedition' AND review_status = 'APPROVED' AND year IS NOT NULL ORDER BY year`)).map(rowToItem);
   for (const m of shuffle(milestones, r).slice(0, 4)) {
     const wrong = shuffle([...new Set(milestones.map((x) => String(x.year)).filter((v) => v !== String(m.year)))], r).slice(0, 3);
     if (wrong.length < 3) continue;
@@ -205,26 +210,26 @@ function buildQuiz(db: DatabaseSync, seed: number) {
   return shuffle(qs, r).slice(0, 8);
 }
 
-function lessonPacks(db: DatabaseSync) {
+async function lessonPacks(db: Db) {
   const stations = listStations();
   const regions = [...new Set(stations.map((s) => s.domain))];
-  return regions.map((region) => {
+  return Promise.all(regions.map(async (region) => {
     const ids = stations.filter((s) => s.domain === region).map((s) => s.id);
-    const rows = (db
-      .prepare(
-        `SELECT * FROM archive_items WHERE review_status = 'APPROVED' AND (domain = ? OR station_id IN (${ids.map(() => '?').join(',') || "''"}))
-         ORDER BY CASE type WHEN 'photo' THEN 0 WHEN 'video' THEN 1 WHEN 'expedition' THEN 2 WHEN 'dataset' THEN 3 ELSE 4 END, year DESC LIMIT 8`
-      )
-      .all(region, ...ids) as any[]).map(rowToItem);
+    const rows = (await db.all(
+      `SELECT * FROM archive_items WHERE review_status = 'APPROVED' AND (domain = ? OR station_id IN (${ids.map(() => '?').join(',') || "''"}))
+       ORDER BY CASE type WHEN 'photo' THEN 0 WHEN 'video' THEN 1 WHEN 'expedition' THEN 2 WHEN 'dataset' THEN 3 ELSE 4 END, year DESC NULLS LAST LIMIT 8`,
+      region,
+      ...ids
+    )).map(rowToItem);
     return {
       region,
       stations: stations.filter((s) => s.domain === region).map((s) => ({ id: s.id, name: s.name, locationName: s.locationName, description: s.description })),
       records: rows.map((i) => ({ id: i.id, type: i.type, title: i.title, summary: i.summary, year: i.year, thumbnailUrl: i.thumbnailUrl, dataStatus: i.dataStatus })),
     };
-  });
+  }));
 }
 
-export function createExtrasRouter(db: DatabaseSync) {
+export function createExtrasRouter(db: Db) {
   const r = express.Router();
 
   r.post('/events', rateLimit(600, 10 * 60 * 1000), (req, res) => {
@@ -240,8 +245,8 @@ export function createExtrasRouter(db: DatabaseSync) {
 
   r.get(
     '/archive/:id/cite',
-    wrap((req, res) => {
-      const item = visible(req, req.params.id);
+    wrap(async (req, res) => {
+      const item = await visible(req, req.params.id);
       if (!item) throw new HttpError(404, 'Record not found');
       const format = String(req.query.format || 'apa') as 'apa' | 'bibtex' | 'ris';
       if (!['apa', 'bibtex', 'ris'].includes(format)) throw new HttpError(400, 'format must be apa, bibtex or ris');
@@ -272,7 +277,7 @@ export function createExtrasRouter(db: DatabaseSync) {
   r.get(
     '/archive/:id/series',
     wrap(async (req, res) => {
-      const item = visible(req, req.params.id);
+      const item = await visible(req, req.params.id);
       if (!item) throw new HttpError(404, 'Record not found');
       if (item.meta.climateStation) {
         const st = listStations().find((s) => s.id === item.meta.climateStation);
@@ -308,9 +313,9 @@ export function createExtrasRouter(db: DatabaseSync) {
     })
   );
 
-  r.get('/atlas', (_req, res) => {
+  r.get('/atlas', wrap(async (_req, res) => {
     const stations = listStations();
-    const items = (db.prepare(`SELECT * FROM archive_items WHERE review_status = 'APPROVED' ORDER BY year DESC LIMIT 3000`).all() as any[]).map(rowToItem);
+    const items = (await db.all(`SELECT * FROM archive_items WHERE review_status = 'APPROVED' ORDER BY year DESC NULLS LAST LIMIT 3000`)).map(rowToItem);
     const points = [];
     for (const i of items) {
       const loc = itemLocation(i, stations);
@@ -333,42 +338,39 @@ export function createExtrasRouter(db: DatabaseSync) {
       points,
       unmapped: items.length - points.length,
     });
-  });
+  }));
 
   r.get(
     '/learn',
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       const seed = intOrNull(req.query.seed, 'seed') ?? Math.floor(Date.now() / 86400_000);
-      res.json({ packs: lessonPacks(db), quiz: buildQuiz(db, seed), seed });
+      res.json({ packs: await lessonPacks(db), quiz: await buildQuiz(db, seed), seed });
     })
   );
 
   r.get(
     '/admin/analytics',
     requireRole('reviewer', 'admin'),
-    wrap((req, res) => {
+    wrap(async (req, res) => {
       const days = Math.min(Math.max(intOrNull(req.query.days, 'days') ?? 30, 1), 365);
-      const since = `date('now', '-${days - 1} days')`;
+      const since = new Date(Date.now() - (days - 1) * 86400_000).toISOString().slice(0, 10);
       const top = (kind: string, n = 10) =>
-        db.prepare(`SELECT key, SUM(n) AS n FROM usage_counts WHERE kind = ? AND day >= ${since} GROUP BY key ORDER BY n DESC LIMIT ?`).all(kind, n);
+        db.all(`SELECT key, SUM(n) AS n FROM usage_counts WHERE kind = ? AND day >= ? GROUP BY key ORDER BY n DESC LIMIT ?`, kind, since, n);
       res.json({
         days,
-        daily: db
-          .prepare(`SELECT day, kind, SUM(n) AS n FROM usage_counts WHERE day >= ${since} GROUP BY day, kind ORDER BY day`)
-          .all(),
+        daily: await db.all(`SELECT day, kind, SUM(n) AS n FROM usage_counts WHERE day >= ? GROUP BY day, kind ORDER BY day`, since),
         totals: Object.fromEntries(
-          (db.prepare(`SELECT kind, SUM(n) AS n FROM usage_counts WHERE day >= ${since} GROUP BY kind`).all() as any[]).map((r) => [r.kind, r.n])
+          (await db.all(`SELECT kind, SUM(n) AS n FROM usage_counts WHERE day >= ? GROUP BY kind`, since)).map((r) => [r.kind, r.n])
         ),
-        topPages: top('page'),
-        topSearches: top('search'),
-        topDownloads: top('download'),
-        contributors: db
-          .prepare(
-            `SELECT u.id, u.name, u.institution,
-                    SUM(a.review_status = 'APPROVED') AS approved, SUM(a.review_status = 'PENDING_REVIEW') AS pending
-             FROM users u JOIN archive_items a ON a.owner_id = u.id GROUP BY u.id ORDER BY approved DESC LIMIT 10`
-          )
-          .all(),
+        topPages: await top('page'),
+        topSearches: await top('search'),
+        topDownloads: await top('download'),
+        contributors: await db.all(
+          `SELECT u.id, u.name, u.institution,
+                  COUNT(*) FILTER (WHERE a.review_status = 'APPROVED') AS approved,
+                  COUNT(*) FILTER (WHERE a.review_status = 'PENDING_REVIEW') AS pending
+           FROM users u JOIN archive_items a ON a.owner_id = u.id GROUP BY u.id ORDER BY approved DESC LIMIT 10`
+        ),
       });
     })
   );

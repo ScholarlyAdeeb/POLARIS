@@ -12,7 +12,6 @@ const PAGES: [string, string][] = [
   ['/explore', 'Archive search'],
   ['/map', 'Polar map'],
   ['/knowledge-graph', 'Knowledge graph'],
-  ['/ai', 'Polar Science Assistant'],
 ];
 
 const LINKS = [

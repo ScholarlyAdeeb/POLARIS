@@ -1,8 +1,9 @@
-import 'dotenv/config'; // must run before ./server/api.ts reads ADMIN_TOKEN etc.
+import 'dotenv/config'; // must run before ./server/api.ts reads ADMIN_TOKEN, DATABASE_URL etc.
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createApiRouter, UPLOAD_DIR } from './server/api.ts';
+import { initDb } from './server/db.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,12 +14,13 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 app.disable('x-powered-by');
 
-// REST API (SQLite-backed knowledge repository) and uploaded media
-app.use('/api', createApiRouter());
-app.use('/uploads', express.static(UPLOAD_DIR, { fallthrough: false, dotfiles: 'deny' }));
-
 // Setup dev server with Vite or production static handler
 async function startServer() {
+  // REST API (PostgreSQL knowledge repository) and uploaded media
+  await initDb();
+  app.use('/api', await createApiRouter());
+  app.use('/uploads', express.static(UPLOAD_DIR, { fallthrough: false, dotfiles: 'deny' }));
+
   if (!isProduction) {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
@@ -38,4 +40,7 @@ async function startServer() {
   });
 }
 
-startServer();
+startServer().catch((err) => {
+  console.error('[POLARIS] Could not start:', err.message);
+  process.exit(1);
+});

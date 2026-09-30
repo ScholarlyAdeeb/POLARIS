@@ -5,7 +5,7 @@ import { AdminGate, DataStatusBadge, ErrorNote, Page, PageHeader } from '../comp
 import { AnalyticsPanel, SubmissionsPanel, UsersPanel } from '../components/AdminPanels';
 import { useAuth } from '../lib/auth';
 
-const DATA_STATUSES = ['OFFICIAL', 'VERIFIED', 'EXTERNAL', 'SAMPLE', 'SYNTHETIC', 'AI_GENERATED', 'UNVERIFIED'];
+const DATA_STATUSES = ['OFFICIAL', 'VERIFIED', 'EXTERNAL', 'SAMPLE', 'SYNTHETIC', 'UNVERIFIED'];
 const REVIEW = ['PENDING_REVIEW', 'APPROVED', 'CHANGES_REQUESTED', 'REJECTED'];
 const PROPOSAL = ['SUBMITTED', 'UNDER_REVIEW', 'SHORTLISTED', 'ACCEPTED', 'DECLINED'];
 
@@ -79,33 +79,16 @@ function Console({ logout, onOpenRecord }: { logout: () => void; onOpenRecord?: 
         {(!user || user.role === 'admin') && <UsersPanel />}
       </div>
 
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="sci-card p-4">
-          <h2 className="font-semibold mb-3">AI providers</h2>
-          <div className="grid grid-cols-2 gap-2">
-            <Stat label="Active generator" value={ov.llm.active} />
-            <Stat label="Gemini key" value={ov.llm.gemini.configured ? `set · ${ov.llm.gemini.model}` : 'not set'} />
-            <Stat label="Assistant queries logged" value={ov.aiQueries} />
-          </div>
-        </div>
-        <div className="sci-card p-4">
-          <h2 className="font-semibold mb-3">Semantic retrieval (ml/)</h2>
-          <div className="grid grid-cols-2 gap-2">
-            <Stat label="ML service" value={ov.ml.available ? 'reachable' : 'offline'} />
-            <Stat label="Model" value={ov.ml.model ?? '—'} />
-            <Stat label="Backend" value={ov.ml.backend ?? '—'} />
-            <Stat label="Stored embeddings" value={ov.embeddings} />
-          </div>
-          <button className="sci-btn-ghost w-full mt-3" disabled={busy || !ov.ml.available} onClick={() => act(async () => {
-            const r = await api.admin.rebuildEmbeddings();
-            setInfo(`Embedded ${r.embedded} records with ${r.model} (${r.dim} dims).`);
-          }, 'Embeddings rebuilt.')}>
-            Rebuild embeddings
-          </button>
-          {!ov.ml.available && <p className="text-xs sci-muted mt-2">Start it with ml/serve.ps1. Search stays BM25-only until then.</p>}
-        </div>
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="sci-card p-4">
           <h2 className="font-semibold mb-3">Database</h2>
+          <div className="grid grid-cols-2 gap-2">
+            <Stat label="Engine" value={`${ov.database.engine} ${ov.database.version}`} />
+            <Stat label="Accounts" value={ov.users} />
+          </div>
+        </div>
+        <div className="sci-card p-4">
+          <h2 className="font-semibold mb-3">Records by data status</h2>
           <div className="grid grid-cols-2 gap-2 mb-2">
             {Object.entries(ov.archiveByStatus).map(([k, n]) => (
               <Stat key={k} label={k} value={n as number} />

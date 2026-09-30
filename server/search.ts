@@ -1,11 +1,10 @@
-import type { DatabaseSync } from 'node:sqlite';
-import { rowToItem, type ArchiveItem } from './db.ts';
-import { cosine, embedTexts, mlStatus } from './ml.ts';
+import type { Db } from './pg.ts';
+import { rowToItem, listStations, type ArchiveItem } from './db.ts';
 
 /**
- * Hybrid retrieval: lexical BM25 (SQLite FTS5) + optional semantic embeddings
- * from ml/service.py, merged with reciprocal-rank fusion (RRF). With no ML
- * service or no stored embeddings, results are lexical only and say so.
+ * Full-text search over the archive with PostgreSQL (weighted tsvector + GIN index, ranked with
+ * ts_rank_cd). Natural-language questions work: stopwords are dropped and years become filters.
+ * If no record matches every term, it falls back to records matching any term and says so.
  */
 
 export interface SearchFilters {
@@ -18,21 +17,17 @@ export interface SearchFilters {
   dataStatus?: string[];
 }
 
-export interface HybridHit extends ArchiveItem {
+export interface SearchHit extends ArchiveItem {
   snippet: string;
   score: number;
-  lexicalRank: number | null;
-  semanticRank: number | null;
-  semanticScore: number | null;
+  rank: number;
 }
 
-export interface HybridResult {
+export interface SearchResult {
   query: string;
-  mode: 'hybrid' | 'lexical';
-  semanticNote: string | null;
   matchedAllTerms: boolean;
   total: number;
-  results: HybridHit[];
+  results: SearchHit[];
 }
 
 const STOPWORDS = new Set(
@@ -52,15 +47,15 @@ export function parseQuery(q: string): { terms: string[]; years: number[] } {
   return { terms: terms.slice(0, 12), years: [...new Set(years)] };
 }
 
-/** Turn search terms into a safe FTS5 query: every token quoted, prefix-matched. */
-export function ftsQuery(q: string, mode: 'AND' | 'OR'): string | null {
+/** Search terms as a safe to_tsquery() string: every term prefix-matched, joined with AND or OR. */
+export function tsQuery(q: string, mode: 'AND' | 'OR'): string | null {
   const { terms } = parseQuery(q);
   if (!terms.length) return null;
-  return terms.map((t) => `"${t}"*`).join(mode === 'AND' ? ' ' : ' OR ');
+  return terms.map((t) => `${t}:*`).join(mode === 'AND' ? ' & ' : ' | ');
 }
 
-function filterSql(f: SearchFilters): { sql: string; params: any[] } {
-  // Only reviewer-approved records are searchable (contributor uploads wait for review).
+/** Only reviewer-approved records are searchable (contributor uploads wait for review). */
+export function filterSql(f: SearchFilters): { sql: string; params: any[] } {
   const where: string[] = ["a.review_status = 'APPROVED'"];
   const params: any[] = [];
   if (f.types?.length) {
@@ -91,120 +86,66 @@ function filterSql(f: SearchFilters): { sql: string; params: any[] } {
     where.push("(',' || lower(a.tags) || ',') LIKE ?");
     params.push(`%${f.theme.toLowerCase()}%`);
   }
-  return { sql: where.length ? ' AND ' + where.join(' AND ') : '', params };
+  return { sql: ' AND ' + where.join(' AND '), params };
 }
 
-function lexical(db: DatabaseSync, q: string, f: SearchFilters, limit: number) {
+export async function search(db: Db, q: string, f: SearchFilters = {}, limit = 20): Promise<SearchResult> {
   const { terms, years } = parseQuery(q);
   const flt = filterSql(f);
   const yearSql = years.length ? ` AND a.year IN (${years.map(() => '?').join(',')})` : '';
-  const run = (mode: 'AND' | 'OR', withYears: boolean): any[] => {
-    const fts = ftsQuery(q, mode);
+
+  const run = async (mode: 'AND' | 'OR', withYears: boolean): Promise<any[]> => {
+    const ts = tsQuery(q, mode);
     const yp = withYears ? years : [];
-    if (!fts) {
+    if (!ts) {
       if (!withYears || !years.length) return [];
-      return db
-        .prepare(`SELECT a.*, a.summary AS snippet, 0 AS bm25 FROM archive_items a WHERE 1=1 ${yearSql}${flt.sql} ORDER BY a.rowid DESC LIMIT ?`)
-        .all(...yp, ...flt.params, limit) as any[];
+      return db.all(
+        `SELECT a.*, a.summary AS snippet, 0 AS rank FROM archive_items a WHERE true ${yearSql}${flt.sql} ORDER BY a.rowid DESC LIMIT ?`,
+        ...yp,
+        ...flt.params,
+        limit
+      );
     }
-    return db
-      .prepare(
-        `SELECT a.*, snippet(archive_fts, -1, '[', ']', '…', 18) AS snippet,
-                bm25(archive_fts, 8.0, 3.0, 1.0, 4.0, 1.0) AS bm25
-         FROM archive_fts JOIN archive_items a ON a.rowid = archive_fts.rowid
-         WHERE archive_fts MATCH ? ${withYears ? yearSql : ''}${flt.sql} ORDER BY bm25 LIMIT ?`
-      )
-      .all(fts, ...yp, ...flt.params, limit) as any[];
+    return db.all(
+      `SELECT a.*, ts_headline('english', a.title || '. ' || a.summary, query, 'StartSel=[, StopSel=], MaxWords=26, MinWords=10') AS snippet,
+              ts_rank_cd(a.search, query) AS rank
+       FROM archive_items a, to_tsquery('english', ?) query
+       WHERE a.search @@ query ${withYears ? yearSql : ''}${flt.sql}
+       ORDER BY rank DESC, a.year DESC NULLS LAST LIMIT ?`,
+      ts,
+      ...yp,
+      ...flt.params,
+      limit
+    );
   };
+
   // Strictest first: all terms + year, then all terms, then any term.
-  let rows = run('AND', true);
+  let rows = await run('AND', true);
   let matchedAll = true;
-  if (!rows.length && years.length && terms.length) rows = run('AND', false);
+  if (!rows.length && years.length && terms.length) rows = await run('AND', false);
   if (!rows.length && terms.length > 1) {
-    rows = run('OR', true);
-    if (!rows.length && years.length) rows = run('OR', false);
+    rows = await run('OR', true);
+    if (!rows.length && years.length) rows = await run('OR', false);
     matchedAll = false;
   }
-  return { rows, matchedAll };
+  const results = rows.map((r, i) => ({ ...rowToItem(r), snippet: r.snippet || r.summary, score: Number(Number(r.rank).toFixed(5)), rank: i + 1 }));
+  return { query: q, matchedAllTerms: matchedAll, total: results.length, results };
 }
 
-async function semantic(db: DatabaseSync, q: string, f: SearchFilters, limit: number) {
-  const { n } = db.prepare('SELECT COUNT(*) AS n FROM item_embeddings').get() as any;
-  if (!n) return { rows: [] as any[], note: 'No stored embeddings yet. Rebuild them from the admin page once the ML service is running.' };
-  const status = await mlStatus();
-  if (!status.available) return { rows: [] as any[], note: 'ML embedding service not reachable; showing lexical BM25 results only.' };
-  const emb = await embedTexts([q]);
-  if (!emb?.vectors?.[0]) return { rows: [] as any[], note: 'ML service did not return a query embedding; showing lexical results only.' };
-  const flt = filterSql(f);
-  const cands = db
-    .prepare(`SELECT a.*, e.vector, e.model AS emb_model FROM archive_items a JOIN item_embeddings e ON e.item_id = a.id WHERE 1=1${flt.sql}`)
-    .all(...flt.params) as any[];
-  const qv = emb.vectors[0];
-  const scored = cands
-    .filter((r) => r.emb_model === emb.model)
-    .map((r) => ({ ...r, sim: cosine(qv, JSON.parse(r.vector)) }))
-    .sort((a, b) => b.sim - a.sim)
-    .slice(0, limit);
-  const stale = cands.length && !cands.some((r) => r.emb_model === emb.model);
-  return { rows: scored, note: stale ? `Stored embeddings were built with a different model than ${emb.model}; rebuild them.` : null };
-}
-
-export async function hybridSearch(db: DatabaseSync, q: string, f: SearchFilters = {}, limit = 20): Promise<HybridResult> {
-  const pool = Math.max(limit * 2, 20);
-  const lex = q.trim() ? lexical(db, q, f, pool) : { rows: [] as any[], matchedAll: true };
-  const sem = q.trim() ? await semantic(db, q, f, pool) : { rows: [] as any[], note: null };
-
-  const K = 60;
-  const merged = new Map<string, { row: any; score: number; lexicalRank: number | null; semanticRank: number | null; sim: number | null }>();
-  lex.rows.forEach((r, i) => merged.set(r.id, { row: r, score: 1 / (K + i + 1), lexicalRank: i + 1, semanticRank: null, sim: null }));
-  sem.rows.forEach((r, i) => {
-    const hit = merged.get(r.id);
-    if (hit) {
-      hit.score += 1 / (K + i + 1);
-      hit.semanticRank = i + 1;
-      hit.sim = r.sim;
-    } else merged.set(r.id, { row: { ...r, snippet: r.summary }, score: 1 / (K + i + 1), lexicalRank: null, semanticRank: i + 1, sim: r.sim });
-  });
-
-  const results = [...merged.values()]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
-    .map((h) => ({
-      ...rowToItem(h.row),
-      snippet: h.row.snippet || h.row.summary,
-      score: Number(h.score.toFixed(5)),
-      lexicalRank: h.lexicalRank,
-      semanticRank: h.semanticRank,
-      semanticScore: h.sim === null ? null : Number(h.sim.toFixed(4)),
-    }));
-
-  return {
-    query: q,
-    mode: sem.rows.length ? 'hybrid' : 'lexical',
-    semanticNote: sem.rows.length ? null : sem.note,
-    matchedAllTerms: lex.matchedAll,
-    total: results.length,
-    results,
-  };
-}
-
-export function facets(db: DatabaseSync) {
-  const col = (sql: string) => (db.prepare(sql).all() as any[]).map((r) => Object.values(r)[0]);
+export async function facets(db: Db) {
+  const col = async (sql: string) => (await db.all(sql)).map((r) => Object.values(r)[0]);
   const tagCounts = new Map<string, number>();
-  for (const r of db.prepare(`SELECT tags FROM archive_items WHERE review_status = 'APPROVED'`).all() as any[]) {
+  for (const r of await db.all(`SELECT tags FROM archive_items WHERE review_status = 'APPROVED'`)) {
     for (const t of String(r.tags || '').split(',').map((x) => x.trim().toLowerCase()).filter((x) => x && x.length < 40)) {
       tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
     }
   }
-  const years = db.prepare(`SELECT MIN(year) AS min, MAX(year) AS max FROM archive_items WHERE year IS NOT NULL AND review_status = 'APPROVED'`).get() as any;
+  const years = await db.get(`SELECT MIN(year) AS min, MAX(year) AS max FROM archive_items WHERE year IS NOT NULL AND review_status = 'APPROVED'`);
   return {
-    domains: col(`SELECT DISTINCT domain FROM archive_items WHERE domain <> '' AND review_status = 'APPROVED' ORDER BY domain`),
-    types: col(`SELECT DISTINCT type FROM archive_items WHERE review_status = 'APPROVED' ORDER BY type`),
-    dataStatuses: col(`SELECT DISTINCT data_status FROM archive_items WHERE review_status = 'APPROVED' ORDER BY data_status`),
-    stations: (db.prepare('SELECT data FROM stations ORDER BY sort').all() as any[]).map((r) => {
-      const s = JSON.parse(r.data);
-      return { id: s.id, name: s.name };
-    }),
+    domains: await col(`SELECT DISTINCT domain FROM archive_items WHERE domain <> '' AND review_status = 'APPROVED' ORDER BY domain`),
+    types: await col(`SELECT DISTINCT type FROM archive_items WHERE review_status = 'APPROVED' ORDER BY type`),
+    dataStatuses: await col(`SELECT DISTINCT data_status FROM archive_items WHERE review_status = 'APPROVED' ORDER BY data_status`),
+    stations: listStations().map((s) => ({ id: s.id, name: s.name })),
     years: { min: years?.min ?? null, max: years?.max ?? null },
     themes: [...tagCounts.entries()].filter(([, n]) => n > 1).sort((a, b) => b[1] - a[1]).slice(0, 24).map(([t]) => t),
   };

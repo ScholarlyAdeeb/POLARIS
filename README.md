@@ -14,7 +14,7 @@ media content from them, credited to the people who contributed the work.
 1. **Sign up** at `/login` (scientists, expedition members, outreach staff). New accounts are *contributors*.
 2. **Share work** in `/workspace`: upload a photo, video, PDF, CSV/NetCDF dataset or report and describe it.
 3. **Auto-mapping**: POLARIS suggests the station (nearest to your coordinates, or named in your text), the region,
-   and related records (hybrid search) with a relation for each (`documents`, `collected_during`, `uses_data`, …). You tick the right ones.
+   and related records (full-text search) with a relation for each (`documents`, `collected_during`, `uses_data`, …). You tick the right ones.
 4. **Review**: the record stays private until a *reviewer* approves it under Admin → Contributor submissions.
    Then it appears on the atlas, knowledge graph, search, station pages and timeline.
 5. **Content**: from your record, generate a website article and X / LinkedIn / Instagram posts. Every post is
@@ -27,16 +27,16 @@ The `ADMIN_TOKEN` from `.env` still works as an admin login for the review tools
 
 ## Run it
 
-Requirements: **Node.js 22.13+** (uses the built-in `node:sqlite`; developed on Node 24).
+Requirements: **Node.js 22.13+** (developed on Node 24) and a **PostgreSQL** database (a free Neon project works).
 
 ```bash
 npm install
-cp .env.example .env      # optional; everything has a default
+cp .env.example .env      # then set DATABASE_URL
 npm run dev               # http://localhost:3000
 ```
 
-On first start the server creates `data/polaris.db` and seeds it from `src/data/polarisData.ts`
-plus a set of demo records. Delete `data/` to reset. If `ADMIN_TOKEN` is not set, a random
+On first start the server creates the tables in `DATABASE_URL` and seeds them from `src/data/polarisData.ts`
+plus a set of demo records. Point it at an empty database to reset. If `ADMIN_TOKEN` is not set, a random
 admin token is printed in the server log.
 
 | Script | What it does |
@@ -46,14 +46,16 @@ admin token is printed in the server log.
 | `NODE_ENV=production npm start` | Serves the API and `dist/` |
 | `npm run lint` | Type-check frontend and server |
 | `npm run import:open-data` | Refresh `server/data/open-data.json` from Crossref + PANGAEA |
+| `npm run android:apk` | Build the Android app (`android/app/build/outputs/apk/debug/app-debug.apk`) |
 
-Deployment (Docker, Render blueprint): see [DEPLOY.md](DEPLOY.md).
+Deployment (Docker, Render blueprint) and the Android app: see [DEPLOY.md](DEPLOY.md).
 
 ## Architecture
 
 ```
 server.ts                Express: /api, /uploads, Vite (dev) or dist/ (prod)
-server/db.ts             SQLite schema: archive_items + FTS5 index, item_links, proposals, outreach_posts
+server/pg.ts             PostgreSQL pool and query helpers
+server/db.ts             Schema: archive_items + weighted tsvector (GIN), item_links, proposals, outreach_posts
 server/seed.ts           First-run seed from src/data/polarisData.ts + demo records
 server/api.ts            REST routes, validation, search, reviewer endpoints
 server/auth.ts           Accounts (scrypt), sessions (HttpOnly cookie), roles
@@ -62,8 +64,10 @@ server/extras.ts         Live weather, citations, chart series, atlas, lessons +
 server/openData.ts       Loads real open metadata (Crossref, PANGAEA) as EXTERNAL records
 server/files.ts          Generated downloads: dataset extracts, synoptic CSV, BibTeX, ISO 19115 metadata
 server/outreach.ts       Website / X / LinkedIn / Instagram copy generator (template-based)
+server/claims.ts         Sentence-level claim check of generated posts against the source record
 src/lib/api.ts           Typed API client used by the React app
 src/context/PolarisDataContext.tsx   Loads /api/bootstrap; falls back to bundled data if the API is down
+android/, mobile-shell/  Android app (Capacitor): opens the POLARIS server with downloads, camera and location
 ```
 
 **One archive, seven record types.** `expedition`, `report`, `dataset`, `publication`, `photo`,
@@ -72,7 +76,7 @@ generation work the same way for every kind of record. `item_links` holds direct
 (`uses_data`, `documents`, `collected_during`, …), which drive the "Linked Records" panels and the
 knowledge-graph view.
 
-**Search** is SQLite FTS5 with BM25 ranking (title weighted highest). Natural-language questions
+**Search** is PostgreSQL full-text search ranked with `ts_rank_cd` (title weighted highest). Natural-language questions
 work: stopwords are dropped and years become filters, so *"What atmospheric studies were
 conducted at Maitri in 2023?"* returns the 2023 Maitri records first. If no record matches every
 term, it falls back to the closest matches and says so.
@@ -159,18 +163,17 @@ need review by native speakers. Record content stays in the language it was subm
 - Translation of record content and generated posts.
 - Direct posting to social networks (posts are copied or shared via the network's share link).
 
-## Routes, provenance and Polar AI
+## Routes and provenance
 
 | Route | What it is |
 |---|---|
 | `/` | Home |
-| `/explore` | Hybrid search (BM25 via SQLite FTS5 + optional semantic embeddings, fused with RRF) with region, station, year, theme, type and data-status filters |
+| `/explore` | Full-text search (PostgreSQL) with region, station, year, theme, type and data-status filters |
 | `/map` | Polar map |
 | `/stations/:id` | Data-driven station page with a WebGL (React Three Fiber) conceptual model and database-backed hotspots |
 | `/knowledge-graph` | React Flow graph of stations, expeditions, datasets and publications from `item_links` + `station_id` |
-| `/ai` | Polar Science Assistant: retrieve → generate (Gemini → offline extractive) → sentence-level claim check → cited answer |
-| `/content/review` | Outreach studio: AI/template draft → claim check → named human reviewer → publish (never automatic) |
-| `/admin` | Contributor submissions review, accounts and roles, usage analytics, ML status, provenance, proposals |
+| `/content/review` | Outreach studio: template draft → claim check → named human reviewer → publish (never automatic) |
+| `/admin` | Contributor submissions review, accounts and roles, usage analytics, database status, provenance, proposals |
 | `/atlas` | Every approved record with a place, on polar / Himalaya / world maps (Natural Earth coastlines) |
 | `/timeline` | Expeditions and activities by year |
 | `/newsroom` | Published, reviewed posts with contributor credit |
@@ -178,9 +181,5 @@ need review by native speakers. Record content stays in the language it was subm
 | `/workspace` | Contributor upload → mapping → content workflow |
 | `/login`, `/contributors/:id` | Accounts and public contributor profiles |
 
-Every archive record carries `data_status` (`OFFICIAL`, `VERIFIED`, `EXTERNAL`, `SAMPLE`, `SYNTHETIC`, `AI_GENERATED`, `UNVERIFIED`),
-`provenance` and `review_status`, added by explicit migrations in `server/migrations.ts` (tracked in `schema_migrations`;
-existing rows are back-filled, never dropped). Demo downloads are labelled `SYNTHETIC SAMPLE EXTRACT`.
-
-Optional services (see `.env.example`): `GEMINI_API_KEY` and the embedding service in `ml/`
-(training on an RTX 4070 Laptop GPU: see `ml/README.md`). Without them the app runs fully offline.
+Every archive record carries `data_status` (`OFFICIAL`, `VERIFIED`, `EXTERNAL`, `SAMPLE`, `SYNTHETIC`, `UNVERIFIED`),
+`provenance` and `review_status` (derived in `server/migrations.ts`; schema versions are tracked in `schema_migrations`). Demo downloads are labelled `SYNTHETIC SAMPLE EXTRACT`.

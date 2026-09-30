@@ -1,7 +1,7 @@
 import type { ExpeditionMilestone, HotspotInfo, ScientificPaper, SimulationMission, StationData } from '../types/polaris';
 
 export type ArchiveType = 'expedition' | 'report' | 'dataset' | 'publication' | 'photo' | 'video' | 'activity';
-export type DataStatus = 'OFFICIAL' | 'VERIFIED' | 'EXTERNAL' | 'SAMPLE' | 'SYNTHETIC' | 'AI_GENERATED' | 'UNVERIFIED' | 'TEMPLATE';
+export type DataStatus = 'OFFICIAL' | 'VERIFIED' | 'EXTERNAL' | 'SAMPLE' | 'SYNTHETIC' | 'UNVERIFIED' | 'TEMPLATE';
 
 export interface ArchiveItem {
   id: string;
@@ -42,9 +42,7 @@ export interface DatasetDetail extends ArchiveItem {
 export interface SearchResult extends ArchiveItem {
   snippet: string;
   score?: number;
-  lexicalRank?: number | null;
-  semanticRank?: number | null;
-  semanticScore?: number | null;
+  rank?: number;
 }
 
 export interface SearchFilters {
@@ -59,8 +57,6 @@ export interface SearchFilters {
 
 export interface SearchResponse {
   query: string;
-  mode?: 'hybrid' | 'lexical';
-  semanticNote?: string | null;
   matchedAllTerms: boolean;
   total: number;
   results: SearchResult[];
@@ -151,36 +147,6 @@ export interface Verification {
   unsupported: number;
   checked: number;
   nonAuthoritativeSources: string[];
-}
-
-export interface AiSource {
-  ref: string;
-  id: string;
-  type: string;
-  title: string;
-  dataStatus: string;
-  year: number | null;
-  stationId: string | null;
-  excerpt: string;
-}
-
-export interface AiAnswer {
-  question: string;
-  answer: string;
-  provider: 'gemini' | 'deterministic';
-  model: string | null;
-  retrieval: { mode: 'hybrid' | 'lexical'; note: string | null };
-  sources: AiSource[];
-  verification: Verification;
-}
-
-export interface AiStatus {
-  llm: {
-    active: 'gemini' | 'deterministic';
-    gemini: { configured: boolean; model: string };
-  };
-  ml: { available: boolean; url: string; model?: string; dim?: number; backend?: string };
-  embeddings: number;
 }
 
 export interface OutreachPost {
@@ -383,9 +349,6 @@ export const api = {
       `/stations/${encodeURIComponent(id)}`
     ),
   hotspots: (id: string) => request<{ stationId: string; hotspots: Hotspot[] }>(`/stations/${encodeURIComponent(id)}/hotspots`),
-  aiStatus: () => request<AiStatus>('/ai/status'),
-  ask: (question: string, filters: SearchFilters = {}) =>
-    request<AiAnswer>('/ai/ask', { method: 'POST', body: JSON.stringify({ question, filters }) }),
   auth: {
     me: () => request<User | null>('/auth/me'),
     login: (email: string, password: string) => request<User>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
@@ -402,8 +365,8 @@ export const api = {
     create: (b: RecordInput) => request<ArchiveItem>('/me/records', { method: 'POST', body: JSON.stringify(b) }),
     update: (id: string, b: Partial<RecordInput>) => request<ArchiveItem>(`/me/records/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(b) }),
     remove: (id: string) => request<null>(`/me/records/${encodeURIComponent(id)}`, { method: 'DELETE' }),
-    generate: (id: string, channels: OutreachChannel[], mode: 'ai' | 'template') =>
-      request<OutreachPost[]>(`/me/records/${encodeURIComponent(id)}/content`, { method: 'POST', body: JSON.stringify({ channels, mode }) }),
+    generate: (id: string, channels: OutreachChannel[]) =>
+      request<OutreachPost[]>(`/me/records/${encodeURIComponent(id)}/content`, { method: 'POST', body: JSON.stringify({ channels }) }),
     content: () => request<OutreachPost[]>('/me/content'),
     editContent: (id: number, content: string) => request<OutreachPost>(`/me/content/${id}`, { method: 'PATCH', body: JSON.stringify({ content }) }),
   },
@@ -428,17 +391,16 @@ export const api = {
     users: () => adminRequest<(User & { created_at: string; records: number })[]>('/users'),
     setRole: (id: number, role: Role) => adminRequest<User>(`/users/${id}`, { method: 'PATCH', body: JSON.stringify({ role }) }),
     analytics: (days = 30) => adminRequest<any>(`/analytics?${qs({ days })}`),
-    rebuildEmbeddings: () => adminRequest<{ embedded: number; model: string; dim: number }>('/embeddings/rebuild', { method: 'POST' }),
     updateRecord: (id: string, patch: Record<string, unknown>) =>
       adminRequest<ArchiveItem>(`/archive/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(patch) }),
     proposals: () => adminRequest<any[]>('/proposals'),
     setProposal: (ref: string, status: string) =>
       adminRequest<any>(`/proposals/${encodeURIComponent(ref)}`, { method: 'PATCH', body: JSON.stringify({ status }) }),
     outreach: (review?: string) => adminRequest<OutreachPost[]>(`/outreach?${qs({ review })}`),
-    draft: (itemId: string, channel: OutreachChannel, mode: 'ai' | 'template') =>
-      adminRequest<OutreachPost & { aiRequested: boolean; aiUsed: boolean }>('/outreach/draft', {
+    draft: (itemId: string, channel: OutreachChannel) =>
+      adminRequest<OutreachPost>('/outreach/draft', {
         method: 'POST',
-        body: JSON.stringify({ itemId, channel, mode }),
+        body: JSON.stringify({ itemId, channel }),
       }),
     review: (id: number, body: { action: string; content?: string; reviewer?: string; note?: string }) =>
       adminRequest<OutreachPost>(`/outreach/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),

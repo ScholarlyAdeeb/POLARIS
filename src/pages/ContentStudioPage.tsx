@@ -40,7 +40,6 @@ function Studio({ logout }: { logout: () => void }) {
   const [itemQuery, setItemQuery] = useState('');
   const [itemHits, setItemHits] = useState<SearchResult[]>([]);
   const [channel, setChannel] = useState<OutreachChannel>('website');
-  const [mode, setMode] = useState<'ai' | 'template'>('ai');
   const [queue, setQueue] = useState<OutreachPost[]>([]);
   const [filter, setFilter] = useState('');
   const [openId, setOpenId] = useState<number | null>(null);
@@ -140,7 +139,7 @@ function Studio({ logout }: { logout: () => void }) {
             ))}
           </ul>
         )}
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2">
           <label className="text-xs sci-muted flex flex-col gap-1">
             Channel
             <select value={channel} onChange={(e) => setChannel(e.target.value as OutreachChannel)} className="sci-input">
@@ -151,22 +150,14 @@ function Studio({ logout }: { logout: () => void }) {
               ))}
             </select>
           </label>
-          <label className="text-xs sci-muted flex flex-col gap-1">
-            Writer
-            <select value={mode} onChange={(e) => setMode(e.target.value as 'ai' | 'template')} className="sci-input">
-              <option value="ai">AI draft (falls back to template)</option>
-              <option value="template">Template only</option>
-            </select>
-          </label>
         </div>
         <button
           className="sci-btn"
           disabled={busy || !itemId.trim()}
           onClick={() =>
             run(async () => {
-              const p = await api.admin.draft(itemId.trim(), channel, mode);
+              const p = await api.admin.draft(itemId.trim(), channel);
               setOpenId(p.id);
-              setInfo(p.aiRequested && !p.aiUsed ? 'No LLM available, so the deterministic template wrote this draft.' : null);
             })
           }
         >
@@ -281,7 +272,7 @@ function Studio({ logout }: { logout: () => void }) {
 export function ContentStudioPage() {
   return (
     <Page>
-      <PageHeader title="Outreach studio" text="AI or template drafts → automatic claim check → human review → publish. Publishing is blocked until a named reviewer approves." />
+      <PageHeader title="Outreach studio" text="Template drafts written from the record → automatic claim check → human review → publish. Publishing is blocked until a named reviewer approves." />
       <AdminGate>{(logout) => <Studio logout={logout} />}</AdminGate>
     </Page>
   );
