@@ -1,4 +1,5 @@
-<img width="1024" height="1024" alt="screen" src="https://github.com/user-attachments/assets/f0631941-3035-4093-ac92-dded5c24846d" />
+<img width="1708" height="1653" alt="polaris_emblem" src="https://github.com/user-attachments/assets/b2f7032e-782e-4e35-a830-9db2922f47b9" />
+
 
 
 # POLARIS — Integrated Polar Science Outreach, Knowledge Repository & Media Dissemination Portal
