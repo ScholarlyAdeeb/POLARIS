@@ -93,9 +93,16 @@ export function SeriesChart({ recordId }: { recordId: string }) {
   const [table, setTable] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     setData(null);
     setError(null);
-    api.series(recordId).then(setData).catch((e) => setError(e.status === 404 ? null : e.message));
+    api
+      .series(recordId)
+      .then((d) => !cancelled && setData(d))
+      .catch((e) => !cancelled && setError(e.status === 404 ? null : e.message));
+    return () => {
+      cancelled = true;
+    };
   }, [recordId]);
 
   const xs = useMemo(() => data?.rows.map((r) => r.x) ?? [], [data]);

@@ -10,7 +10,10 @@ import { initDb } from './db.ts';
 export async function createApp() {
   const app = express();
   app.disable('x-powered-by');
-  if (process.env.VERCEL) app.set('trust proxy', true); // https links and Secure cookies behind Vercel's proxy
+  // Behind a proxy (Vercel, Render, nginx) req.ip and req.protocol must come from X-Forwarded-*, or every
+  // client shares the proxy's IP in the rate limiters. TRUST_PROXY is the number of proxy hops.
+  if (process.env.TRUST_PROXY) app.set('trust proxy', /^\d+$/.test(process.env.TRUST_PROXY) ? Number(process.env.TRUST_PROXY) : process.env.TRUST_PROXY);
+  else if (process.env.VERCEL || process.env.RENDER) app.set('trust proxy', 1);
   await initDb();
   app.use('/api', await createApiRouter());
   app.use('/uploads', express.static(UPLOAD_DIR, { fallthrough: false, dotfiles: 'deny' }));

@@ -10,7 +10,9 @@ export function LoginPage() {
   const { t } = useT();
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const next = params.get('next') || '/workspace';
+  // Only same-site paths: "//host" or "https://..." would send the user off-site after sign-in.
+  const rawNext = params.get('next') || '';
+  const next = /^\/(?![/\\])/.test(rawNext) ? rawNext : '/workspace';
   const [mode, setMode] = useState<'signin' | 'register'>(params.get('mode') === 'register' ? 'register' : 'signin');
   const [form, setForm] = useState({ name: '', email: '', password: '', institution: '' });
   const [busy, setBusy] = useState(false);

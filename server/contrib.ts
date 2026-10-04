@@ -121,17 +121,21 @@ function readRecordBody(b: any, partial = false) {
   if (b.location && !location) throw new HttpError(400, 'location needs lat between -90 and 90 and lon between -180 and 180');
   const url = str(b.url, 'url', { max: 2000 });
   if (url && !/^(\/uploads\/|https?:\/\/)/.test(url)) throw new HttpError(400, 'url must be an uploaded file or an http(s) link');
+  const thumbnailUrl = str(b.thumbnailUrl, 'thumbnailUrl', { max: 2000 });
+  if (thumbnailUrl && !/^(\/uploads\/|https?:\/\/)/.test(thumbnailUrl)) throw new HttpError(400, 'thumbnailUrl must be an uploaded file or an http(s) link');
+  const stationId = str(b.stationId, 'stationId', { max: 60 }) || null;
+  if (stationId && !listStations().some((s) => s.id === stationId)) throw new HttpError(400, `Unknown station ${stationId}`);
   return {
     type,
     title: b.title === undefined && partial ? undefined : str(b.title, 'title', { required: true, max: 300 }),
     summary: str(b.summary, 'summary', { max: 5000 }),
     body: str(b.body, 'body', { max: 50000 }),
-    stationId: str(b.stationId, 'stationId', { max: 60 }) || null,
+    stationId,
     year: intOrNull(b.year, 'year'),
     date: str(b.date, 'date', { max: 40 }) || null,
     tags: ((b.tags ?? []) as unknown[]).map(tag).filter(Boolean),
     url: url || null,
-    thumbnailUrl: str(b.thumbnailUrl, 'thumbnailUrl', { max: 2000 }) || null,
+    thumbnailUrl: thumbnailUrl || null,
     doi: str(b.doi, 'doi', { max: 200 }) || null,
     location,
     links: Array.isArray(b.links) ? (b.links as any[]).slice(0, 20) : [],
@@ -204,9 +208,7 @@ export function createContributorRouter(db: Db) {
     wrap(async (req, res) => {
       const u = req.user!;
       const b = readRecordBody(req.body ?? {});
-      const stations = listStations();
-      if (b.stationId && !stations.some((s) => s.id === b.stationId)) throw new HttpError(400, `Unknown station ${b.stationId}`);
-      const st = stations.find((s) => s.id === b.stationId);
+      const st = listStations().find((s) => s.id === b.stationId);
       const domain = st?.domain || (b.location ? regionFor(b.location) : '') || str(req.body?.domain, 'domain', { max: 80 });
       const id = `USR-${b.type!.toUpperCase().slice(0, 4)}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
       const isImage = b.url && /\.(jpe?g|png|webp|gif)$/i.test(b.url);
@@ -247,13 +249,18 @@ export function createContributorRouter(db: Db) {
     '/records/:id',
     wrap(async (req, res) => {
       const item = await ownRecord(req.user!, req.params.id);
-      const b = readRecordBody({ ...item, ...(req.body ?? {}), location: req.body?.location ?? item.meta.location ?? null, links: req.body?.links }, true);
+      const body = req.body ?? {};
+      // An explicit `location: null` clears the coordinates; leaving the field out keeps them.
+      const location = 'location' in body ? body.location : item.meta.location ?? null;
+      const b = readRecordBody({ ...item, ...body, location, links: body.links }, true);
       const meta = { ...item.meta, location: b.location ?? undefined };
+      const st = listStations().find((s) => s.id === b.stationId);
+      const domain = st?.domain || (b.location ? regionFor(b.location) : '') || item.domain;
       await db.tx(async (t) => {
         await t.run(
-          `UPDATE archive_items SET title = ?, summary = ?, body = ?, station_id = ?, year = ?, date = ?, tags = ?, url = ?, thumbnail_url = ?, doi = ?,
+          `UPDATE archive_items SET title = ?, summary = ?, body = ?, domain = ?, station_id = ?, year = ?, date = ?, tags = ?, url = ?, thumbnail_url = ?, doi = ?,
              meta = ?, review_status = 'PENDING_REVIEW', updated_at = ${NOW} WHERE id = ?`,
-          b.title ?? item.title, b.summary, b.body, b.stationId, b.year, b.date, b.tags.join(', '), b.url, b.thumbnailUrl, b.doi, JSON.stringify(meta), item.id
+          b.title ?? item.title, b.summary, b.body, domain, b.stationId, b.year, b.date, b.tags.join(', '), b.url, b.thumbnailUrl, b.doi, JSON.stringify(meta), item.id
         );
         if (b.links.length) await writeLinks(t, item.id, item.type, b.links);
       });

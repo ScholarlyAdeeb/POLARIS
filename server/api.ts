@@ -6,7 +6,7 @@ import { NOW, type Db } from './pg.ts';
 import { bibtex, datasetDownload, datasetHeader, metadataRecord, proposalTemplate, synopticCsv } from './files.ts';
 import { CHANNELS, generateContent, type Channel } from './outreach.ts';
 import { DATA_STATUSES, REVIEW_STATUSES } from './migrations.ts';
-import { facets, parseQuery, search, tsQuery, type SearchFilters } from './search.ts';
+import { facets, filterSql, parseQuery, search, tsQuery, type SearchFilters } from './search.ts';
 import { HttpError, intOrNull, publicBase, rateLimit, sendDownload, str, tag, wrap } from './http.ts';
 import { attachUser, createAuthRouter, createUsersRouter, isReviewer, requireRole, seedDemoAccounts } from './auth.ts';
 import { checkAgainst, createContributorRouter, createDraft, createPublicContentRouter, postRow } from './contrib.ts';
@@ -261,41 +261,13 @@ export async function createApiRouter() {
   api.get(
     '/archive',
     wrap(async (req, res) => {
-      const f = readFilters(req.query);
-      const where: string[] = [PUBLIC_SQL];
-      const params: any[] = [];
-      if (f.types?.length) {
-        where.push(`a.type IN (${f.types.map(() => '?').join(',')})`);
-        params.push(...f.types);
-      }
-      if (f.dataStatus?.length) {
-        where.push(`a.data_status IN (${f.dataStatus.map(() => '?').join(',')})`);
-        params.push(...f.dataStatus);
-      }
-      if (f.domain) {
-        where.push('a.domain = ?');
-        params.push(f.domain);
-      }
-      if (f.station) {
-        where.push('a.station_id = ?');
-        params.push(f.station);
-      }
+      const flt = filterSql(readFilters(req.query));
+      const where: string[] = [`TRUE${flt.sql}`];
+      const params: any[] = [...flt.params];
       const year = intOrNull(req.query.year, 'year');
       if (year !== null) {
         where.push('a.year = ?');
         params.push(year);
-      }
-      if (f.yearFrom != null) {
-        where.push('a.year >= ?');
-        params.push(f.yearFrom);
-      }
-      if (f.yearTo != null) {
-        where.push('a.year <= ?');
-        params.push(f.yearTo);
-      }
-      if (f.theme) {
-        where.push("(',' || lower(a.tags) || ',') LIKE ?");
-        params.push(`%${f.theme.toLowerCase()}%`);
       }
       const q = String(req.query.q || '').trim();
       const ts = q ? tsQuery(q, 'AND') : null;
@@ -779,7 +751,7 @@ export async function createApiRouter() {
       const b = req.body ?? {};
       const action = str(b.action, 'action', { max: 30 }) || (b.status ? 'status' : b.content !== undefined ? 'edit' : '');
       // Signed-in reviewers sign with their account name; the shared admin token must type one.
-      const reviewer = str(b.reviewer, 'reviewer', { max: 80 }) || (req.user && req.user.id > 0 ? req.user.name : '');
+      const reviewer = req.user && req.user.id > 0 ? req.user.name : str(b.reviewer, 'reviewer', { max: 80 });
       const note = str(b.note, 'note', { max: 1000 });
       const set = async (fields: Record<string, unknown>) => {
         const keys = Object.keys(fields);
