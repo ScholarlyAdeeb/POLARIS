@@ -322,6 +322,7 @@ function PostEditor({ post, onSaved }: { post: OutreachPost; onSaved: () => void
   const [text, setText] = useState(post.content);
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const c = post.claim_check;
   const published = post.status === 'PUBLISHED';
   return (
@@ -353,9 +354,15 @@ function PostEditor({ post, onSaved }: { post: OutreachPost; onSaved: () => void
             disabled={busy || text === post.content}
             onClick={async () => {
               setBusy(true);
-              await api.me.editContent(post.id, text).catch(() => undefined);
-              setBusy(false);
-              onSaved();
+              setError(null);
+              try {
+                await api.me.editContent(post.id, text);
+                onSaved();
+              } catch (e: any) {
+                setError(e.message);
+              } finally {
+                setBusy(false);
+              }
             }}
           >
             {t('common.save')}
@@ -378,6 +385,7 @@ function PostEditor({ post, onSaved }: { post: OutreachPost; onSaved: () => void
           </Link>
         )}
       </div>
+      <ErrorNote error={error} />
     </li>
   );
 }

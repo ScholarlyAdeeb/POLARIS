@@ -1,7 +1,7 @@
 import express, { type Request } from 'express';
 import type { Db } from './pg.ts';
 import { getItem, listStations, rowToItem, type ArchiveItem } from './db.ts';
-import { HttpError, intOrNull, rateLimit, sendDownload, wrap } from './http.ts';
+import { HttpError, intOrNull, publicBase, rateLimit, sendDownload, wrap } from './http.ts';
 import { isReviewer, requireRole } from './auth.ts';
 import { itemLocation, stationLocation } from './geo.ts';
 import { syntheticSeries } from './files.ts';
@@ -113,7 +113,11 @@ function parseCsv(text: string, maxRows = 1000) {
     columns: columns.map((c) => c.name),
     rows: rows.map((r, n) => ({
       x: xIndex >= 0 ? r[xIndex] : String(n + 1),
-      values: columns.map((c) => Number(r[header.indexOf(c.name)])),
+      // Blank cells are gaps (NaN -> null in JSON), not zeros.
+      values: columns.map((c) => {
+        const cell = r[header.indexOf(c.name)];
+        return cell === undefined || cell === '' ? NaN : Number(cell);
+      }),
     })),
     truncated: lines.length - 1 > maxRows,
   };
@@ -249,8 +253,7 @@ export function createExtrasRouter(db: Db) {
       if (!item) throw new HttpError(404, 'Record not found');
       const format = String(req.query.format || 'apa') as 'apa' | 'bibtex' | 'ris';
       if (!['apa', 'bibtex', 'ris'].includes(format)) throw new HttpError(400, 'format must be apa, bibtex or ris');
-      const base = `${req.protocol}://${req.get('host')}`;
-      const text = citation(item, format, base);
+      const text = citation(item, format, publicBase(req));
       if (req.query.download) {
         const ext = { apa: 'txt', bibtex: 'bib', ris: 'ris' }[format];
         const type = { apa: 'text/plain', bibtex: 'application/x-bibtex', ris: 'application/x-research-info-systems' }[format];
