@@ -99,7 +99,7 @@ records are indexed, so researchers' work becomes answerable once a reviewer app
 
 Models come from Hugging Face. Locally they run inside the Node server with transformers.js
 (`npm run rag:models` downloads them once, ~1.8 GB; about 6 tokens/s on a laptop CPU). On Vercel,
-set `HF_TOKEN` and the same embedding model plus `Qwen/Qwen2.5-7B-Instruct` run through Hugging Face
+set `HF_TOKEN` and the same embedding model plus `Qwen/Qwen2.5-72B-Instruct` run through Hugging Face
 Inference Providers. Both backends share one index. See `.env.example` for the settings.
 
 

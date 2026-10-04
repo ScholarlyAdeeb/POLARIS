@@ -31,7 +31,14 @@ export const ragConfig = () => {
     /** bge models expect this prefix on queries (not on passages). */
     queryPrefix: env('RAG_QUERY_PREFIX', 'Represent this sentence for searching relevant passages: '),
     llmLocal: env('RAG_LLM_MODEL', 'onnx-community/Qwen2.5-1.5B-Instruct'),
-    llmHosted: env('RAG_HF_LLM_MODEL', 'Qwen/Qwen2.5-7B-Instruct'),
+    /**
+     * Hosted chat models, tried in order: Hugging Face serves each through a set of providers, and an
+     * account may not have every provider enabled, so the first model one of them serves is used.
+     */
+    llmHosted: env('RAG_HF_LLM_MODEL', 'Qwen/Qwen2.5-72B-Instruct,openai/gpt-oss-20b,Qwen/Qwen2.5-7B-Instruct')
+      .split(',')
+      .map((m) => m.trim())
+      .filter(Boolean),
     /**
      * cpu (default) runs the 4-bit model with ONNX Runtime's CPU kernels, the fastest option measured
      * (about 6 tokens/s for 1.5B on a laptop i9). dml (Windows GPU) and cuda (Linux) are available, but

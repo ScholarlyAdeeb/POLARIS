@@ -70,8 +70,13 @@ async function embedHosted(cfg: RagConfig, inputs: string[]): Promise<number[][]
 
 // ---- generation -----------------------------------------------------------------
 
+/** Hosted models this deployment cannot use (no enabled provider), and the one that last worked. */
+const unavailable = new Set<string>();
+let hostedInUse: string | null = null;
+
 export function llmName(cfg = ragConfig()) {
-  return cfg.backend === 'hosted' ? cfg.llmHosted : cfg.llmLocal;
+  if (cfg.backend === 'local') return cfg.llmLocal;
+  return hostedInUse ?? cfg.llmHosted.find((m) => !unavailable.has(m)) ?? cfg.llmHosted[0];
 }
 
 /** Load the local language model now (startup warm-up), so the first question is not slow. */
@@ -127,13 +132,29 @@ export async function generate(messages: ChatMessage[], onToken: (t: string) => 
 
 async function generateHosted(cfg: RagConfig, messages: ChatMessage[], onToken: (t: string) => void, signal?: AbortSignal) {
   if (!cfg.hfToken) throw new Error('HF_TOKEN is not set (needed for the hosted backend)');
-  const res = await fetch('https://router.huggingface.co/v1/chat/completions', {
-    method: 'POST',
-    signal,
-    headers: { authorization: `Bearer ${cfg.hfToken}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ model: cfg.llmHosted, messages, stream: true, max_tokens: cfg.maxNewTokens, temperature: 0.1 }),
-  });
-  if (!res.ok || !res.body) throw new Error(`Language model service: HTTP ${res.status} ${(await res.text()).slice(0, 200)}`);
+  let res: Response | null = null;
+  let lastError = '';
+  for (const model of cfg.llmHosted.filter((m) => !unavailable.has(m))) {
+    const r = await fetch('https://router.huggingface.co/v1/chat/completions', {
+      method: 'POST',
+      signal,
+      headers: { authorization: `Bearer ${cfg.hfToken}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ model, messages, stream: true, max_tokens: cfg.maxNewTokens, temperature: 0.1 }),
+    });
+    if (r.ok && r.body) {
+      hostedInUse = model;
+      res = r;
+      break;
+    }
+    lastError = `HTTP ${r.status} ${(await r.text()).slice(0, 200)}`;
+    // Not served by any provider on this account: skip it from now on and try the next model.
+    if ((r.status === 400 || r.status === 404) && /not supported|model_not_supported|not found|does not exist/i.test(lastError)) {
+      unavailable.add(model);
+      continue;
+    }
+    throw new Error(`Language model service (${model}): ${lastError}`);
+  }
+  if (!res || !res.body) throw new Error(`No configured model is available to this Hugging Face account (${lastError})`);
   let text = '';
   let buf = '';
   const decoder = new TextDecoder();
