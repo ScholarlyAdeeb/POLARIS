@@ -149,6 +149,96 @@ export interface Verification {
   nonAuthoritativeSources: string[];
 }
 
+export interface RagSource {
+  ref: string;
+  id: string;
+  type: string;
+  title: string;
+  dataStatus: string;
+  year: number | null;
+  stationId: string | null;
+  excerpt: string;
+  url: string | null;
+  contributor: { id: number | null; name: string; institution: string } | null;
+  score: number;
+}
+
+export interface RagAnswer {
+  question: string;
+  answer: string;
+  mode: 'generative' | 'extractive' | 'no_sources';
+  model: string | null;
+  sources: RagSource[];
+  verification: Verification | null;
+  timings: { retrievalMs: number; generationMs: number };
+  note: string | null;
+}
+
+export interface RagStatus {
+  enabled: boolean;
+  backend: 'local' | 'hosted';
+  embedModel: string;
+  llm: string | null;
+  device: string;
+  llmState: string;
+  hostedReady: boolean | null;
+  index: {
+    ready: boolean;
+    problem: string | null;
+    records: number;
+    chunks: number;
+    fileChunks: number;
+    approved: number;
+    contributorRecords: number;
+    errors: { item_id: string; error: string }[];
+  };
+}
+
+export interface AskHandlers {
+  onSources?: (s: RagSource[]) => void;
+  onToken?: (t: string) => void;
+  onReset?: (note: string) => void;
+}
+
+/** Streams an answer from /api/rag/ask (server-sent events over a POST response). */
+async function askStream(question: string, filters: { domain?: string; station?: string; types?: string[] }, h: AskHandlers, signal?: AbortSignal) {
+  const res = await fetch('/api/rag/ask', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ question, filters }),
+    signal,
+  });
+  if (!res.ok || !res.body) {
+    const body = await res.json().catch(() => null);
+    throw new ApiError(res.status, body?.error || `Request failed (${res.status})`);
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buf = '';
+  let result: RagAnswer | null = null;
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    let end: number;
+    while ((end = buf.indexOf('\n\n')) >= 0) {
+      const block = buf.slice(0, end);
+      buf = buf.slice(end + 2);
+      const event = /^event: (.*)$/m.exec(block)?.[1];
+      const data = /^data: (.*)$/m.exec(block)?.[1];
+      if (!event || data === undefined) continue;
+      const payload = JSON.parse(data);
+      if (event === 'sources') h.onSources?.(payload);
+      else if (event === 'token') h.onToken?.(payload);
+      else if (event === 'reset') h.onReset?.(payload);
+      else if (event === 'done') result = payload;
+      else if (event === 'error') throw new ApiError(500, payload.error);
+    }
+  }
+  if (!result) throw new ApiError(500, 'The answer stream ended early');
+  return result;
+}
+
 export interface OutreachPost {
   id: number;
   item_id: string;
@@ -354,6 +444,10 @@ async function contributorUpload(file: File): Promise<Uploaded> {
 }
 
 export const api = {
+  rag: {
+    status: () => request<RagStatus>('/rag/status'),
+    ask: askStream,
+  },
   bootstrap: () => request<BootstrapData>('/bootstrap'),
   search: (q: string, limit = 20, filters: SearchFilters = {}) => request<SearchResponse>(`/search?${qs({ q, limit, ...filters })}`),
   facets: () => request<Facets>('/facets'),
@@ -399,6 +493,11 @@ export const api = {
   },
   admin: {
     overview: () => adminRequest<any>('/overview'),
+    ragReindex: (full = false) =>
+      adminRequest<{ indexed: number; removed: number; pending: number; errors: { id: string; error: string }[]; index: RagStatus['index'] }>('/rag/reindex', {
+        method: 'POST',
+        body: JSON.stringify({ full }),
+      }),
     submissions: (review = 'PENDING_REVIEW') => adminRequest<Submission[]>(`/submissions?${qs({ review })}`),
     reviewRecord: (id: string, body: { action: 'approve' | 'request_changes' | 'reject'; note?: string; reviewer?: string; dataStatus?: string }) =>
       adminRequest<ArchiveItem>(`/archive/${encodeURIComponent(id)}/review`, { method: 'POST', body: JSON.stringify(body) }),

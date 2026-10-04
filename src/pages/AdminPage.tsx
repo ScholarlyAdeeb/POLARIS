@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api, type ArchiveItem } from '../lib/api';
+import { api, type ArchiveItem, type RagStatus } from '../lib/api';
 import { AdminGate, DataStatusBadge, ErrorNote, Page, PageHeader } from '../components/ui';
 import { AnalyticsPanel, SubmissionsPanel, UsersPanel } from '../components/AdminPanels';
 import { useAuth } from '../lib/auth';
@@ -14,6 +14,83 @@ function Stat({ label, value }: { label: string; value: React.ReactNode }) {
     <div className="sci-well p-3">
       <p className="text-[11px] sci-muted">{label}</p>
       <p className="sci-mono font-semibold">{value}</p>
+    </div>
+  );
+}
+
+/** Ask POLARIS: what the RAG index holds and which open models answer. */
+function RagPanel() {
+  const [st, setSt] = useState<RagStatus | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const load = () => api.rag.status().then(setSt).catch((e) => setMsg(e.message));
+  useEffect(() => {
+    load();
+  }, []);
+  const reindex = async (full: boolean) => {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const r = await api.admin.ragReindex(full);
+      setMsg(
+        `${r.indexed} records embedded, ${r.removed} removed${r.pending ? `, ${r.pending} still pending (run again)` : ''}${
+          r.errors.length ? `. Errors: ${r.errors.map((e) => `${e.id}: ${e.error}`).join('; ')}` : ''
+        }`
+      );
+      load();
+    } catch (e: any) {
+      setMsg(e.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  if (!st) return <div className="sci-card p-4 text-sm sci-muted">{msg ?? 'Loading Ask POLARIS status…'}</div>;
+  const ix = st.index;
+  return (
+    <div className="sci-card p-4">
+      <h2 className="font-semibold mb-3">Ask POLARIS (RAG)</h2>
+      {ix.ready ? (
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <Stat label="Records indexed" value={`${ix.records} / ${ix.approved}`} />
+          <Stat label="Chunks" value={`${ix.chunks}${ix.fileChunks ? ` (${ix.fileChunks} from files)` : ''}`} />
+          <Stat label="Shared by researchers" value={ix.contributorRecords} />
+          <Stat label="Backend" value={st.backend === 'local' ? `This server (${st.device})` : 'Hugging Face API'} />
+        </div>
+      ) : (
+        <p className="text-sm mb-3" style={{ color: 'var(--pol-bad)' }}>
+          {ix.problem}
+        </p>
+      )}
+      <p className="text-xs sci-muted mb-3">
+        Embeddings <span className="sci-mono">{st.embedModel}</span>
+        {st.llm ? (
+          <>
+            {' '}
+            · answers <span className="sci-mono">{st.llm}</span> ({st.llmState})
+          </>
+        ) : (
+          ' · extractive answers (RAG_LLM=off)'
+        )}
+        {st.hostedReady === false && ' · HF_TOKEN is not set'}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        <button className="sci-btn" disabled={busy || !ix.ready} onClick={() => reindex(false)}>
+          {busy ? 'Indexing…' : 'Index new records'}
+        </button>
+        <button className="sci-btn-ghost" disabled={busy || !ix.ready} onClick={() => reindex(true)}>
+          Rebuild all
+        </button>
+      </div>
+      {msg && <p className="text-xs sci-muted mt-2">{msg}</p>}
+      {ix.errors.length > 0 && (
+        <ul className="text-xs mt-2 sci-muted">
+          {ix.errors.map((e) => (
+            <li key={e.item_id}>
+              {e.item_id}: {e.error}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -87,6 +164,7 @@ function Console({ logout, onOpenRecord }: { logout: () => void; onOpenRecord?: 
             <Stat label="Accounts" value={ov.users} />
           </div>
         </div>
+        <RagPanel />
         <div className="sci-card p-4">
           <h2 className="font-semibold mb-3">Records by data status</h2>
           <div className="grid grid-cols-2 gap-2 mb-2">

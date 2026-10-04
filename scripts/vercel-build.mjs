@@ -24,7 +24,8 @@ await build({
   target: 'node22',
   format: 'esm',
   sourcemap: 'linked',
-  external: ['pg-native', 'vite'],
+  // Local RAG models (transformers.js + ONNX Runtime) never run in the function; Vercel uses the hosted backend.
+  external: ['pg-native', 'vite', '@huggingface/transformers', 'onnxruntime-node'],
   // CommonJS dependencies inside an ESM bundle still call require()/__dirname
   banner: {
     js: [

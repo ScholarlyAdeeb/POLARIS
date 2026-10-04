@@ -104,6 +104,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCommandPalette }) => {
   const navItems: { to: string; key: string; show?: boolean }[] = [
     { to: '/', key: 'nav.home' },
     { to: '/explore', key: 'nav.explore' },
+    { to: '/ask', key: 'nav.ask' },
     { to: '/atlas', key: 'nav.atlas' },
     { to: '/map', key: 'nav.map' },
     { to: '/stations', key: 'nav.stations' },

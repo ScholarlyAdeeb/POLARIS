@@ -82,7 +82,26 @@ work: stopwords are dropped and years become filters, so *"What atmospheric stud
 conducted at Maitri in 2023?"* returns the 2023 Maitri records first. If no record matches every
 term, it falls back to the closest matches and says so.
 
-## Demo data
+## Ask POLARIS (RAG)
+
+`/ask` answers questions from the records on the portal: approved contributor uploads (including the
+text of uploaded PDF, TXT, CSV and JSON files), seeded records and open-data metadata. Only approved
+records are indexed, so researchers' work becomes answerable once a reviewer approves it.
+
+1. **Index**: each record is split into ~900-character chunks, embedded with `BAAI/bge-small-en-v1.5`
+   and stored in PostgreSQL with pgvector (`rag_chunks`, HNSW index). A content hash per record
+   re-embeds edited records and drops unpublished ones (`server/rag/indexer.ts`).
+2. **Retrieve**: vector similarity plus PostgreSQL full-text search, with a relevance floor so
+   unrelated questions get no sources (`server/rag/ask.ts`).
+3. **Answer**: an open model answers only from the retrieved records and cites them as `[S1]`;
+   every sentence is then checked against the cited records (`server/claims.ts`), and the page shows
+   which records were used and who contributed them.
+
+Models come from Hugging Face. Locally they run inside the Node server with transformers.js
+(`npm run rag:models` downloads them once, ~1.8 GB; about 6 tokens/s on a laptop CPU). On Vercel,
+set `HF_TOKEN` and the same embedding model plus `Qwen/Qwen2.5-7B-Instruct` run through Hugging Face
+Inference Providers. Both backends share one index. See `.env.example` for the settings.
+
 
 The 45 expedition seasons, station facts and hotspot payloads come from the original frontend
 data. **Datasets, reports, photos, the video and activities added by the seed are demo

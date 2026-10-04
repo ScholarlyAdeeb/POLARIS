@@ -34,3 +34,9 @@ npm run android:apk
 ```
 
 Needs JDK 21 and the Android SDK (`ANDROID_HOME`, or `sdk.dir` in `android/local.properties`). The APK is written to `android/app/build/outputs/apk/debug/app-debug.apk`. Set `POLARIS_SERVER_URL=https://your.domain` before building to make a hosted server the default; otherwise the app defaults to this PC's Wi-Fi address on port 3000. The address can be changed in the app.
+
+## Ask POLARIS (RAG)
+
+- **Local / Docker**: run `npm run rag:models` once (downloads the open models to `data/models`). The index builds itself on startup.
+- **Vercel**: add `HF_TOKEN` (a Hugging Face access token) to the project's environment variables. The function uses Hugging Face Inference Providers with the same embedding model, so it shares the index in PostgreSQL. `vercel.json` skips the ONNX Runtime download (`ONNXRUNTIME_NODE_INSTALL=skip`) because local models never run there.
+- The database needs the pgvector extension (Neon, Supabase and Render Postgres include it); the tables are created automatically.

@@ -13,6 +13,8 @@ import { checkAgainst, createContributorRouter, createDraft, createPublicContent
 import { countUsage, createExtrasRouter } from './extras.ts';
 import { rawBody, saveUpload } from './uploads.ts';
 import { climateCsv, fixedStation, liveReadings, recentHourlyCsv, withLive } from './realdata.ts';
+import { createRagRouter, startRag } from './rag/ask.ts';
+import { syncIndex, touchIndex } from './rag/indexer.ts';
 
 export { UPLOAD_DIR } from './uploads.ts';
 
@@ -141,6 +143,13 @@ export async function createApiRouter() {
   api.use('/me', createContributorRouter(db));
   api.use(createPublicContentRouter(db));
   api.use(createExtrasRouter(db));
+  api.use(createRagRouter(db));
+  // Any write may change what is public; the RAG index re-checks on its next sync.
+  api.use((req, res, next) => {
+    if (req.method !== 'GET') res.on('finish', touchIndex);
+    next();
+  });
+  startRag(db);
 
   api.get(
     '/health',
@@ -701,6 +710,8 @@ export async function createApiRouter() {
         JSON.stringify(provenance),
         item.id
       );
+      touchIndex();
+      if (!process.env.VERCEL) syncIndex(db).catch(() => undefined); // approved work becomes answerable right away
       res.json(await getItem(item.id));
     })
   );

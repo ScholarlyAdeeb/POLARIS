@@ -95,6 +95,28 @@ export function verifyClaims(text: string, sources: Source[]): Verification {
   };
 }
 
+/**
+ * Adds a citation to every factual sentence that has none: the source sharing the most words with it
+ * (at least 40%). Small models often forget to cite; this makes every claim checkable against a record.
+ */
+export function attachCitations(text: string, sources: Source[]): string {
+  const vocab = sources.map((s) => ({ ref: s.ref, words: new Set(words(s.text)) }));
+  return splitSentences(text)
+    .map((sentence) => {
+      if (/\[S\d+\]/i.test(sentence)) return sentence;
+      const sw = [...new Set(words(stripNonClaims(sentence)))];
+      if (sw.length < 3) return sentence;
+      let best: { ref: string; score: number } | null = null;
+      for (const v of vocab) {
+        const score = sw.filter((w) => v.words.has(w)).length / sw.length;
+        if (!best || score > best.score) best = { ref: v.ref, score };
+      }
+      if (!best || best.score < 0.4) return sentence;
+      return sentence.replace(/([.!?]*)$/, ` [${best.ref}]$1`);
+    })
+    .join(' ');
+}
+
 export function toSource(item: ArchiveItem, i: number): Source {
   const c = item.meta?.contributor;
   const credit = c?.name ? `Shared on POLARIS by ${c.name}${c.institution ? `, ${c.institution}` : ''}.` : '';

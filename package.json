@@ -13,11 +13,13 @@
     "lint": "tsc --noEmit",
     "import:open-data": "tsx scripts/import-open-data.ts",
     "android:sync": "node scripts/android-config.mjs && cap sync android",
-    "android:apk": "npm run android:sync && cd android && gradlew assembleDebug"
+    "android:apk": "npm run android:sync && cd android && gradlew assembleDebug",
+    "rag:models": "tsx scripts/rag-models.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
     "@capacitor/core": "^8.5.2",
+    "@huggingface/transformers": "^4.3.0",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.1",
     "@tailwindcss/vite": "^4.3.3",
@@ -35,6 +37,7 @@
     "react-router-dom": "^7.18.4",
     "three": "^0.186.1",
     "topojson-client": "^3.1.0",
+    "unpdf": "^1.8.1",
     "vite": "^8.3.0",
     "world-atlas": "^2.0.2"
   },

@@ -14,6 +14,7 @@ import { WorkspacePage } from './pages/WorkspacePage';
 import { ContributorPage, NewsroomPage } from './pages/NewsroomPage';
 import { TimelinePage } from './pages/TimelinePage';
 import { LearnPage } from './pages/LearnPage';
+import { AskPage } from './pages/AskPage';
 
 // Modals
 import { SimulationModal } from './components/modals/SimulationModal';
@@ -195,6 +196,7 @@ export default function App() {
               }
             />
             <Route path="/explore" element={<ExplorePage {...viewers} />} />
+            <Route path="/ask" element={<AskPage onOpenRecord={handleOpenRecord} />} />
             <Route
               path="/map"
               element={<PolarMapView onNavigate={goTab} onSelectStation={selectStation} selectedStationId={selectedStationId} onShowToast={handleShowToast} />}

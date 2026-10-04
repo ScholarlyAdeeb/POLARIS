@@ -32,6 +32,7 @@ export function MobileNav() {
   }, [open]);
 
   const more = [
+    { to: '/ask', key: 'nav.ask', icon: 'forum' },
     { to: '/newsroom', key: 'nav.newsroom', icon: 'newspaper' },
     { to: '/map', key: 'nav.map', icon: 'map' },
     { to: '/stations', key: 'nav.stations', icon: 'home_work' },
