@@ -67,7 +67,13 @@ function sameToken(a: string, b: string) {
 function readCookie(req: Request, name: string): string {
   for (const part of (req.get('cookie') || '').split(';')) {
     const i = part.indexOf('=');
-    if (i > 0 && part.slice(0, i).trim() === name) return decodeURIComponent(part.slice(i + 1).trim());
+    if (i > 0 && part.slice(0, i).trim() === name) {
+      try {
+        return decodeURIComponent(part.slice(i + 1).trim());
+      } catch {
+        return ''; // malformed cookie: treat as signed out instead of failing every request
+      }
+    }
   }
   return '';
 }
@@ -155,10 +161,16 @@ export function createAuthRouter(db: Db) {
       if (password.length > 200) throw new HttpError(400, 'Password is too long');
       const institution = str(req.body?.institution, 'institution', { max: 160 });
       if (await db.get('SELECT 1 FROM users WHERE lower(email) = lower(?)', email)) throw new HttpError(409, 'An account with this email already exists');
-      const row = await db.get(
-        `INSERT INTO users (email, name, institution, role, password_hash) VALUES (?, ?, ?, 'contributor', ?) RETURNING *`,
-        email, name, institution, hashPassword(password)
-      );
+      const row = await db
+        .get(
+          `INSERT INTO users (email, name, institution, role, password_hash) VALUES (?, ?, ?, 'contributor', ?) RETURNING *`,
+          email, name, institution, hashPassword(password)
+        )
+        .catch((err) => {
+          // Two sign-ups for the same email at once: the unique index catches the second.
+          if (err?.code === '23505') throw new HttpError(409, 'An account with this email already exists');
+          throw err;
+        });
       await startSession(db, req, res, row.id);
       res.status(201).json(toUser(row));
     })

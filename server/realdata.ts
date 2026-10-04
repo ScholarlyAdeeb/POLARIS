@@ -82,7 +82,8 @@ const COMPASS = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', '
 
 /** Station card values from a live reading (same fields the UI already shows). */
 export function withLive(s: StationData, r: LiveReading | undefined): StationData & { readingsSource?: string; readingsTime?: string } {
-  if (!r) return s;
+  // Open-Meteo returns null for fields it has no value for; keep the stored card values then.
+  if (!r || ![r.temperature, r.apparent, r.windSpeedKmh, r.windDir, r.pressure].every(Number.isFinite)) return s;
   const kts = r.windSpeedKmh / 1.852;
   return {
     ...s,

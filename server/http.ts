@@ -63,6 +63,7 @@ export function rateLimit(max: number, windowMs: number) {
   return (req: Request, _res: Response, next: NextFunction) => {
     const key = req.ip || 'unknown';
     const now = Date.now();
+    if (hits.size > 10_000) for (const [k, v] of hits) if (v.reset < now) hits.delete(k);
     const h = hits.get(key);
     if (!h || h.reset < now) hits.set(key, { n: 1, reset: now + windowMs });
     else if (++h.n > max) return next(new HttpError(429, 'Too many requests, try again later'));

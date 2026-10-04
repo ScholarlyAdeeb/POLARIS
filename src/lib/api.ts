@@ -320,7 +320,13 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     headers: { ...(init?.body ? { 'content-type': 'application/json' } : {}), ...init?.headers },
   });
   const text = await res.text();
-  const body = text ? JSON.parse(text) : null;
+  let body: any = null;
+  try {
+    body = text ? JSON.parse(text) : null;
+  } catch {
+    // Proxy / gateway error pages are HTML, not JSON.
+    if (res.ok) throw new ApiError(res.status, 'The server sent an unreadable response');
+  }
   if (!res.ok) throw new ApiError(res.status, body?.error || `Request failed (${res.status})`);
   return body as T;
 }

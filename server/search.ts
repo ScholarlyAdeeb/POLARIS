@@ -83,8 +83,9 @@ export function filterSql(f: SearchFilters): { sql: string; params: any[] } {
     params.push(f.yearTo);
   }
   if (f.theme) {
-    where.push("(',' || lower(a.tags) || ',') LIKE ?");
-    params.push(`%${f.theme.toLowerCase()}%`);
+    // Exact tag match: tags are stored joined with ", ".
+    where.push("(', ' || lower(a.tags) || ', ') LIKE ? ESCAPE '\\'");
+    params.push(`%, ${f.theme.toLowerCase().replace(/[\\%_]/g, '\\$&')}, %`);
   }
   return { sql: ' AND ' + where.join(' AND '), params };
 }
