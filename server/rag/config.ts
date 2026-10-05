@@ -39,6 +39,11 @@ export const ragConfig = () => {
       .split(',')
       .map((m) => m.trim())
       .filter(Boolean),
+    /** Hugging Face provider routing: "fastest" (default), "cheapest", or empty for the account default. */
+    hfPolicy: env('RAG_HF_POLICY', 'fastest') === 'off' ? '' : env('RAG_HF_POLICY', 'fastest'),
+    /** Give up on the hosted model (and answer from the records) if it is this slow. */
+    firstTokenTimeoutMs: Number(env('RAG_FIRST_TOKEN_TIMEOUT_MS', '15000')),
+    totalTimeoutMs: Number(env('RAG_TOTAL_TIMEOUT_MS', '45000')),
     /**
      * cpu (default) runs the 4-bit model with ONNX Runtime's CPU kernels, the fastest option measured
      * (about 6 tokens/s for 1.5B on a laptop i9). dml (Windows GPU) and cuda (Linux) are available, but

@@ -172,6 +172,7 @@ export interface RagAnswer {
   verification: Verification | null;
   timings: { retrievalMs: number; generationMs: number };
   note: string | null;
+  cached?: boolean;
 }
 
 export interface RagStatus {

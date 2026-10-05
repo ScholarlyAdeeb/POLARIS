@@ -38,6 +38,26 @@ const normalise = (v: number[]) => {
 export async function embed(texts: string[], kind: 'query' | 'passage'): Promise<number[][]> {
   const cfg = ragConfig();
   const inputs = kind === 'query' ? texts.map((t) => cfg.queryPrefix + t) : texts;
+  // Repeated questions skip the embedding call (query vectors only; passages are embedded once anyway).
+  if (kind === 'query' && inputs.length === 1) {
+    const key = `${cfg.backend}|${inputs[0].toLowerCase().replace(/\s+/g, ' ').trim()}`;
+    const hit = queryVectors.get(key);
+    if (hit) {
+      queryVectors.delete(key);
+      queryVectors.set(key, hit); // most recently used last
+      return [hit];
+    }
+    const [v] = await embedUncached(cfg, inputs);
+    queryVectors.set(key, v);
+    if (queryVectors.size > 500) queryVectors.delete(queryVectors.keys().next().value!);
+    return [v];
+  }
+  return embedUncached(cfg, inputs);
+}
+
+const queryVectors = new Map<string, number[]>();
+
+async function embedUncached(cfg: RagConfig, inputs: string[]): Promise<number[][]> {
   if (cfg.backend === 'hosted') return embedHosted(cfg, inputs);
   embedPipe ??= transformers(cfg).then((m) => m.pipeline('feature-extraction', cfg.embedModelLocal, { dtype: EMBED_DTYPE, device: 'cpu' }));
   const pipe = await embedPipe.catch((err) => {
@@ -60,6 +80,7 @@ async function embedHosted(cfg: RagConfig, inputs: string[]): Promise<number[][]
       method: 'POST',
       headers: { authorization: `Bearer ${cfg.hfToken}`, 'content-type': 'application/json' },
       body: JSON.stringify({ inputs: inputs.slice(i, i + 32), normalize: true }),
+      signal: AbortSignal.timeout(inputs.length > 1 ? 30_000 : 8_000),
     });
     if (!res.ok) throw new Error(`Embedding service: HTTP ${res.status} ${(await res.text()).slice(0, 200)}`);
     const rows = (await res.json()) as number[][];
@@ -130,53 +151,89 @@ export async function generate(messages: ChatMessage[], onToken: (t: string) => 
   return job;
 }
 
+let policyRejected = false;
+
+/**
+ * Streams from Hugging Face Inference Providers. Tries the configured models in order (skipping any
+ * no enabled provider serves), asks the router for the fastest provider, and gives up if the first
+ * token or the whole answer takes too long, so a slow provider never hangs the request.
+ */
 async function generateHosted(cfg: RagConfig, messages: ChatMessage[], onToken: (t: string) => void, signal?: AbortSignal) {
   if (!cfg.hfToken) throw new Error('HF_TOKEN is not set (needed for the hosted backend)');
-  let res: Response | null = null;
-  let lastError = '';
-  for (const model of cfg.llmHosted.filter((m) => !unavailable.has(m))) {
-    const r = await fetch('https://router.huggingface.co/v1/chat/completions', {
+  const ctrl = new AbortController();
+  let timedOut = '';
+  const stop = (why: string) => {
+    timedOut ||= why;
+    ctrl.abort();
+  };
+  signal?.addEventListener('abort', () => ctrl.abort(), { once: true });
+  let firstTimer = setTimeout(() => stop(`no answer within ${cfg.firstTokenTimeoutMs / 1000} s`), cfg.firstTokenTimeoutMs);
+  const totalTimer = setTimeout(() => stop(`answer took longer than ${cfg.totalTimeoutMs / 1000} s`), cfg.totalTimeoutMs);
+  const call = (model: string) =>
+    fetch('https://router.huggingface.co/v1/chat/completions', {
       method: 'POST',
-      signal,
+      signal: ctrl.signal,
       headers: { authorization: `Bearer ${cfg.hfToken}`, 'content-type': 'application/json' },
       body: JSON.stringify({ model, messages, stream: true, max_tokens: cfg.maxNewTokens, temperature: 0.1 }),
     });
-    if (r.ok && r.body) {
-      hostedInUse = model;
-      res = r;
-      break;
-    }
-    lastError = `HTTP ${r.status} ${(await r.text()).slice(0, 200)}`;
-    // Not served by any provider on this account: skip it from now on and try the next model.
-    if ((r.status === 400 || r.status === 404) && /not supported|model_not_supported|not found|does not exist/i.test(lastError)) {
-      unavailable.add(model);
-      continue;
-    }
-    throw new Error(`Language model service (${model}): ${lastError}`);
-  }
-  if (!res || !res.body) throw new Error(`No configured model is available to this Hugging Face account (${lastError})`);
-  let text = '';
-  let buf = '';
-  const decoder = new TextDecoder();
-  for await (const chunk of res.body as any) {
-    buf += decoder.decode(chunk, { stream: true });
-    let nl: number;
-    while ((nl = buf.indexOf('\n')) >= 0) {
-      const line = buf.slice(0, nl).trim();
-      buf = buf.slice(nl + 1);
-      if (!line.startsWith('data:')) continue;
-      const data = line.slice(5).trim();
-      if (data === '[DONE]') return text;
-      try {
-        const t = JSON.parse(data).choices?.[0]?.delta?.content;
-        if (t) {
-          text += t;
-          onToken(t);
+
+  try {
+    let res: Response | null = null;
+    let lastError = '';
+    for (const model of cfg.llmHosted.filter((m) => !unavailable.has(m))) {
+      let r: Response;
+      if (cfg.hfPolicy && !policyRejected) {
+        r = await call(`${model}:${cfg.hfPolicy}`);
+        if (!r.ok && r.status === 400 && !/model_not_supported|not supported by any provider/i.test(await r.clone().text())) {
+          policyRejected = true; // router does not accept the policy suffix: plain model names from now on
+          r = await call(model);
         }
-      } catch {
-        /* keep-alive or partial line */
+      } else r = await call(model);
+      if (r.ok && r.body) {
+        hostedInUse = model;
+        res = r;
+        break;
+      }
+      lastError = `HTTP ${r.status} ${(await r.text()).slice(0, 200)}`;
+      // Not served by any provider on this account: skip it from now on and try the next model.
+      if ((r.status === 400 || r.status === 404) && /not supported|model_not_supported|not found|does not exist/i.test(lastError)) {
+        unavailable.add(model);
+        continue;
+      }
+      throw new Error(`Language model service (${model}): ${lastError}`);
+    }
+    if (!res || !res.body) throw new Error(`No configured model is available to this Hugging Face account (${lastError})`);
+
+    let text = '';
+    let buf = '';
+    const decoder = new TextDecoder();
+    for await (const chunk of res.body as any) {
+      buf += decoder.decode(chunk, { stream: true });
+      let nl: number;
+      while ((nl = buf.indexOf('\n')) >= 0) {
+        const line = buf.slice(0, nl).trim();
+        buf = buf.slice(nl + 1);
+        if (!line.startsWith('data:')) continue;
+        const data = line.slice(5).trim();
+        if (data === '[DONE]') return text;
+        try {
+          const t = JSON.parse(data).choices?.[0]?.delta?.content;
+          if (t) {
+            if (!text) clearTimeout(firstTimer);
+            text += t;
+            onToken(t);
+          }
+        } catch {
+          /* keep-alive or partial line */
+        }
       }
     }
+    return text;
+  } catch (err: any) {
+    if (timedOut) throw new Error(`the language model is slow right now (${timedOut})`);
+    throw err;
+  } finally {
+    clearTimeout(firstTimer);
+    clearTimeout(totalTimer);
   }
-  return text;
 }

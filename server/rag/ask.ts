@@ -7,7 +7,7 @@ import { HttpError, rateLimit, str, wrap } from '../http.ts';
 import { requireRole } from '../auth.ts';
 import { ragConfig } from './config.ts';
 import { embed, generate, llmName, localLlmDevice, localLlmState, warmLocalLlm, type ChatMessage } from './models.ts';
-import { ensureRagSchema, indexStatus, recordHeader, syncIndex } from './indexer.ts';
+import { ensureRagSchema, indexStatus, indexVersion, recordHeader, syncIndex } from './indexer.ts';
 
 /**
  * Ask POLARIS: questions answered from the records researchers have shared on the portal.
@@ -23,8 +23,9 @@ export interface RagSource extends Source {
   score: number;
 }
 
-const MAX_SOURCES = 6;
-const CHUNKS_PER_SOURCE = 2;
+// Prompt size drives time-to-first-token (prefill): 5 records, the best chunk of each.
+const MAX_SOURCES = 5;
+const CHUNKS_PER_SOURCE = 1;
 
 interface Hit {
   item_id: string;
@@ -191,6 +192,18 @@ export interface AskResult {
   verification: Verification | null;
   timings: { retrievalMs: number; generationMs: number };
   note: string | null;
+  cached?: boolean;
+}
+
+/**
+ * Answers to repeated questions, per server instance. The key includes the index version, so any
+ * approval, edit or removal makes old answers unreachable. Fallback answers (model errors) are not cached.
+ */
+const answers = new Map<string, { result: AskResult; at: number }>();
+const ANSWER_TTL_MS = 30 * 60_000;
+
+function cacheKey(question: string, filters: SearchFilters, version: string) {
+  return `${version}|${JSON.stringify(filters)}|${question.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()}`;
 }
 
 /** Answers a question; `emit` receives streaming events (sources first, then answer tokens). */
@@ -204,8 +217,36 @@ export async function ask(
   const cfg = ragConfig();
   const problem = await ensureRagSchema(db);
   if (problem) throw new HttpError(503, problem);
-  // Records approved since the last question are embedded first (bounded, so a question never waits long).
-  await syncIndex(db, { budgetMs: 8_000 }).catch(() => undefined);
+  // One query tells whether records changed; only then are new approvals embedded (bounded wait).
+  let { stale, version } = await indexVersion(db);
+  if (stale) {
+    await syncIndex(db, { budgetMs: 8_000 }).catch(() => undefined);
+    version = (await indexVersion(db)).version;
+  }
+
+  const key = cacheKey(question, filters, version);
+  const hit = answers.get(key);
+  if (hit && Date.now() - hit.at < ANSWER_TTL_MS) {
+    emit('sources', hit.result.sources);
+    emit('token', hit.result.answer);
+    return { ...hit.result, cached: true, timings: { retrievalMs: 0, generationMs: 0 } };
+  }
+  const result = await answer(db, cfg, question, filters, emit, signal);
+  if (!result.note) {
+    answers.set(key, { result, at: Date.now() });
+    if (answers.size > 300) answers.delete(answers.keys().next().value!);
+  }
+  return result;
+}
+
+async function answer(
+  db: Db,
+  cfg: ReturnType<typeof ragConfig>,
+  question: string,
+  filters: SearchFilters,
+  emit: (event: string, data: unknown) => void,
+  signal?: AbortSignal
+): Promise<AskResult> {
 
   const t0 = Date.now();
   const sources = await buildSources(db, await retrieve(db, question, filters));

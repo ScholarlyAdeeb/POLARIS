@@ -46,10 +46,16 @@ let schemaReady: Promise<string | null> | null = null;
 /** Creates the tables once. Resolves to null, or the reason RAG cannot run on this database. */
 export function ensureRagSchema(db: Db) {
   schemaReady ??= db
-    .tx(async (t) => {
-      await t.run('SELECT pg_advisory_xact_lock(4242)');
-      await t.exec(SCHEMA);
-    })
+    .get(`SELECT to_regclass('public.rag_index_state') IS NOT NULL AS ready`)
+    // Tables already there (every start after the first): skip the DDL, which costs several round trips.
+    .then((r) =>
+      r?.ready
+        ? undefined
+        : db.tx(async (t) => {
+            await t.run('SELECT pg_advisory_xact_lock(4242)');
+            await t.exec(SCHEMA);
+          })
+    )
     .then(() => null)
     .catch((err) => {
       schemaReady = null;
@@ -159,6 +165,11 @@ export function syncIndex(db: Db, { budgetMs = 60_000, force = false } = {}): Pr
     const started = Date.now();
     const result: SyncResult = { indexed: 0, removed: 0, pending: 0, errors: [] };
     if (await ensureRagSchema(db)) return result;
+    // One cheap query decides whether anything changed; only then are all records hashed.
+    if (!force && !(await indexVersion(db)).stale) {
+      lastFullCheck = Date.now();
+      return result;
+    }
 
     // Records that are no longer public leave the index.
     const removed = await db.run(
@@ -233,13 +244,38 @@ export function syncIndex(db: Db, { budgetMs = 60_000, force = false } = {}): Pr
         }
       }
     }
-    if (!result.pending && !result.errors.length) lastFullCheck = Date.now();
+    if (!result.pending && !result.errors.length) {
+      // Every record's hash is now current; edits that did not change the indexed text (data status,
+      // downloads) no longer count as stale for the quick check.
+      await db.run(`UPDATE rag_index_state s SET indexed_at = ${NOW} FROM archive_items a WHERE a.id = s.item_id AND a.updated_at > s.indexed_at`);
+      lastFullCheck = Date.now();
+    }
     if (result.indexed || result.removed) console.log(`[POLARIS] RAG index: ${result.indexed} records embedded, ${result.removed} removed`);
     return result;
   })().finally(() => {
     running = null;
   });
   return running;
+}
+
+/**
+ * Index version in one query: approved records, indexed records, records edited since they were
+ * indexed, and records embedded with another model. Stale when any of them disagree. The version
+ * string changes whenever the public archive changes, so it also keys the answer cache.
+ */
+export async function indexVersion(db: Db): Promise<{ stale: boolean; version: string }> {
+  const r = await db.get(
+    `SELECT (SELECT COUNT(*) FROM archive_items WHERE review_status = 'APPROVED') AS approved,
+            (SELECT MAX(updated_at) FROM archive_items WHERE review_status = 'APPROVED') AS latest,
+            (SELECT COUNT(*) FROM rag_index_state) AS indexed,
+            (SELECT COUNT(*) FROM rag_index_state s JOIN archive_items a ON a.id = s.item_id
+               WHERE a.updated_at > s.indexed_at OR a.review_status <> 'APPROVED' OR s.model <> ?) AS changed`,
+    ragConfig().embedModel
+  );
+  const approved = Number(r?.approved ?? 0);
+  const indexed = Number(r?.indexed ?? 0);
+  const changed = Number(r?.changed ?? 0);
+  return { stale: approved !== indexed || changed > 0, version: `${approved}|${r?.latest ?? ''}|${indexed}|${changed}` };
 }
 
 /** Marks the index stale so the next sync re-checks every record (after approvals and edits). */

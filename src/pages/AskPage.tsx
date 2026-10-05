@@ -323,8 +323,14 @@ export function AskPage({ onOpenRecord }: { onOpenRecord: (id: string) => void }
             {result && (
               <p className="text-[11px] sci-muted sci-mono">
                 {result.mode === 'generative' && result.model ? `${result.model} · ` : result.mode === 'extractive' ? 'extractive answer · ' : ''}
-                retrieval {result.timings.retrievalMs} ms
-                {result.mode === 'generative' && ` · generation ${(result.timings.generationMs / 1000).toFixed(1)} s`}
+                {result.cached ? (
+                  'answered earlier · from cache'
+                ) : (
+                  <>
+                    retrieval {result.timings.retrievalMs} ms
+                    {result.mode === 'generative' && ` · generation ${(result.timings.generationMs / 1000).toFixed(1)} s`}
+                  </>
+                )}
               </p>
             )}
           </section>
