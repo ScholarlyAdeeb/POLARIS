@@ -30,6 +30,13 @@ function domainFor(text: string): string {
   return '';
 }
 
+/** 1 -> "1st", 2 -> "2nd", 11 -> "11th", 23 -> "23rd". */
+export function ordinal(n: number): string {
+  const teen = n % 100 >= 11 && n % 100 <= 13;
+  const suffix = teen ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th';
+  return `${n}${suffix}`;
+}
+
 const shortAuthors = (a: string[]) => (a.length > 6 ? `${a.slice(0, 6).join('; ')}; et al.` : a.join('; '));
 
 export async function loadOpenData(db: Db): Promise<number> {
@@ -99,6 +106,53 @@ export async function loadOpenData(db: Db): Promise<number> {
         },
       });
     }
+    // Papers in NCPOR's Scientific Reports of the Indian Expeditions to Antarctica (NCPOR DSpace, OAI-PMH).
+    // Metadata only: the repository is "All Rights Reserved", so each record links to the paper on NCPOR's site.
+    for (const r of snap.ncporReports ?? []) {
+      const id = `NCPOR-DS-${String(r.handle).split('/').pop()}`;
+      const yearTag = (r.subjects ?? []).map((s: string) => s.match(/^(19[89]\d|20[0-2]\d)$/)?.[1]).find(Boolean);
+      // DSpace dates are upload dates (2006); the science belongs to the expedition season (1st ISEA = 1981-82).
+      const season = r.expedition ? 1980 + r.expedition : null;
+      const year = yearTag ? Number(yearTag) : season;
+      const text = `${r.title} ${(r.subjects ?? []).join(' ')} ${r.section ?? ''}`;
+      const station = STATION_WORDS.find(([re]) => re.test(text))?.[1] ?? null;
+      const nth = r.expedition ? ordinal(r.expedition) : '';
+      const subjects = (r.subjects ?? []).filter((s: string) => !/^\d{4}$/.test(s));
+      items.push({
+        id,
+        type: 'report',
+        title: r.title,
+        summary:
+          `${r.report ? `Paper in the ${r.report}` : 'Paper in NCPOR’s expedition scientific reports'}` +
+          `${season ? ` (${nth} Indian Scientific Expedition to Antarctica, ${season}–${String((season + 1) % 100).padStart(2, '0')} season)` : ''}` +
+          `${r.section ? `, section “${r.section}”` : ''}.` +
+          `${r.authors?.length ? ` Authors: ${shortAuthors(r.authors)}.` : ''}` +
+          `${subjects.length ? ` Keywords: ${subjects.slice(0, 6).join(', ')}.` : ''}`,
+        domain: domainFor(text) || 'ANTARCTICA',
+        stationId: station,
+        year,
+        tags: ['ncpor', 'expedition report', ...(r.expedition ? [`ISEA-${r.expedition}`] : []), ...subjects.slice(0, 5).map((t: string) => t.replace(/,/g, ' ').slice(0, 50))],
+        url: r.url,
+        meta: {
+          authors: shortAuthors(r.authors ?? []),
+          expedition: r.expedition ?? null,
+          report: r.report ?? null,
+          section: r.section ?? null,
+          handle: r.handle,
+          openData: true,
+          registry: 'NCPOR DSpace',
+          publisher: 'National Centre for Polar and Ocean Research (NCPOR)',
+        },
+        dataStatus: 'EXTERNAL',
+        provenance: {
+          source: 'NCPOR DSpace repository (OAI-PMH)',
+          retrievedAt: snap.ncporRetrievedAt ?? snap.retrievedAt,
+          licence: 'NCPOR: All rights reserved. POLARIS stores metadata only.',
+          method: 'OAI-PMH ListRecords (Dublin Core); expedition and section from the repository’s community structure',
+          note: 'Read the paper on NCPOR’s repository at the link.',
+        },
+      });
+    }
     // One real climate record per fixed station: daily ERA5 values since 1981, fetched live on download.
     for (const s of stations.filter(fixedStation)) {
       const id = `CLIMATE-${s.id.toUpperCase()}`;
@@ -125,6 +179,6 @@ export async function loadOpenData(db: Db): Promise<number> {
     }
   }
   const added = await insertItems(db, items);
-  if (added) console.log(`[POLARIS] Loaded ${added} open-data records (Crossref + PANGAEA)`);
+  if (added) console.log(`[POLARIS] Loaded ${added} open-data records (Crossref, PANGAEA, NCPOR DSpace)`);
   return added;
 }

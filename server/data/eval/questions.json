@@ -1,0 +1,30 @@
+{
+  "about": "Fixed questions for Ask POLARIS. Each expected fact was checked by hand against the text of the expected record (its title, summary or catalogue fields) before the run. A question passes when the answer cites an expected record AND states every expected fact (any one spelling per fact). Off-topic questions pass when the answer says the archive does not have it.",
+  "checkedOn": "2026-10-16",
+  "questions": [
+    { "id": "q01", "category": "Expeditions", "question": "Which ship carried the first Indian Scientific Expedition to Antarctica?", "records": ["exp-1981-1st-indian-scientific-ex"], "facts": [["Polar Circle"]] },
+    { "id": "q02", "category": "Expeditions", "question": "How many days did it take to build Dakshin Gangotri station?", "records": ["exp-1983-dakshin-gangotri-station"], "facts": [["60 days", "60-day", "sixty days"]] },
+    { "id": "q03", "category": "Expeditions", "question": "When was Maitri station built, and in which area of Antarctica?", "records": ["exp-1989-maitri-station-built-in"], "facts": [["1989"], ["Schirmacher"]] },
+    { "id": "q04", "category": "Expeditions", "question": "Where is India's Arctic research station Himadri?", "records": ["exp-2008-himadri-station-establis"], "facts": [["Ny-Ålesund", "Ny-Alesund", "Ny Ålesund", "Svalbard", "Spitsbergen"]] },
+    { "id": "q05", "category": "Expeditions", "question": "How far did the Indian South Pole overland traverse travel from Maitri?", "records": ["exp-2010-south-pole-scientific-ov"], "facts": [["2,250", "2250"]] },
+    { "id": "q06", "category": "Expeditions", "question": "How many containers was Bharati station built from?", "records": ["exp-2012-bharati-station-commissi"], "facts": [["134"]] },
+    { "id": "q07", "category": "Expeditions", "question": "At what altitude is the Himansh station in the Himalayas?", "records": ["exp-2016-himansh-high-altitude-st"], "facts": [["4,080", "4080"]] },
+    { "id": "q08", "category": "Expeditions", "question": "Which is the most recent completed Indian Scientific Expedition to Antarctica?", "records": ["exp-2026-45th-isea-completed-2025"], "facts": [["45th", "45 th", "forty-fifth"]] },
+    { "id": "q09", "category": "Datasets", "question": "What does the Maitri AOD Radiometry 2023 dataset measure?", "records": ["NCPOR-MET-2023-042"], "facts": [["aerosol optical depth"]] },
+    { "id": "q10", "category": "Datasets", "question": "Who published data on aerosol mass concentration at Maitri and Larsemann Hills on PANGAEA?", "records": ["OPEN-PG-808285", "OPEN-PG-808286"], "facts": [["Chaubey", "Krishna Moorthy", "Suresh Babu"]] },
+    { "id": "q11", "category": "Datasets", "question": "Which reanalysis is the daily climate record for Maitri station based on?", "records": ["CLIMATE-MAITRI"], "facts": [["ERA5"]] },
+    { "id": "q12", "category": "Publications", "question": "Who wrote the article 'Indian Endeavour in Antarctic Geoscience'?", "records": ["OPEN-CR-780D52E6DE"], "facts": [["Ravindra"]] },
+    { "id": "q13", "category": "Publications", "question": "Which journal published the study of copepod carbon biomass in coastal Antarctica?", "records": ["OPEN-CR-EEAA74B5C1"], "facts": [["Journal of Crustacean Biology"]] },
+    { "id": "q14", "category": "NCPOR expedition reports", "question": "Who studied the geochemistry of metapelite from Dakshin Gangotri?", "records": ["NCPOR-DS-145"], "facts": [["Divakar", "Govil"]] },
+    { "id": "q15", "category": "NCPOR expedition reports", "question": "Who reported the biotic features of surface water bodies around Maitri in Schirmacher Oasis?", "records": ["NCPOR-DS-712"], "facts": [["Ghosh", "Sangolkar", "Kotangale"]] },
+    { "id": "q16", "category": "NCPOR expedition reports", "question": "Who made glaciological observations during the 28th Indian Antarctic Expedition?", "records": ["NCPOR-DS-1123"], "facts": [["Shrivastava", "Dharwadkar"]] },
+    { "id": "q17", "category": "NCPOR expedition reports", "question": "Who compared methane measurements on an Antarctic air sample?", "records": ["NCPOR-DS-295"], "facts": [["Parashar", "Rai"]] },
+    { "id": "q18", "category": "NCPOR expedition reports", "question": "In which expedition's scientific report is the study of the personality and temperament of Indian Antarctic expedition members?", "records": ["NCPOR-DS-1009"], "facts": [["25th", "twenty-fifth", "Twenty Fifth"]] },
+    { "id": "q19", "category": "NCPOR expedition reports", "question": "Where was an alkaline lamprophyre dyke reported in Dronning Maud Land?", "records": ["NCPOR-DS-352"], "facts": [["Schirmacher"]] },
+    { "id": "q20", "category": "NCPOR expedition reports", "question": "Who worked on geographical control in East Antarctica?", "records": ["NCPOR-DS-383"], "facts": [["Srivastava", "Madhwal"]] },
+    { "id": "q21", "category": "NCPOR expedition reports", "question": "Who studied the gneisses of the South Humboldt Mountains in central Dronning Maud Land?", "records": ["NCPOR-DS-351"], "facts": [["Ravindra", "Dey"]] },
+    { "id": "q22", "category": "NCPOR expedition reports", "question": "Which survey organisation reported its work during the 24th Indian Scientific Expedition to Antarctica?", "records": ["NCPOR-DS-953"], "facts": [["Survey of India"]] },
+    { "id": "q23", "category": "Off-topic (should decline)", "question": "Who won the 2018 FIFA World Cup?", "offTopic": true },
+    { "id": "q24", "category": "Off-topic (should decline)", "question": "What is the population of Mumbai?", "offTopic": true }
+  ]
+}

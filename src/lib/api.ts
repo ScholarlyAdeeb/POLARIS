@@ -161,6 +161,8 @@ export interface RagSource {
   url: string | null;
   contributor: { id: number | null; name: string; institution: string } | null;
   score: number;
+  /** PDF pages the cited passages come from; empty when the evidence is the catalogue record. */
+  pages?: number[];
 }
 
 export interface RagAnswer {
@@ -311,6 +313,25 @@ export interface PublishedPost {
   author_id: number | null;
   author_name: string | null;
   author_institution: string | null;
+  /** 8-character code shown with a QR on the newsroom card; checked at /verify/:code. */
+  verification_code: string;
+}
+
+export type VerifyStatus = 'genuine' | 'altered' | 'not_published' | 'no_match';
+export interface VerifyResult {
+  status: VerifyStatus;
+  code: string;
+  post?: {
+    id: number;
+    channel: OutreachChannel;
+    content: string;
+    itemId: string;
+    itemTitle: string;
+    author: { id: number; name: string; institution: string } | null;
+    reviewer: string | null;
+    reviewedAt: string | null;
+    publishedAt: string | null;
+  };
 }
 
 export interface Submission extends ArchiveItem {
@@ -486,6 +507,7 @@ export const api = {
     editContent: (id: number, content: string) => request<OutreachPost>(`/me/content/${id}`, { method: 'PATCH', body: JSON.stringify({ content }) }),
   },
   published: (params: { channel?: string; user?: number } = {}) => request<PublishedPost[]>(`/content/published?${qs(params)}`),
+  verify: (code: string, text?: string) => request<VerifyResult>(`/verify/${encodeURIComponent(code)}?${qs({ text: text || undefined })}`),
   contributor: (id: number) =>
     request<{ id: number; name: string; institution: string; role: Role; created_at: string; records: ArchiveItem[]; publishedPosts: number }>(`/contributors/${id}`),
   atlas: () =>

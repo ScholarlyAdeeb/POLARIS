@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { api, type ArchiveItem, type OutreachChannel, type PublishedPost } from '../lib/api';
 import { useT } from '../lib/i18n';
 import { DataStatusBadge, ErrorNote, Page, PageHeader } from '../components/ui';
+import { VerifyBadge } from '../components/VerifyBadge';
 
 const CHANNEL_LABEL: Record<OutreachChannel, string> = { website: 'Website', x: 'X', linkedin: 'LinkedIn', instagram: 'Instagram' };
 
@@ -67,6 +68,11 @@ function PostCard({ p }: { p: PublishedPost }) {
           <span className="sci-muted ml-auto">{new Date(p.published_at ?? p.updated_at).toLocaleDateString()}</span>
         </div>
         {p.channel === 'website' ? <Article text={p.content} /> : <p className="text-sm whitespace-pre-line leading-relaxed">{p.content}</p>}
+        {p.verification_code && (
+          <div className="flex">
+            <VerifyBadge code={p.verification_code} />
+          </div>
+        )}
         <div className="mt-auto pt-2 border-t sci-border flex flex-wrap items-center gap-2 text-xs">
           {p.author_name ? (
             <span className="sci-muted">

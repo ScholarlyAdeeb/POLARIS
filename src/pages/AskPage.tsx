@@ -84,6 +84,24 @@ function SourceCard({ s, active, onOpenRecord }: { s: RagSource; active: boolean
           {s.contributor.institution && <span className="sci-muted">, {s.contributor.institution}</span>}
         </p>
       )}
+      {!!s.pages?.length && (
+        <p className="text-xs flex flex-wrap items-center gap-1.5" data-testid="source-pages">
+          <span className="material-symbols-outlined text-[14px] text-[#00677d]">menu_book</span>
+          <span className="sci-muted">From the attached file,</span>
+          {s.pages.map((p) =>
+            s.url ? (
+              // Browsers' PDF viewers open at #page=N
+              <a key={p} href={`${s.url}#page=${p}`} target="_blank" rel="noreferrer" className="font-semibold text-[#00677d] hover:underline">
+                page {p}
+              </a>
+            ) : (
+              <span key={p} className="font-semibold">
+                page {p}
+              </span>
+            )
+          )}
+        </p>
+      )}
       <p className="text-sm sci-muted line-clamp-4 whitespace-pre-line">{s.excerpt}</p>
     </li>
   );

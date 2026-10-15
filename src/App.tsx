@@ -15,6 +15,8 @@ import { ContributorPage, NewsroomPage } from './pages/NewsroomPage';
 import { TimelinePage } from './pages/TimelinePage';
 import { LearnPage } from './pages/LearnPage';
 import { AskPage } from './pages/AskPage';
+import { VerifyPage } from './pages/VerifyPage';
+import { AccuracyPage } from './pages/AccuracyPage';
 
 // Modals
 import { SimulationModal } from './components/modals/SimulationModal';
@@ -210,6 +212,9 @@ export default function App() {
             <Route path="/atlas" element={<AtlasPage {...viewers} />} />
             <Route path="/timeline" element={<TimelinePage onOpenRecord={handleOpenRecord} />} />
             <Route path="/newsroom" element={<NewsroomPage />} />
+            <Route path="/accuracy" element={<AccuracyPage />} />
+            <Route path="/verify" element={<VerifyPage />} />
+            <Route path="/verify/:code" element={<VerifyPage />} />
             <Route path="/learn" element={<LearnPage onOpenRecord={handleOpenRecord} />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/workspace" element={<WorkspacePage />} />

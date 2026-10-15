@@ -19,6 +19,8 @@ credited to the researcher who shared it.
 |---|---|
 | Live portal | https://polaris2-ecru.vercel.app |
 | Ask POLARIS | https://polaris2-ecru.vercel.app/ask |
+| Accuracy of Ask POLARIS (fixed questions, every answer published) | https://polaris2-ecru.vercel.app/accuracy |
+| Verify a post (QR / 8-character code) | https://polaris2-ecru.vercel.app/verify |
 | Deployment (Vercel, Docker, Render, Android) | [DEPLOY.md](DEPLOY.md) |
 | Configuration | [.env.example](.env.example) |
 
@@ -30,10 +32,11 @@ accounts; tap one to fill the form.
 | Role | Username | Password | What you can do |
 |---|---|---|---|
 | Contributor | `user1` | `1234` | Upload work, review the suggested mapping, generate posts from your records, see your public profile |
-| Admin | `admin` | `0786` | Everything above, plus approve submissions, review and publish posts, manage accounts and roles, see usage and the RAG index |
+| Demo reviewer | `admin` | `0786` | Review, approve and publish **content created by the demo accounts**, see usage and the RAG index. Sandboxed: it cannot see or touch real contributors' work, accounts or proposals, cannot delete or edit records, and cannot approve anything it created itself |
 
-These are shared demonstration accounts. Please do not change their roles, so the next
-person can sign in too. New accounts created at `/login` start as contributors.
+These are shared demonstration accounts, so the server sandboxes them (`server/guards.ts`). To try the full
+flow: sign in as `user1`, upload and generate posts; then sign in as `admin` to approve and publish them.
+New accounts created at `/login` start as contributors. Set `DEMO_ACCOUNTS=off` to remove both logins.
 
 ![Ask POLARIS: a cited answer, fact-checked sentence by sentence, with the records it used](docs/screenshots/02-ask.png)
 
@@ -68,10 +71,12 @@ person can sign in too. New accounts created at `/login` start as contributors.
 | **For the respective users, per their uploaded work** | Posts and records are credited to the contributor and shown on their public profile and in the newsroom | Accounts, roles, contributor pages |
 | **Outreach and education** | Timeline of 45 expeditions, lesson packs and a quiz, live station weather, climate history since 1981 | Database-generated lessons; Open-Meteo forecast and ERA5 reanalysis |
 
-The archive on the live portal holds **153 approved records**: 84 publications, 48 datasets,
-8 expeditions, 7 photographs, 3 reports, 2 activities and 1 video, across 6 stations
-(Bharati, Maitri, Dakshin Gangotri, Himadri, Himansh, ORV Sagar Kanya). The interface is
-available in English, Hindi and Tamil.
+The archive on the live portal holds **943 approved records**, including **790 papers from NCPOR's own
+Scientific Reports of the Indian Expeditions to Antarctica** (1st to 30th expedition, harvested from NCPOR's
+DSpace repository over OAI-PMH, metadata only with a link to each paper), 80 NCPOR-affiliated journal
+articles (Crossref), PANGAEA datasets, ERA5 climate records per station, the expedition timeline and the demo
+records, across 6 stations (Bharati, Maitri, Dakshin Gangotri, Himadri, Himansh, ORV Sagar Kanya). The
+interface is available in English, Hindi and Tamil.
 
 ---
 
@@ -152,6 +157,14 @@ returns the best-matching sentences from the records, cited.
 | What atmospheric studies were conducted at Maitri? | Aerosol, ozone, boundary layer and black-carbon studies, cited to four records |
 | Who won the cricket world cup in 2011? | No matching record; the model is not called |
 
+**Page citations.** Text inside uploaded PDFs is indexed page by page. When an answer draws on a PDF, the
+source card says *From the attached file, page 4* and the link opens the PDF at that page.
+
+**Measured, in public.** `/accuracy` shows the latest run of a fixed set of questions whose answers were
+checked by hand against the records (`server/data/eval/questions.json`): whether the right record was found
+and cited, whether the checked fact was stated, and whether off-topic questions were declined. Every answer
+is shown, including the wrong ones. Re-run with `EVAL_BASE=https://polaris2-ecru.vercel.app npm run eval`.
+
 ---
 
 ## Trust, provenance and honest labels
@@ -161,7 +174,7 @@ Every record carries a **data status**, shown as a badge everywhere it appears:
 | Status | Meaning |
 |---|---|
 | `OFFICIAL` / `VERIFIED` | Confirmed by NCPOR or a reviewer |
-| `EXTERNAL` ("Open registry") | Real metadata from Crossref (NCPOR-affiliated articles) or PANGAEA (polar datasets); the data stays with the publisher and "Get the data" links to the DOI |
+| `EXTERNAL` ("Open registry") | Real metadata from NCPOR's DSpace repository (expedition scientific reports), Crossref (NCPOR-affiliated articles) or PANGAEA (polar datasets); the paper or data stays with the publisher and the record links to it |
 | `SAMPLE` | Demo record written for the prototype |
 | `SYNTHETIC` | Demo dataset; its download is a small generated extract labelled `SYNTHETIC SAMPLE EXTRACT` inside the file |
 | `UNVERIFIED` | Contributed, not yet confirmed |
@@ -173,6 +186,10 @@ Every record carries a **data status**, shown as a badge everywhere it appears:
 - **Review gates**: contributor records are private until approved; posts need a named human
   reviewer; Ask POLARIS only reads approved records.
 - **Provenance**: who reviewed a record, when, and the decision are stored with it.
+- **Two-person rule**: nobody approves their own submission or their own drafted post; the server refuses it.
+- **Verifiable posts**: every published post carries an 8-character code and a QR code. `/verify/<code>`
+  says whether a copy is a *genuine* published post, an *altered* copy (paste the text to compare), *not
+  approved*, or *no match*.
 
 ---
 
@@ -260,6 +277,9 @@ export, outreach and Ask POLARIS work the same way for every kind of record.
 | Sessions | Random token in an `HttpOnly`, `SameSite` cookie (`Secure` over HTTPS); only a SHA-256 of the token is stored; malformed cookies are treated as signed out | `server/auth.ts` |
 | Roles | `contributor`, `reviewer`, `admin`, checked on the server for every route; contributors only see and edit their own unpublished records | `server/auth.ts`, `server/contrib.ts` |
 | Review | Records and posts are published only by a named reviewer; the reviewer name comes from the signed-in account | `server/api.ts` |
+| Two-person rule | A reviewer cannot approve a record they own or a post they drafted | `server/guards.ts` |
+| Demo logins | The public demo reviewer reaches demo-owned content only; accounts, proposals, deletes and record edits are refused | `server/guards.ts` |
+| Post integrity | Published posts carry a code derived from their exact text; `/verify` detects altered copies | `server/verify.ts` |
 | Uploads | Allow-listed file types, 100 MB limit, generated file names, `dotfiles` denied | `server/uploads.ts` |
 | Input | Length and format checks on every field; station ids, URLs and coordinates validated | `server/http.ts`, `server/contrib.ts` |
 | Abuse | Per-client rate limits on sign-in, proposals and Ask POLARIS, with the real client IP behind Vercel / Render proxies | `server/http.ts`, `server/app.ts` |
@@ -300,8 +320,11 @@ The index builds itself on startup. To use Hugging Face instead of local models,
 | `npm run build` | Production frontend build into `dist/` |
 | `NODE_ENV=production npm start` | Serves the API and `dist/` |
 | `npm run lint` | Type-check frontend and server |
+| `npm test` | Unit tests (review rules, demo sandbox, post verification, evaluation scoring, PDF page chunking, GPS mapping, claim check, uploads, NCPOR snapshot); also run by GitHub Actions on every push |
+| `npm run eval` | Ask the fixed evaluation questions and write `server/data/eval/results.json` for `/accuracy` (`EVAL_BASE` picks the server) |
 | `npm run rag:models` | Download the local RAG models into `data/models` |
 | `npm run import:open-data` | Refresh `server/data/open-data.json` from Crossref + PANGAEA |
+| `npm run import:ncpor` | Refresh the NCPOR expedition-report papers from NCPOR's DSpace (OAI-PMH, metadata only) |
 | `npm run vercel-build` | Build output for Vercel (static app + API function) |
 | `npm run android:apk` | Build the Android app |
 
@@ -398,7 +421,7 @@ Model files (`data/models`), uploads, build output and `.env` are not in the rep
 
 | Area | Actual state |
 |---|---|
-| Real NCPOR data | Seeded datasets, reports, photos and the video are demo records labelled `SAMPLE` / `SYNTHETIC`. Publications and PANGAEA datasets are real metadata (`EXTERNAL`); the archive does not hold the full data files or papers. |
+| Real NCPOR data | 790 papers from NCPOR's expedition scientific reports, 80 Crossref articles and the PANGAEA datasets are real metadata (`EXTERNAL`) linking to the source; NCPOR's repository is "All Rights Reserved", so the full papers are not copied. A few seeded datasets, reports, photos and the video remain demo records labelled `SAMPLE` / `SYNTHETIC`. |
 | Uploads on Vercel | Need a Vercel Blob store (`BLOB_READ_WRITE_TOKEN`); it is not connected on the live portal yet, so files uploaded elsewhere do not show there. |
 | Ask POLARIS quality | Answers are only as good as the records. Locally the 1.5B model sometimes includes a loosely related record; the claim check marks such sentences "partly supported". Questions in Hindi or Tamil are not tuned. |
 | Free model usage | The hosted backend uses the Hugging Face free monthly allowance; beyond it, answers fall back to quoted sentences. |

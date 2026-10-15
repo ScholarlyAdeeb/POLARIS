@@ -1,3 +1,5 @@
+import path from 'path';
+import fs from 'fs';
 import express, { type Request, type Response, type NextFunction } from 'express';
 import crypto from 'crypto';
 import type { ScientificPaper, StationData, SimulationMission, HotspotInfo, ExpeditionMilestone } from '../src/types/polaris.ts';
@@ -9,6 +11,8 @@ import { DATA_STATUSES, REVIEW_STATUSES } from './migrations.ts';
 import { facets, filterSql, parseQuery, search, tsQuery, type SearchFilters } from './search.ts';
 import { HttpError, intOrNull, publicBase, rateLimit, sendDownload, str, tag, wrap } from './http.ts';
 import { attachUser, createAuthRouter, createUsersRouter, isReviewer, requireRole, seedDemoAccounts } from './auth.ts';
+import { createVerifyRouter } from './verify.ts';
+import { assertDemoMayAct, assertNotOwnWork, demoSandbox, demoScopeSql } from './guards.ts';
 import { checkAgainst, createContributorRouter, createDraft, createPublicContentRouter, postRow } from './contrib.ts';
 import { countUsage, createExtrasRouter } from './extras.ts';
 import { rawBody, saveUpload } from './uploads.ts';
@@ -142,6 +146,16 @@ export async function createApiRouter() {
   api.use('/auth', createAuthRouter(db));
   api.use('/me', createContributorRouter(db));
   api.use(createPublicContentRouter(db));
+  api.use(createVerifyRouter(db)); // public: is this post a genuine published POLARIS post?
+  // Public: the latest Ask POLARIS evaluation (scripts/eval-ask.ts writes it; /accuracy shows it).
+  api.get(
+    '/accuracy',
+    wrap((_req, res) => {
+      const dir = path.resolve(process.cwd(), 'server', 'data', 'eval');
+      const read = (f: string) => (fs.existsSync(path.join(dir, f)) ? JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')) : null);
+      res.json({ questions: read('questions.json'), results: read('results.json') });
+    })
+  );
   api.use(createExtrasRouter(db));
   api.use(createRagRouter(db));
   // Any write may change what is public; the RAG index re-checks on its next sync.
@@ -479,6 +493,7 @@ export async function createApiRouter() {
   // --- admin ----------------------------------------------------------------------
   const admin = express.Router();
   admin.use(requireRole('reviewer', 'admin'));
+  admin.use(demoSandbox()); // shared demo logins only reach demo-owned content
   admin.use('/users', createUsersRouter(db));
 
   admin.post(
@@ -646,10 +661,12 @@ export async function createApiRouter() {
     wrap(async (req, res) => {
       const status = String(req.query.review || 'PENDING_REVIEW');
       if (!(REVIEW_STATUSES as readonly string[]).includes(status)) throw new HttpError(400, 'Unknown review status');
+      const scope = await demoScopeSql(db, req, 'a.owner_id');
       const rows = await db.all(
         `SELECT a.*, u.name AS owner_name, u.institution AS owner_institution FROM archive_items a
-         JOIN users u ON u.id = a.owner_id WHERE a.review_status = ? ORDER BY a.rowid DESC`,
-        status
+         JOIN users u ON u.id = a.owner_id WHERE a.review_status = ?${scope.sql ? ` AND ${scope.sql}` : ''} ORDER BY a.rowid DESC`,
+        status,
+        ...scope.params
       );
       res.json(
         await Promise.all(
@@ -671,6 +688,8 @@ export async function createApiRouter() {
       const next = ({ approve: 'APPROVED', request_changes: 'CHANGES_REQUESTED', reject: 'REJECTED' } as Record<string, string>)[action];
       if (!next) throw new HttpError(400, 'action must be one of: approve, request_changes, reject');
       if (next !== 'APPROVED' && !note) throw new HttpError(400, 'Add a note so the contributor knows what to change');
+      await assertDemoMayAct(db, req, [item.ownerId]);
+      if (next === 'APPROVED') assertNotOwnWork(req.user, [item.ownerId], 'a record');
       const dataStatus = req.body?.dataStatus ? str(req.body.dataStatus, 'dataStatus') : item.dataStatus;
       if (!(DATA_STATUSES as readonly string[]).includes(dataStatus)) throw new HttpError(400, 'Invalid dataStatus');
       const provenance = { ...item.provenance, reviewedBy: reviewer, reviewedAt: new Date().toISOString(), reviewDecision: next };
@@ -712,11 +731,12 @@ export async function createApiRouter() {
       if (!CHANNELS.includes(channel)) throw new HttpError(400, `channel must be one of: ${CHANNELS.join(', ')}`);
       const content = str(req.body?.content, 'content', { required: true, max: 20000 });
       const row = await db.get(
-        `INSERT INTO outreach_posts (item_id, channel, content, data_status, provider, claim_check) VALUES (?, ?, ?, 'TEMPLATE', 'template', ?) RETURNING id`,
+        `INSERT INTO outreach_posts (item_id, channel, content, data_status, provider, claim_check, created_by) VALUES (?, ?, ?, 'TEMPLATE', 'template', ?, ?) RETURNING id`,
         itemId,
         channel,
         content,
-        JSON.stringify((await checkAgainst(itemId, content)) ?? {})
+        JSON.stringify((await checkAgainst(itemId, content)) ?? {}),
+        req.user && req.user.id > 0 ? req.user.id : null
       );
       res.status(201).json(await postRow(db, row.id));
     })
@@ -734,6 +754,11 @@ export async function createApiRouter() {
       if (req.query.review) {
         where.push('p.review_status = ?');
         params.push(String(req.query.review));
+      }
+      const scope = await demoScopeSql(db, req, 'COALESCE(p.created_by, a.owner_id)');
+      if (scope.sql) {
+        where.push(scope.sql);
+        params.push(...scope.params);
       }
       const rows = await db.all(
         `SELECT p.*, a.title AS item_title, a.data_status AS item_data_status, a.review_status AS item_review_status,
@@ -773,6 +798,9 @@ export async function createApiRouter() {
         );
       };
       const now = new Date().toISOString();
+      const sourceOwner = (await getItem(post.item_id))?.ownerId;
+      await assertDemoMayAct(db, req, [post.created_by, sourceOwner]);
+      if (action === 'approve') assertNotOwnWork(req.user, [post.created_by], 'a post');
       if (action === 'edit') {
         const content = str(b.content, 'content', { required: true, max: 20000 });
         await set({ content, claim_check: JSON.stringify((await checkAgainst(post.item_id, content)) ?? {}), review_status: 'PENDING_REVIEW', status: 'DRAFT' });

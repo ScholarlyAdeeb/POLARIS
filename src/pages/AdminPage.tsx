@@ -97,6 +97,8 @@ function RagPanel() {
 
 function Console({ logout, onOpenRecord }: { logout: () => void; onOpenRecord?: (id: string) => void }) {
   const { user } = useAuth();
+  // Shared demo logins are sandboxed on the server (demo-owned content only; no accounts or proposals).
+  const demo = Boolean(user?.email?.toLowerCase().endsWith('@demo.polaris.local'));
   const [ov, setOv] = useState<any>(null);
   const [items, setItems] = useState<ArchiveItem[]>([]);
   const [proposals, setProposals] = useState<any[]>([]);
@@ -106,7 +108,7 @@ function Console({ logout, onOpenRecord }: { logout: () => void; onOpenRecord?: 
 
   const load = async () => {
     try {
-      const [o, a, p] = await Promise.all([api.admin.overview(), api.archive({ limit: 100 }), api.admin.proposals()]);
+      const [o, a, p] = await Promise.all([api.admin.overview(), api.archive({ limit: 100 }), demo ? Promise.resolve([]) : api.admin.proposals()]);
       setOv(o);
       setItems(a.items);
       setProposals(p);
@@ -150,10 +152,17 @@ function Console({ logout, onOpenRecord }: { logout: () => void; onOpenRecord?: 
         )}
       </div>
 
+      {demo && (
+        <p className="sci-well p-3 text-sm" data-testid="demo-sandbox-note">
+          <b>Demo reviewer.</b> This shared login can review and publish only content created by the demo accounts. Accounts,
+          proposals and other contributors' work are not available to it. You cannot approve a record or post you created yourself
+          (two-person rule).
+        </p>
+      )}
       <SubmissionsPanel onOpenRecord={onOpenRecord} />
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
         <AnalyticsPanel />
-        {(!user || user.role === 'admin') && <UsersPanel />}
+        {(!user || user.role === 'admin') && !demo && <UsersPanel />}
       </div>
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -234,7 +243,7 @@ function Console({ logout, onOpenRecord }: { logout: () => void; onOpenRecord?: 
         </table>
       </section>
 
-      <section className="sci-card p-4">
+      {!demo && <section className="sci-card p-4">
         <h2 className="font-semibold mb-3">Research proposals ({proposals.length})</h2>
         {proposals.length === 0 && <p className="text-sm sci-muted">No proposals yet.</p>}
         <ul className="divide-y sci-border">
@@ -254,7 +263,7 @@ function Console({ logout, onOpenRecord }: { logout: () => void; onOpenRecord?: 
             </li>
           ))}
         </ul>
-      </section>
+      </section>}
     </div>
   );
 }

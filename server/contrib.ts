@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import type { Db } from './pg.ts';
 import { NOW } from './pg.ts';
 import { ARCHIVE_TYPES, getItem, insertItem, listStations, rowToItem, type ArchiveItem, type ArchiveType } from './db.ts';
+import { verificationCode } from './verify.ts';
 import { HttpError, intOrNull, publicBase, str, tag, wrap } from './http.ts';
 import { requireRole, type SessionUser } from './auth.ts';
 import { blobUploadToken, describeBlobUpload, rawBody, saveUpload } from './uploads.ts';
@@ -345,7 +346,7 @@ export function createPublicContentRouter(db: Db) {
         params.push(user);
       }
       res.json(
-        await db.all(
+        (await db.all(
           `SELECT p.id, p.item_id, p.channel, p.content, p.data_status, p.reviewer, p.published_at, p.updated_at,
                   a.title AS item_title, a.type AS item_type, a.thumbnail_url AS item_thumbnail, a.station_id AS item_station,
                   u.id AS author_id, u.name AS author_name, u.institution AS author_institution
@@ -353,7 +354,7 @@ export function createPublicContentRouter(db: Db) {
            LEFT JOIN users u ON u.id = COALESCE(p.created_by, a.owner_id)
            WHERE ${where.join(' AND ')} ORDER BY COALESCE(p.published_at, p.updated_at) DESC LIMIT 100`,
           ...params
-        )
+        )).map((p) => ({ ...p, verification_code: verificationCode(p) }))
       );
     })
   );

@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS rag_chunks (
   seq INTEGER NOT NULL,
   source TEXT NOT NULL,
   content TEXT NOT NULL,
+  page INTEGER,
   embedding vector(384) NOT NULL,
   search tsvector GENERATED ALWAYS AS (to_tsvector('english', content)) STORED
 );
@@ -50,7 +51,7 @@ export function ensureRagSchema(db: Db) {
     // Tables already there (every start after the first): skip the DDL, which costs several round trips.
     .then((r) =>
       r?.ready
-        ? undefined
+        ? db.run('ALTER TABLE rag_chunks ADD COLUMN IF NOT EXISTS page INTEGER').then(() => undefined) // PDF page of file chunks (added later)
         : db.tx(async (t) => {
             await t.run('SELECT pg_advisory_xact_lock(4242)');
             await t.exec(SCHEMA);
@@ -89,29 +90,59 @@ function recordText(item: ArchiveItem) {
 const TEXT_FILES = /\.(txt|csv|json|md)$/i;
 const MAX_FILE_CHARS = 40_000;
 
-/** Text of the record's uploaded file (local /uploads or Vercel Blob). Other links are not fetched. */
-async function fileText(item: ArchiveItem): Promise<string> {
+export interface FilePage {
+  page: number | null;
+  text: string;
+}
+
+/**
+ * Text of the record's uploaded file (local /uploads or Vercel Blob). PDFs come back page by page so
+ * answers can cite the page; other files are one part with no page. Other links are not fetched.
+ */
+async function filePages(item: ArchiveItem): Promise<FilePage[]> {
   const url = item.url || '';
   const isPdf = /\.pdf$/i.test(url);
-  if (!isPdf && !TEXT_FILES.test(url)) return '';
+  if (!isPdf && !TEXT_FILES.test(url)) return [];
   let bytes: Buffer;
   if (url.startsWith('/uploads/')) {
     const p = path.join(UPLOAD_DIR, path.basename(url));
-    if (!fs.existsSync(p)) return '';
+    if (!fs.existsSync(p)) return [];
     bytes = fs.readFileSync(p);
   } else if (/^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\//i.test(url)) {
     const res = await fetch(url);
-    if (!res.ok) return '';
+    if (!res.ok) return [];
     bytes = Buffer.from(await res.arrayBuffer());
-  } else return '';
-  if (bytes.length > 30 * 1024 * 1024) return '';
-  if (isPdf) {
-    const { extractText, getDocumentProxy } = await import('unpdf');
-    const pdf = await getDocumentProxy(new Uint8Array(bytes));
-    const { text } = await extractText(pdf, { mergePages: true });
-    return String(text).replace(/\s+\n/g, '\n').slice(0, MAX_FILE_CHARS);
+  } else return [];
+  if (bytes.length > 30 * 1024 * 1024) return [];
+  if (!isPdf) return [{ page: null, text: bytes.toString('utf8').slice(0, MAX_FILE_CHARS) }];
+  const { extractText, getDocumentProxy } = await import('unpdf');
+  const pdf = await getDocumentProxy(new Uint8Array(bytes));
+  const { text } = await extractText(pdf, { mergePages: false });
+  return limitPages((text as string[]).map((t, i) => ({ page: i + 1, text: String(t).replace(/\s+\n/g, '\n') })));
+}
+
+/** Keeps pages in order until MAX_FILE_CHARS is used up; drops empty pages. */
+export function limitPages(pages: FilePage[], max = MAX_FILE_CHARS): FilePage[] {
+  const out: FilePage[] = [];
+  let budget = max;
+  for (const p of pages) {
+    if (budget <= 0) break;
+    const text = p.text.slice(0, budget);
+    budget -= text.length;
+    if (text.trim()) out.push({ page: p.page, text });
   }
-  return bytes.toString('utf8').slice(0, MAX_FILE_CHARS);
+  return out;
+}
+
+/** Chunks of an attached file; each chunk keeps its page and says it in the text the model sees. */
+export function fileChunks(header: string, pages: FilePage[]) {
+  return pages.flatMap((pg) =>
+    chunkText(pg.text).map((c) => ({
+      source: 'file',
+      page: pg.page,
+      content: `${header}\n(from the attached file${pg.page ? `, page ${pg.page}` : ''})\n\n${c}`,
+    }))
+  );
 }
 
 /** ~900-character chunks on paragraph/sentence boundaries, with a little overlap. */
@@ -139,6 +170,7 @@ const hashOf = (item: ArchiveItem) =>
   crypto
     .createHash('sha1')
     .update(JSON.stringify([item.title, item.summary, item.body, item.tags, item.url, item.stationId, item.year, item.domain, item.doi, item.meta?.contributor]))
+    .update(/\.pdf$/i.test(item.url || '') ? '|pdf-pages-v1' : '') // re-index PDFs once so their chunks carry page numbers
     .digest('hex');
 
 // ---- sync ------------------------------------------------------------------------
@@ -195,20 +227,20 @@ export function syncIndex(db: Db, { budgetMs = 60_000, force = false } = {}): Pr
       try {
         const prepared = await Promise.all(
           batch.map(async (item) => {
-            let file = '';
+            let pages: FilePage[] = [];
             let fileError: string | null = null;
             try {
-              file = await fileText(item);
+              pages = await filePages(item);
             } catch (err: any) {
               fileError = `File text not read: ${err.message}`;
             }
             const header = recordHeader(item);
-            const parts = [
-              ...chunkText(recordText(item)).map((c) => ({ source: 'record', content: `${header}\n\n${c}` })),
-              ...chunkText(file).map((c) => ({ source: 'file', content: `${header}\n(from the attached file)\n\n${c}` })),
+            const parts: { source: string; page: number | null; content: string }[] = [
+              ...chunkText(recordText(item)).map((c) => ({ source: 'record', page: null, content: `${header}\n\n${c}` })),
+              ...fileChunks(header, pages),
             ];
-            if (!parts.length) parts.push({ source: 'record', content: header });
-            return { item, parts, fileChars: file.length, fileError };
+            if (!parts.length) parts.push({ source: 'record', page: null, content: header });
+            return { item, parts, fileChars: pages.reduce((n, pg) => n + pg.text.length, 0), fileError };
           })
         );
         const vectors = await embed(
@@ -223,10 +255,10 @@ export function syncIndex(db: Db, { budgetMs = 60_000, force = false } = {}): Pr
           let v = 0;
           for (const p of prepared)
             p.parts.forEach((x, i) => {
-              values.push('(?, ?, ?, ?, ?::vector)');
-              params.push(p.item.id, i, x.source, x.content, `[${vectors[v++].join(',')}]`);
+              values.push('(?, ?, ?, ?, ?, ?::vector)');
+              params.push(p.item.id, i, x.source, x.content, x.page, `[${vectors[v++].join(',')}]`);
             });
-          await t.run(`INSERT INTO rag_chunks (item_id, seq, source, content, embedding) VALUES ${values.join(',')}`, ...params);
+          await t.run(`INSERT INTO rag_chunks (item_id, seq, source, content, page, embedding) VALUES ${values.join(',')}`, ...params);
           await t.run(
             `INSERT INTO rag_index_state (item_id, hash, model, chunks, file_chars, error, indexed_at)
              VALUES ${prepared.map(() => `(?, ?, ?, ?, ?, ?, ${NOW})`).join(',')}

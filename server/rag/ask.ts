@@ -21,6 +21,8 @@ export interface RagSource extends Source {
   url: string | null;
   contributor: { id: number | null; name: string; institution: string } | null;
   score: number;
+  /** PDF pages the cited passages come from (empty when the evidence is the catalogue record itself). */
+  pages: number[];
 }
 
 // Prompt size drives time-to-first-token (prefill): 5 records, the best chunk of each.
@@ -32,6 +34,7 @@ interface Hit {
   content: string;
   rrf: number;
   sim: number;
+  page: number | null;
   keyword?: boolean;
 }
 
@@ -44,7 +47,7 @@ async function retrieve(db: Db, question: string, f: SearchFilters): Promise<Hit
   const [qv] = await embed([question], 'query');
   const vec = `[${qv.join(',')}]`;
   const dense = await db.all(
-    `SELECT c.id, c.item_id, c.content, 1 - (c.embedding <=> ?::vector) AS sim
+    `SELECT c.id, c.item_id, c.content, c.page, 1 - (c.embedding <=> ?::vector) AS sim
      FROM rag_chunks c JOIN archive_items a ON a.id = c.item_id
      WHERE true ${flt.sql} ORDER BY c.embedding <=> ?::vector LIMIT 30`,
     vec,
@@ -54,7 +57,7 @@ async function retrieve(db: Db, question: string, f: SearchFilters): Promise<Hit
   const ts = tsQuery(question, 'OR');
   const sparse = ts
     ? await db.all(
-        `SELECT c.id, c.item_id, c.content, ts_rank_cd(c.search, q) AS rank, 1 - (c.embedding <=> ?::vector) AS sim
+        `SELECT c.id, c.item_id, c.content, c.page, ts_rank_cd(c.search, q) AS rank, 1 - (c.embedding <=> ?::vector) AS sim
          FROM rag_chunks c JOIN archive_items a ON a.id = c.item_id, to_tsquery('english', ?) q
          WHERE c.search @@ q ${flt.sql} ORDER BY rank DESC LIMIT 30`,
         vec,
@@ -66,7 +69,7 @@ async function retrieve(db: Db, question: string, f: SearchFilters): Promise<Hit
   const keyword = new Set(sparse.map((r) => r.id));
   const add = (rows: any[]) =>
     rows.forEach((r, i) => {
-      const h = fused.get(r.id) ?? { item_id: r.item_id, content: r.content, rrf: 0, sim: Number(r.sim) };
+      const h = fused.get(r.id) ?? { item_id: r.item_id, content: r.content, rrf: 0, sim: Number(r.sim), page: r.page == null ? null : Number(r.page) };
       h.rrf += 1 / (60 + i + 1);
       fused.set(r.id, { ...h, keyword: keyword.has(r.id) } as Hit);
     });
@@ -81,7 +84,8 @@ async function retrieve(db: Db, question: string, f: SearchFilters): Promise<Hit
     .sort((a, b) => b.sim + (b.keyword ? 0.02 : 0) - (a.sim + (a.keyword ? 0.02 : 0)));
 }
 
-const stripHeader = (chunk: string, item: ArchiveItem) => chunk.replace(recordHeader(item), '').replace(/^\s*\(from the attached file\)\s*/, '').trim();
+const stripHeader = (chunk: string, item: ArchiveItem) =>
+  chunk.replace(recordHeader(item), '').replace(/^\s*\(from the attached file(, page \d+)?\)\s*/, '').trim();
 
 async function buildSources(db: Db, hits: Hit[]): Promise<RagSource[]> {
   const order: string[] = [];
@@ -108,7 +112,7 @@ async function buildSources(db: Db, hits: Hit[]): Promise<RagSource[]> {
       const row = byId.get(id);
       const item = rowToItem(row);
       const hs = chunks.get(id)!;
-      const excerpt = hs.map((h) => stripHeader(h.content, item)).join('\n…\n');
+      const excerpt = hs.map((h) => (h.page ? `(p. ${h.page}) ` : '') + stripHeader(h.content, item)).join('\n…\n');
       const c = item.meta?.contributor;
       const contributor = row.owner_uid
         ? { id: Number(row.owner_uid), name: row.owner_name, institution: row.owner_institution || '' }
@@ -127,6 +131,7 @@ async function buildSources(db: Db, hits: Hit[]): Promise<RagSource[]> {
         text: `${recordHeader(item)}\n${excerpt}`,
         excerpt: excerpt.slice(0, 700),
         url: item.url,
+        pages: [...new Set(hs.map((h) => h.page).filter((p): p is number => p != null))].sort((a, b) => a - b),
         contributor,
         score: Number(Math.max(...hs.map((h) => h.rrf)).toFixed(4)),
       };
