@@ -17,6 +17,8 @@ interface Results {
   base: string;
   model: string | null;
   embedModel: string | null;
+  /** Answers given while a model service was down (keyword search or quoted sentences). */
+  degraded?: number;
   summary: {
     total: number;
     passed: number;
@@ -71,6 +73,12 @@ export function AccuracyPage() {
             <Stat value={r.summary.factual.facts} total={r.summary.factual.total} label="Stated the checked fact" />
             <Stat value={r.summary.offTopic.declined} total={r.summary.offTopic.total} label="Off-topic questions declined" />
           </div>
+          {!!r.degraded && (
+            <p className="sci-well p-3 text-sm" data-testid="accuracy-degraded">
+              <b>Measured in fallback mode.</b> During this run a model service was unavailable for {r.degraded} of {r.summary.total} questions, so
+              those answers came from keyword search and quoted sentences instead of the language model.
+            </p>
+          )}
           <p className="text-xs sci-muted">
             Run on {new Date(r.ranAt).toLocaleString()} against {r.base} · answer model {r.model ?? 'none (quoted sentences)'} · retrieval {r.embedModel ?? 'n/a'}.{' '}
             {data?.questions?.about} Questions checked on {data?.questions?.checkedOn}. Re-run with <code className="sci-mono">npm run eval</code>.

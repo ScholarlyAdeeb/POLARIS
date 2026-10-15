@@ -62,14 +62,27 @@ async function main() {
       sources: answer.sources,
       verification: result?.verification ? { supported: result.verification.supported, partial: result.verification.partial, unsupported: result.verification.unsupported } : null,
       ms: result?.timings ? (result.timings.retrievalMs ?? 0) + (result.timings.generationMs ?? 0) : null,
+      note: result?.note ?? null,
       error: result ? null : error,
       score,
     });
     console.log(`${score.pass ? 'PASS' : 'FAIL'}  ${q.id}  ${q.question}${score.missingFacts.length ? `  (missing: ${score.missingFacts.join(', ')})` : ''}${result ? '' : `  [${error}]`}`);
     await sleep(3500); // stays under the 20 questions/minute limit
   }
-  const out = { ranAt: new Date().toISOString(), base: BASE, model: status?.llm ?? null, embedModel: status?.embedModel ?? null, summary: summarize(rows), rows };
+  const failed = rows.filter((r) => r.error).length;
+  // Answers given while a model service was down (keyword search / quoted sentences) are kept, but flagged.
+  const degraded = rows.filter((r) => r.note).length;
+  const out = { ranAt: new Date().toISOString(), base: BASE, model: status?.llm ?? null, embedModel: status?.embedModel ?? null, degraded, summary: summarize(rows), rows };
+  if (failed) {
+    // A service outage is not an accuracy result: keep the last published run and say why.
+    fs.writeFileSync(path.join(DIR, 'results.failed.json'), JSON.stringify(out, null, 1));
+    console.error(`
+${failed} of ${rows.length} requests failed (first error: ${rows.find((r) => r.error)?.error}). Not publishing; see server/data/eval/results.failed.json.`);
+    process.exitCode = 1;
+    return;
+  }
   fs.writeFileSync(path.join(DIR, 'results.json'), JSON.stringify(out, null, 1));
+  if (degraded) console.log(`Note: ${degraded} answers were given in fallback mode (a model service was unavailable).`);
   const s = out.summary;
   console.log(`\n${s.passed}/${s.total} passed. Factual: cited the right record ${s.factual.cited}/${s.factual.total}, stated the fact ${s.factual.facts}/${s.factual.total}. Off-topic declined ${s.offTopic.declined}/${s.offTopic.total}.`);
 }

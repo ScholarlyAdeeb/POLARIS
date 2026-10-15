@@ -41,6 +41,52 @@ interface Hit {
 const MIN_SIM = 0.6;
 const KEYWORD_MIN_SIM = 0.55;
 
+/** Share of the question's terms (prefix match, like to_tsquery's :*) that a chunk contains. */
+export function termCoverage(terms: string[], content: string): number {
+  if (!terms.length) return 0;
+  const words = content.toLowerCase().split(/[^\p{L}\p{N}]+/u);
+  return terms.filter((t) => words.some((w) => w.startsWith(t))).length / terms.length;
+}
+
+/** Below this share of the question's terms, an any-term keyword match is too loose to answer from. */
+export const KEYWORD_FALLBACK_COVERAGE = 0.6;
+
+/**
+ * Keyword-only retrieval, used when the embedding service is unavailable (no credits, outage, timeout):
+ * all terms first; otherwise any term, keeping chunks that contain most of the question's terms.
+ */
+async function keywordRetrieve(db: Db, question: string, f: SearchFilters): Promise<Hit[]> {
+  const flt = filterSql(f);
+  const { terms } = parseQuery(question);
+  if (!terms.length) return [];
+  const run = (mode: 'AND' | 'OR') =>
+    db.all(
+      `SELECT c.id, c.item_id, c.content, c.page, ts_rank_cd(c.search, q) AS rank
+       FROM rag_chunks c JOIN archive_items a ON a.id = c.item_id, to_tsquery('english', ?) q
+       WHERE c.search @@ q ${flt.sql} ORDER BY rank DESC LIMIT 40`,
+      tsQuery(question, mode),
+      ...flt.params
+    );
+  let rows = await run('AND');
+  if (!rows.length) rows = (await run('OR')).filter((r) => termCoverage(terms, r.content) >= KEYWORD_FALLBACK_COVERAGE);
+  return rows
+    .map((r) => ({ item_id: r.item_id, content: r.content, rrf: Number(r.rank), sim: termCoverage(terms, r.content), page: r.page == null ? null : Number(r.page), keyword: true }))
+    .sort((a, b) => b.sim - a.sim || b.rrf - a.rrf);
+}
+
+/** Retrieval with a fallback: if the embedding service fails, answer from keyword search and say so. */
+async function retrieveWithFallback(db: Db, question: string, f: SearchFilters): Promise<{ hits: Hit[]; degraded: string | null }> {
+  try {
+    return { hits: await retrieve(db, question, f), degraded: null };
+  } catch (err: any) {
+    console.warn('[POLARIS] Ask POLARIS: semantic search unavailable, using keyword search:', err.message);
+    return {
+      hits: await keywordRetrieve(db, question, f),
+      degraded: 'Semantic search is unavailable right now, so these records were found by keyword search.',
+    };
+  }
+}
+
 /** Top chunks by vector similarity and by keywords, fused with RRF (k = 60). */
 async function retrieve(db: Db, question: string, f: SearchFilters): Promise<Hit[]> {
   const flt = filterSql(f);
@@ -175,10 +221,18 @@ function tidy(answer: string, sources: RagSource[]) {
 /** Without a language model: the sentences from the sources that best match the question, cited. */
 function extractive(question: string, sources: RagSource[]): string {
   const terms = parseQuery(question).terms;
+  const asksWho = /^\s*who\b/i.test(question);
+  const seen = new Set<string>();
   const scored = sources.flatMap((s) =>
     splitSentences(s.excerpt)
       .filter((x) => x.length > 30 && x.length < 400)
-      .map((x) => ({ s, x, score: terms.filter((t) => x.toLowerCase().includes(t)).length }))
+      .filter((x) => !seen.has(x) && seen.add(x)) // the same sentence can sit in several chunks
+      .map((x) => ({
+        s,
+        x,
+        // "Who …?" is answered by the authors line, which rarely repeats the question's words.
+        score: terms.filter((t) => x.toLowerCase().includes(t)).length + (asksWho && /^authors?:/i.test(x.trim()) ? 3 : 0),
+      }))
   );
   const best = scored
     .filter((c) => c.score > 0)
@@ -254,7 +308,8 @@ async function answer(
 ): Promise<AskResult> {
 
   const t0 = Date.now();
-  const sources = await buildSources(db, await retrieve(db, question, filters));
+  const { hits, degraded } = await retrieveWithFallback(db, question, filters);
+  const sources = await buildSources(db, hits);
   const retrievalMs = Date.now() - t0;
   emit('sources', sources);
 
@@ -262,18 +317,19 @@ async function answer(
   if (!sources.length) {
     const answer = 'No approved record on POLARIS matches this question yet. Try other words, or share your own work from the Share page.';
     emit('token', answer);
-    return { ...base, answer, mode: 'no_sources', model: null, verification: null, note: null };
+    return { ...base, answer, mode: 'no_sources', model: null, verification: null, note: degraded };
   }
 
   let answer = '';
   let mode: AskResult['mode'] = 'generative';
-  let note: string | null = null;
+  let note: string | null = degraded;
   const t1 = Date.now();
   if (cfg.llm) {
     try {
       answer = await generate(prompt(question, sources), (t) => emit('token', t), signal);
     } catch (err: any) {
-      note = `Language model unavailable (${err.message}); showing the matching sentences from the records instead.`;
+      const why = String(err.message || '').replace(/\{.*$/s, '').trim().slice(0, 80);
+      note = [degraded, `The language model is unavailable${why ? ` (${why})` : ''}, so the answer quotes the matching sentences from the records.`].filter(Boolean).join(' ');
       emit('reset', note);
     }
   }

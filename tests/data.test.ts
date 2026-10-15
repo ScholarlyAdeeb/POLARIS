@@ -76,3 +76,11 @@ test('NCPOR snapshot records are real, linked and unique', () => {
   assert.equal(new Set(r.map((x: any) => x.handle)).size, r.length);
   assert.ok(r.every((x: any) => /\/dspace\/handle\//.test(x.url) && x.title));
 });
+
+test('keyword fallback coverage: loose matches are dropped, close ones kept', async () => {
+  const { termCoverage, KEYWORD_FALLBACK_COVERAGE } = await import('../server/rag/ask.ts');
+  assert.equal(termCoverage(['metapel', 'dakshin', 'gangotri'], 'Geochemistry of metapelite from Dakshin Gangotri'), 1);
+  // "Who won the FIFA World Cup?" must not be answered from a record that merely says "World"
+  assert.ok(termCoverage(['won', 'fifa', 'world', 'cup'], 'World Data Centre for glaciology') < KEYWORD_FALLBACK_COVERAGE);
+  assert.equal(termCoverage([], 'anything'), 0);
+});
