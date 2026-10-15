@@ -1,0 +1,1628 @@
+{
+ "ranAt": "2026-10-15T20:24:34.644Z",
+ "base": "http://localhost:3100",
+ "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+ "embedModel": "BAAI/bge-small-en-v1.5",
+ "degraded": 0,
+ "summary": {
+  "total": 24,
+  "passed": 20,
+  "factual": {
+   "total": 22,
+   "retrieved": 22,
+   "cited": 21,
+   "facts": 19,
+   "passed": 18
+  },
+  "offTopic": {
+   "total": 2,
+   "declined": 2
+  }
+ },
+ "rows": [
+  {
+   "question": {
+    "id": "q01",
+    "category": "Expeditions",
+    "question": "Which ship carried the first Indian Scientific Expedition to Antarctica?",
+    "records": [
+     "exp-1981-1st-indian-scientific-ex"
+    ],
+    "facts": [
+     [
+      "Polar Circle"
+     ]
+    ]
+   },
+   "answer": "The first Indian Scientific Expedition to Antarctica was carried by the MV Polar Circle in 1981. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "exp-1981-1st-indian-scientific-ex",
+     "title": "1st Indian Scientific Expedition to Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-1260",
+     "title": "India's First Scientific Expedition to South Pole: A Report",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-968",
+     "title": "Report on the Scientific Studies and Establishment of the First Indian Structure in the Area",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-1142",
+     "title": "Chemical oceanographic studies along a section from 32°S to Antarctica in the south western Indian Ocean",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-858",
+     "title": "A report of Bharat Sanchar Nigam Limited activities during XXI Indian Scientific Expedition to Antarctica",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 9340,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "exp-1981-1st-indian-scientific-ex"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q02",
+    "category": "Expeditions",
+    "question": "How many days did it take to build Dakshin Gangotri station?",
+    "records": [
+     "exp-1983-dakshin-gangotri-station"
+    ],
+    "facts": [
+     [
+      "60 days",
+      "60-day",
+      "sixty days"
+     ]
+    ]
+   },
+   "answer": "The Dakshin Gangotri station was constructed within a record 60 days on the floating ice shelf [S1]. This was achieved through innovative construction methods supported by year-round overwintering scientists for seven continuous years. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "exp-1983-dakshin-gangotri-station",
+     "title": "Dakshin Gangotri Station Commissioned",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-668",
+     "title": "Dakshin Gangotri : The Indian Permanent Station in Antartica",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-364",
+     "title": "On the Construction of Shelter Accommodation within C & N Hangar, Dakshin Gangotri, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-279",
+     "title": "Automatic Weather Station at Dakshin Gangotri, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-395",
+     "title": "Fire Protection—Indian Stations at Antarctica; Maitri and Dakshin Gangotri Hangar Accommodation",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 2,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 13682,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "exp-1983-dakshin-gangotri-station"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q03",
+    "category": "Expeditions",
+    "question": "When was Maitri station built, and in which area of Antarctica?",
+    "records": [
+     "exp-1989-maitri-station-built-in"
+    ],
+    "facts": [
+     [
+      "1989"
+     ],
+     [
+      "Schirmacher"
+     ]
+    ]
+   },
+   "answer": "Maitri station was built in the Schirmacher Oasis in 1989. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "exp-1989-maitri-station-built-in",
+     "title": "Maitri Station Built in Schirmacher Oasis",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-917",
+     "title": "Structural Assessment of Maitri building at Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "PHOTO-MAITRI-OASIS",
+     "title": "Maitri and the Schirmacher Oasis",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-997",
+     "title": "Meteorological Programme at Maitri, Antarctica During 25th Expedition",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-919",
+     "title": "Structural Assessment of Maitri Station at Antarctica",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 8696,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "exp-1989-maitri-station-built-in"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q04",
+    "category": "Expeditions",
+    "question": "Where is India's Arctic research station Himadri?",
+    "records": [
+     "exp-2008-himadri-station-establis"
+    ],
+    "facts": [
+     [
+      "Ny-Ålesund",
+      "Ny-Alesund",
+      "Ny Ålesund",
+      "Svalbard",
+      "Spitsbergen"
+     ]
+    ]
+   },
+   "answer": "India's Arctic research station Himadri is established in the Arctic region of Svalbard, Norway [S1]. It was first established in 2008 as part of India's expansion into polar sciences. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "exp-2008-himadri-station-establis",
+     "title": "Himadri Station Established in the Arctic",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "PHOTO-HIMADRI-KONGSFJORDEN",
+     "title": "Himadri, Ny-Ålesund",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "CLIMATE-HIMADRI",
+     "title": "Daily surface climate at Himadri Research Station, 1981 to present (ERA5)",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-581",
+     "title": "Environmental Status at Indian Polar Research Station Maitri-A Comprehensive Study",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-1036",
+     "title": "New Indian Research Base at Larsemann Hills (Antarctica)",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 1,
+    "unsupported": 0
+   },
+   "ms": 16735,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "exp-2008-himadri-station-establis"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q05",
+    "category": "Expeditions",
+    "question": "How far did the Indian South Pole overland traverse travel from Maitri?",
+    "records": [
+     "exp-2010-south-pole-scientific-ov"
+    ],
+    "facts": [
+     [
+      "2,250",
+      "2250"
+     ]
+    ]
+   },
+   "answer": "The Indian South Pole overland traverse traveled 2,250 km from Maitri to the Geographic South Pole via customized PistenBully convoys. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "exp-2010-south-pole-scientific-ov",
+     "title": "South Pole Scientific Overland Traverse",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-943",
+     "title": "Study of Meteorological Parameter at Maitri, Antarctica during 24th Indian Antarctic Expedition, 2004-2006",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-719",
+     "title": "Movement of Indian Antarctic Station Maitri into Auroral Oval during Geomagnetic Disturbance",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-586",
+     "title": "Pioneering a Land Route from Maitri to Polar Plateau",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-718",
+     "title": "Characterisation of Selective Soil and Sediment Samples around Indian Station Maitri in Schirmacher Oasis, East Antarctica",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 12745,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "exp-2010-south-pole-scientific-ov"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q06",
+    "category": "Expeditions",
+    "question": "How many containers was Bharati station built from?",
+    "records": [
+     "exp-2012-bharati-station-commissi"
+    ],
+    "facts": [
+     [
+      "134"
+     ]
+    ]
+   },
+   "answer": "Bharati station was built from 134 modular ISO containers. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "PHOTO-BHARATI-EXTERIOR",
+     "title": "Bharati Station on the Grovnes Peninsula",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "exp-2012-bharati-station-commissi",
+     "title": "Bharati Station Commissioned at Larsemann Hills",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "BHARATI-FACILITY-LOG",
+     "title": "BHARATI-FACILITY-LOG: Fuel-to-Thermal Energy Audit 2024",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-758",
+     "title": "Report on the Indian Antarctic Scientific Station \"Maitri\" - A Study of the Station and Its Life Support Systems",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "exp-1989-maitri-station-built-in",
+     "title": "Maitri Station Built in Schirmacher Oasis",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 0,
+    "partial": 0,
+    "unsupported": 1
+   },
+   "ms": 7766,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": false,
+    "facts": true,
+    "declined": false,
+    "pass": false,
+    "citedIds": [
+     "PHOTO-BHARATI-EXTERIOR"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q07",
+    "category": "Expeditions",
+    "question": "At what altitude is the Himansh station in the Himalayas?",
+    "records": [
+     "exp-2016-himansh-high-altitude-st"
+    ],
+    "facts": [
+     [
+      "4,080",
+      "4080"
+     ]
+    ]
+   },
+   "answer": "The Himansh station in the Himalayas is established at an altitude of 4,080 meters above sea level (MSL). [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "exp-2016-himansh-high-altitude-st",
+     "title": "Himansh High-Altitude Station in Himalayas",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "PHOTO-HIMANSH-SPITI",
+     "title": "Himansh Observatory, Spiti",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "paper-1",
+     "title": "Decadal Mass Balance Deficits in the Chhota Shigri Glacier, Western Himalaya, Derived from In-Situ Geodetic Surveys",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "exp-2008-himadri-station-establis",
+     "title": "Himadri Station Established in the Arctic",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "OPEN-CR-DF6731CB30",
+     "title": "Spatial surface velocity pattern in the glaciers of Chandra Basin, Western Himalaya",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 0,
+    "partial": 1,
+    "unsupported": 0
+   },
+   "ms": 10321,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "exp-2016-himansh-high-altitude-st"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q08",
+    "category": "Expeditions",
+    "question": "Which is the most recent completed Indian Scientific Expedition to Antarctica?",
+    "records": [
+     "exp-2026-45th-isea-completed-2025"
+    ],
+    "facts": [
+     [
+      "45th",
+      "45 th",
+      "forty-fifth"
+     ]
+    ]
+   },
+   "answer": "The most recent completed Indian Scientific Expedition to Antarctica is the 45th ISEA (2025–26 Season) [S1]. This expedition continues year-round operations at Maitri and Bharati stations, focusing on atmospheric, glaciology, and geoscience programs. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "exp-2026-45th-isea-completed-2025",
+     "title": "45th ISEA Completed (2025–26 Season)",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-968",
+     "title": "Report on the Scientific Studies and Establishment of the First Indian Structure in the Area",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-1036",
+     "title": "New Indian Research Base at Larsemann Hills (Antarctica)",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-1123",
+     "title": "Glaciological Observation During The 28th Indian Antarctic Expedition",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-1260",
+     "title": "India's First Scientific Expedition to South Pole: A Report",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 2,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 15596,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "exp-2026-45th-isea-completed-2025"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q09",
+    "category": "Datasets",
+    "question": "What does the Maitri AOD Radiometry 2023 dataset measure?",
+    "records": [
+     "NCPOR-MET-2023-042"
+    ],
+    "facts": [
+     [
+      "aerosol optical depth"
+     ]
+    ]
+   },
+   "answer": "The Maitri AOD Radiometry 2023 dataset measures hourly aerosol optical depth (AOD) from a sun-photometer at the Maitri station during the 42nd International Science Expedition to Antarctica (ISEA) season. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "NCPOR-MET-2023-042",
+     "title": "Maitri AOD Radiometry 2023",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "RPT-ISEA42-ATMOS",
+     "title": "ISEA-42 Atmospheric Bulletin",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-623",
+     "title": "Short-term GPS measurements as MAITRI, Indian Antarctic station",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-708",
+     "title": "Millimeter-Wave Ozone Radiospectrometer Experiment at Maitri, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "CLIMATE-MAITRI",
+     "title": "Daily surface climate at Maitri Station, 1981 to present (ERA5)",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 12668,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "NCPOR-MET-2023-042"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q10",
+    "category": "Datasets",
+    "question": "Who published data on aerosol mass concentration at Maitri and Larsemann Hills on PANGAEA?",
+    "records": [
+     "OPEN-PG-808285",
+     "OPEN-PG-808286"
+    ],
+    "facts": [
+     [
+      "Chaubey",
+      "Krishna Moorthy",
+      "Suresh Babu"
+     ]
+    ]
+   },
+   "answer": "The data on aerosol mass concentration at Maitri and Larsemann Hills was published by Jai Prakash Chaubey, K Krishna Moorthy, S Suresh Babu, and Vijayakumar S Nair on PANGAEA in 2011. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "OPEN-PG-808285",
+     "title": "(Table 1, 3) Total mass concentration of aerosols in Maitri and Larsemann Hills Station, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "OPEN-PG-808290",
+     "title": "Aerosol total mass concentration and optical depth during IPY 2007-2008 at Maitri and Larsemann Hills Station",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "OPEN-PG-808286",
+     "title": "(Table 2) Aerosol optical depth in Maitri and Larsemann Hills Station, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-1041",
+     "title": "Characterization of Aerosols and Pre-cursor Gases Observed over Maitri and Larsemann Hill Region during 26th IAE",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "OPEN-PG-846890",
+     "title": "Selected soil properties and bacterial abundance in the glacier forefields 'Black Valley Transect' and 'Glacier Transect' on Larsemann Hills, East Antarctica",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 18055,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "OPEN-PG-808285"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q11",
+    "category": "Datasets",
+    "question": "Which reanalysis is the daily climate record for Maitri station based on?",
+    "records": [
+     "CLIMATE-MAITRI"
+    ],
+    "facts": [
+     [
+      "ERA5"
+     ]
+    ]
+   },
+   "answer": "The daily climate record for Maitri station is based on the ERA5 reanalysis. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "CLIMATE-MAITRI",
+     "title": "Daily surface climate at Maitri Station, 1981 to present (ERA5)",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-653",
+     "title": "Monitoring of Various Atmospheric Parameters Over Maitri, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-729",
+     "title": "Meteorological Studies at Maitri during Thirteenth Indian Antarctic Expedition (1994)",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-320",
+     "title": "Investigations on weather forecasting and long-term climate changes in Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-997",
+     "title": "Meteorological Programme at Maitri, Antarctica During 25th Expedition",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 9260,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "CLIMATE-MAITRI"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q12",
+    "category": "Publications",
+    "question": "Who wrote the article 'Indian Endeavour in Antarctic Geoscience'?",
+    "records": [
+     "OPEN-CR-780D52E6DE"
+    ],
+    "facts": [
+     [
+      "Ravindra"
+     ]
+    ]
+   },
+   "answer": "The article 'Indian Endeavour in Antarctic Geoscience' was written by Rasik Ravindra [S1]. [S3]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "OPEN-CR-780D52E6DE",
+     "title": "Indian Endeavour in Antarctic Geoscience",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-644",
+     "title": "Antarctic Geoscience in the Indian Context",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-1036",
+     "title": "New Indian Research Base at Larsemann Hills (Antarctica)",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "OPEN-CR-7F71513913",
+     "title": "Advances in Antarctic geoscience studies: Indian contributions",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-1123",
+     "title": "Glaciological Observation During The 28th Indian Antarctic Expedition",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 9354,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "OPEN-CR-780D52E6DE",
+     "NCPOR-DS-1036"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q13",
+    "category": "Publications",
+    "question": "Which journal published the study of copepod carbon biomass in coastal Antarctica?",
+    "records": [
+     "OPEN-CR-EEAA74B5C1"
+    ],
+    "facts": [
+     [
+      "Journal of Crustacean Biology"
+     ]
+    ]
+   },
+   "answer": "The study of copepod carbon biomass in coastal Antarctica was published in the Journal of Crustacean Biology (2019). [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "OPEN-CR-EEAA74B5C1",
+     "title": "Morphometric estimation of copepod carbon biomass in coastal Antarctica: a case study in Prydz Bay",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "OPEN-CR-41295831D8",
+     "title": "Fate of Dissolved Organic Carbon in Antarctic Surface Environments During Summer",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "OPEN-CR-B73959CCD6",
+     "title": "Under‐Ice Phytoplankton Bloom and Associated Particulate Organic Matter Composition Dynamics in Prydz Bay, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-284",
+     "title": "Short Term Variation in Particulate Organic Matter in the Shelf Waters of the Princess Astrid Coast, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "OPEN-CR-6F641668D4",
+     "title": "Interannual dynamics of plankton communities and carbon biomass across Southern Ocean frontal systems",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 12019,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "OPEN-CR-EEAA74B5C1"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q14",
+    "category": "NCPOR expedition reports",
+    "question": "Who studied the geochemistry of metapelite from Dakshin Gangotri?",
+    "records": [
+     "NCPOR-DS-145"
+    ],
+    "facts": [
+     [
+      "Divakar",
+      "Govil"
+     ]
+    ]
+   },
+   "answer": "The geochemistry of metapelite from Dakshin Gangotri was studied by Rao, V.Divakar, Govil, P.K., and Balram, V. [S1].",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "NCPOR-DS-145",
+     "title": "Geochemistry of metapelite from Dakshin Gangotri",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-159",
+     "title": "Geology of the Dakshin Gangotri landmass Schirmacher Hill Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-215",
+     "title": "Geology of Dakshin Gangotri Hill Range Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-187",
+     "title": "Petrochemical studies of the rock sample from Dakshin Gangotri, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-164",
+     "title": "Mineralogical variation in the gneisses from Dakshin Gangotri Antarctica",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 13909,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "NCPOR-DS-145"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q15",
+    "category": "NCPOR expedition reports",
+    "question": "Who reported the biotic features of surface water bodies around Maitri in Schirmacher Oasis?",
+    "records": [
+     "NCPOR-DS-712"
+    ],
+    "facts": [
+     [
+      "Ghosh",
+      "Sangolkar",
+      "Kotangale"
+     ]
+    ]
+   },
+   "answer": "[T.K. GHOSH, L.N. SANGOLKAR; J.P. KOTANGALE] [S1]. [A.K. KASHYAP] [S3].",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "NCPOR-DS-712",
+     "title": "Biotic Features of Selective Surface Water Bodies around Indian Station Maitri in Schirmacher Oasis, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-920",
+     "title": "Studies on Diatom Flora of Schirmacher Oasis, East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-319",
+     "title": "A Preliminary survey of the terrestrial algae of Schirmacher Oasis,Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-1002",
+     "title": "Freshwater Diatom Communities of Schirmacher Oasis, East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-1081",
+     "title": "Bathymetric Profiling of Lakes of Schirmacher Oasis, East Antarctica",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 0,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 12790,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "NCPOR-DS-712",
+     "NCPOR-DS-319"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q16",
+    "category": "NCPOR expedition reports",
+    "question": "Who made glaciological observations during the 28th Indian Antarctic Expedition?",
+    "records": [
+     "NCPOR-DS-1123"
+    ],
+    "facts": [
+     [
+      "Shrivastava",
+      "Dharwadkar"
+     ]
+    ]
+   },
+   "answer": "The authors of the expedition report for the 28th Indian Antarctic Expedition, which includes glaciological observations, are Shrivastava, Prakash Kumar; Dharwadkar, Amit; Nath, Ashish Kumar; and Chaturvedi, Arun. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "NCPOR-DS-1123",
+     "title": "Glaciological Observation During The 28th Indian Antarctic Expedition",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-870",
+     "title": "Glaciological observations during the 22nd Indian Antarctic Expedition",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-753",
+     "title": "A Note on The Glaciological Studies Carried Out During Eleventh Indian Expedition to Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-1082",
+     "title": "Glaciological Observations In and Around Schirmacher Oasis, East Antarctica during 27th Indian Antarctic Expedition",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-1207",
+     "title": "Glaciological Observations during the 29th Indian Antarctic Expedition",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 17185,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "NCPOR-DS-1123"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q17",
+    "category": "NCPOR expedition reports",
+    "question": "Who compared methane measurements on an Antarctic air sample?",
+    "records": [
+     "NCPOR-DS-295"
+    ],
+    "facts": [
+     [
+      "Parashar",
+      "Rai"
+     ]
+    ]
+   },
+   "answer": "[Different researchers compared methane measurements on an Antarctic air sample.] [S1]. [The researchers also noted that they used a Perkin Elmer Sigma 2000 chromatograph.] [S1]. [They found that the measurements were consistent with previous studies.] [S1]. [The researchers concluded that the measurements were accurate and reliable.] [S1]. [The researchers emphasized the importance of comparing measurements across different seasons and locations.] [S1]. [The researchers acknowledged the need for further studies to improve the accuracy of methane measurements.] [S1]. [The researchers recommended the use of standardized methods for measuring methane.] [S1]. [The researchers noted that the measurements were taken using a Chromatograph.] [S1]. [The researchers emphasized the need for continuous monitoring of methane levels.] [S1]. [The researchers suggested that the measurements should be taken at multiple locations.] [S1]. [The researchers noted that the measurements were taken during specific seasons.] [S1]. [The researchers recommended the use of online measurement systems.] [S1]. [The researchers noted that the measurements were taken at different times of the day.] [S1]. [The researchers emphasized the need for regular calibration of the instruments.] [S1]. [The researchers noted that the",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "NCPOR-DS-295",
+     "title": "A Note on Comparative Methane Measurements on an Antarctic Air Sample",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-911",
+     "title": "Study of Ambient Air Methane Concentration at Maitri, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-878",
+     "title": "Online Measurement of Surface Air concentration of CH4 and CO2 at Maitri, Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-1236",
+     "title": "Ambient air quality studies at different Islands of Larsemann Hills in East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-876",
+     "title": "Total Water Vapour Column Measurement Over Schirmacher Region, East Antarctica",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 0,
+    "partial": 0,
+    "unsupported": 1
+   },
+   "ms": 50488,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": false,
+    "declined": false,
+    "pass": false,
+    "citedIds": [
+     "NCPOR-DS-295"
+    ],
+    "missingFacts": [
+     "Parashar"
+    ]
+   }
+  },
+  {
+   "question": {
+    "id": "q18",
+    "category": "NCPOR expedition reports",
+    "question": "In which expedition's scientific report is the study of the personality and temperament of Indian Antarctic expedition members?",
+    "records": [
+     "NCPOR-DS-1009"
+    ],
+    "facts": [
+     [
+      "25th",
+      "twenty-fifth",
+      "Twenty Fifth"
+     ]
+    ]
+   },
+   "answer": "The study of the personality and temperament of Indian Antarctic expedition members is found in the expedition report titled \"Expedition report: Personality and Temperament of Indian Antarctic Expedition Members\" [S1]. This report discusses the characteristics and behaviors of the expedition members in the context of their Antarctic expedition. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "NCPOR-DS-1009",
+     "title": "Personality and Temperament of Indian Antarctic Expedition Members",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-1008",
+     "title": "Interpersonal Relations among Indian Antarctic Expedition Members in Isolated and Confined Environment",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-555",
+     "title": "Effect of stress on social behaviour of expedition members of ISEA",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-968",
+     "title": "Report on the Scientific Studies and Establishment of the First Indian Structure in the Area",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-823",
+     "title": "Stress, Anxiety and Loneliness Among 20th Indian Expeditioners at Antarctica during Summer",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 1,
+    "unsupported": 0
+   },
+   "ms": 18130,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": false,
+    "declined": false,
+    "pass": false,
+    "citedIds": [
+     "NCPOR-DS-1009"
+    ],
+    "missingFacts": [
+     "25th"
+    ]
+   }
+  },
+  {
+   "question": {
+    "id": "q19",
+    "category": "NCPOR expedition reports",
+    "question": "Where was an alkaline lamprophyre dyke reported in Dronning Maud Land?",
+    "records": [
+     "NCPOR-DS-352"
+    ],
+    "facts": [
+     [
+      "Schirmacher"
+     ]
+    ]
+   },
+   "answer": "An alkaline lamprophyre dyke was reported in Dronning Maud Land [S1]. [S3]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "NCPOR-DS-352",
+     "title": "Occurrence of Alkaline Lamprophyre Dyke from Schirmacher Range, Dronning Maud Land, East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-869",
+     "title": "Geological Studies in Western Muhlig- Hofmann Mountains, Central Dronning Maud Land, East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-737",
+     "title": "Calc-alkaline Lamprophyres from Schirmacher Oasis, Queen Maud Land, East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-544",
+     "title": "Glaciomorphic land forms in parts ofSchirmarcher Oasis,central Dronning Maud Land, east Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-755",
+     "title": "Geology of the Area around Dallmannfjellet Area, Orvin Range Central Dronning Maud land East Antartica",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 10369,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": false,
+    "declined": false,
+    "pass": false,
+    "citedIds": [
+     "NCPOR-DS-352",
+     "NCPOR-DS-737"
+    ],
+    "missingFacts": [
+     "Schirmacher"
+    ]
+   }
+  },
+  {
+   "question": {
+    "id": "q20",
+    "category": "NCPOR expedition reports",
+    "question": "Who worked on geographical control in East Antarctica?",
+    "records": [
+     "NCPOR-DS-383"
+    ],
+    "facts": [
+     [
+      "Srivastava",
+      "Madhwal"
+     ]
+    ]
+   },
+   "answer": "[V.P. Srivastava and H.B. Madhwal] [S1]. P.K. Sharma and Laxmi Bisnoi] [S3].",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "NCPOR-DS-383",
+     "title": "Geographical Control in East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "OPEN-CR-62524CA4B7",
+     "title": "Spatiotemporal Variability of Extreme Precipitation Events and Associated Atmospheric Processes Over Dronning Maud Land, East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-851",
+     "title": "Characterizing the Marine Boundary Layer Over East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-813",
+     "title": "Geology and Geochemistry of Eastern part of Muhlig-Hofmann Fjella, Central Dronning Maud Land, East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-549",
+     "title": "Report on Mapping in Antarctica (during 18th Indian Scientific Expedition to Antarctica)",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 11502,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "NCPOR-DS-383",
+     "NCPOR-DS-851"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q21",
+    "category": "NCPOR expedition reports",
+    "question": "Who studied the gneisses of the South Humboldt Mountains in central Dronning Maud Land?",
+    "records": [
+     "NCPOR-DS-351"
+    ],
+    "facts": [
+     [
+      "Ravindra",
+      "Dey"
+     ]
+    ]
+   },
+   "answer": "[Ravindra, R.; Dey, A.; D'Souza, M.J.; Beg, M.J.; Kaul, M.K.] [S1]. [Thamban, Meloth; Shrivastava, P. K.] [S3].",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "NCPOR-DS-351",
+     "title": "On the Gneisses and Associated Rocks from South Humboldt Mountains, Central Dronning Maud Land, East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-869",
+     "title": "Geological Studies in Western Muhlig- Hofmann Mountains, Central Dronning Maud Land, East Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-1063",
+     "title": "Ice Core Drilling in the Central Dronning Maud Land and Snow Studies in the Larsemann Hills Region: Field Activities and Initial Results",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-544",
+     "title": "Glaciomorphic land forms in parts ofSchirmarcher Oasis,central Dronning Maud Land, east Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-1053",
+     "title": "Geology of the Gruber and Zweissel Granitoids, Central Dronning Maud Land, East Antarctica",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 17451,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "NCPOR-DS-351",
+     "NCPOR-DS-1063"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q22",
+    "category": "NCPOR expedition reports",
+    "question": "Which survey organisation reported its work during the 24th Indian Scientific Expedition to Antarctica?",
+    "records": [
+     "NCPOR-DS-953"
+    ],
+    "facts": [
+     [
+      "Survey of India"
+     ]
+    ]
+   },
+   "answer": "The Survey of India reported its work during the 24th Indian Scientific Expedition to Antarctica. [S1]",
+   "mode": "generative",
+   "model": "onnx-community/Qwen2.5-1.5B-Instruct",
+   "sources": [
+    {
+     "ref": "S1",
+     "id": "NCPOR-DS-953",
+     "title": "Report on the Work Done by Survey of India Team During XXIV Indian Scientific Expedition to Antarctica",
+     "pages": []
+    },
+    {
+     "ref": "S2",
+     "id": "NCPOR-DS-968",
+     "title": "Report on the Scientific Studies and Establishment of the First Indian Structure in the Area",
+     "pages": []
+    },
+    {
+     "ref": "S3",
+     "id": "NCPOR-DS-942",
+     "title": "Diary of Events, Highlights of Achievements and Technical Report of the 24th Indian Antarctic Expedition",
+     "pages": []
+    },
+    {
+     "ref": "S4",
+     "id": "NCPOR-DS-958",
+     "title": "Glaciological Studies During 24th Indian Antarctic Expedition",
+     "pages": []
+    },
+    {
+     "ref": "S5",
+     "id": "NCPOR-DS-967",
+     "title": "Report on the Communication Tasks Carried Out During the 24th Indian Antarctic Expedition (2004 - 2006)",
+     "pages": []
+    }
+   ],
+   "verification": {
+    "supported": 1,
+    "partial": 0,
+    "unsupported": 0
+   },
+   "ms": 11952,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": true,
+    "cited": true,
+    "facts": true,
+    "declined": false,
+    "pass": true,
+    "citedIds": [
+     "NCPOR-DS-953"
+    ],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q23",
+    "category": "Off-topic (should decline)",
+    "question": "Who won the 2018 FIFA World Cup?",
+    "offTopic": true
+   },
+   "answer": "No approved record on POLARIS matches this question yet. Try other words, or share your own work from the Share page.",
+   "mode": "no_sources",
+   "model": null,
+   "sources": [],
+   "verification": null,
+   "ms": 749,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": false,
+    "cited": false,
+    "facts": false,
+    "declined": true,
+    "pass": true,
+    "citedIds": [],
+    "missingFacts": []
+   }
+  },
+  {
+   "question": {
+    "id": "q24",
+    "category": "Off-topic (should decline)",
+    "question": "What is the population of Mumbai?",
+    "offTopic": true
+   },
+   "answer": "No approved record on POLARIS matches this question yet. Try other words, or share your own work from the Share page.",
+   "mode": "no_sources",
+   "model": null,
+   "sources": [],
+   "verification": null,
+   "ms": 779,
+   "note": null,
+   "error": null,
+   "score": {
+    "retrieved": false,
+    "cited": false,
+    "facts": false,
+    "declined": true,
+    "pass": true,
+    "citedIds": [],
+    "missingFacts": []
+   }
+  }
+ ]
+}
