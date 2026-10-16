@@ -37,7 +37,9 @@ export const PolarisDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
       .then((d) => {
         if (!cancelled) setData({ ...d, source: 'api' });
       })
-      .catch((err) => console.warn('[POLARIS] API unavailable, using bundled data:', err));
+      .catch((err) => console.warn('[POLARIS] API unavailable, using bundled data:', err))
+      // The boot splash in index.html waits for this (or its own time-out) before fading out.
+      .finally(() => window.dispatchEvent(new Event('polaris:ready')));
     return () => {
       cancelled = true;
     };
