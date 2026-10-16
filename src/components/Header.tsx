@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LANGS, useT } from '../lib/i18n';
 import { isReviewerRole, useAuth } from '../lib/auth';
 
 interface HeaderProps {
   onOpenCommandPalette: () => void;
+  /** The page being shown (it lags the router during a page morph, so the active tab can slide). */
+  pathname: string;
 }
 
 const SUBTITLE: Record<string, string> = {
@@ -90,7 +92,8 @@ function AccountMenu() {
   );
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenCommandPalette }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenCommandPalette, pathname }) => {
+  const isActive = (to: string) => (to === '/' ? pathname === '/' : pathname === to || pathname.startsWith(`${to}/`));
   const { lang, setLang, t } = useT();
   const { user } = useAuth();
   const [highContrast, setHighContrast] = useState(false);
@@ -124,7 +127,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCommandPalette }) => {
         <div className="flex items-center justify-between gap-4">
           <div onClick={() => navigate('/')} className="flex items-center gap-2 sm:gap-3 cursor-pointer group select-none min-w-0">
             <span className="h-9 w-9 shrink-0 rounded-lg bg-white p-0.5 ring-1 ring-slate-200 flex items-center justify-center">
-              <img alt="POLARIS emblem" className="h-full w-full object-contain" src="/polaris-emblem.svg" />
+              <img alt="POLARIS emblem" className="h-full w-full object-contain" src="/polaris-emblem.svg" data-boot-logo />
             </span>
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
@@ -185,18 +188,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCommandPalette }) => {
             {navItems
               .filter((i) => i.show !== false)
               .map((item) => (
-                <NavLink
+                <Link
                   key={item.to}
                   to={item.to}
-                  end={item.to === '/'}
-                  className={({ isActive }) =>
-                    `text-sm whitespace-nowrap transition-colors px-3 py-1.5 rounded-lg ${
-                      isActive ? 'text-[#00677d] font-semibold bg-[#eff4ff]' : 'text-slate-600 hover:text-[#0b1c30] hover:bg-slate-100/60'
-                    }`
-                  }
+                  aria-current={isActive(item.to) ? 'page' : undefined}
+                  className={`relative text-sm whitespace-nowrap transition-colors px-3 py-1.5 rounded-lg ${
+                    isActive(item.to) ? 'text-[#00677d] font-semibold' : 'text-slate-600 hover:text-[#0b1c30] hover:bg-slate-100/60'
+                  }`}
                 >
-                  {t(item.key)}
-                </NavLink>
+                  {/* The active-tab highlight is its own element so it can slide to the next tab during a page morph. */}
+                  {isActive(item.to) && <span aria-hidden className="vt-nav-pill absolute inset-0 rounded-lg bg-[#eff4ff]" />}
+                  <span className={isActive(item.to) ? 'relative vt-nav-label' : 'relative'}>{t(item.key)}</span>
+                </Link>
               ))}
           </nav>
         </div>

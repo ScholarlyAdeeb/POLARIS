@@ -5,6 +5,7 @@ import { usePolarisData } from '../context/PolarisDataContext';
 import { DataStatusBadge, ErrorNote, Page } from '../components/ui';
 import { WeatherCard } from '../components/WeatherCard';
 import { ClimateCard } from '../components/ClimateCard';
+import { morphName } from '../lib/morph';
 
 const StationScene = lazy(() => import('../components/StationScene'));
 
@@ -14,12 +15,12 @@ export function StationsIndex() {
   const { stations } = usePolarisData();
   return (
     <Page>
-      <h1 className="font-['Space_Grotesk'] text-2xl md:text-3xl font-bold mb-6">Stations and platforms</h1>
+      <h1 className="vt-named font-['Space_Grotesk'] text-2xl md:text-3xl font-bold mb-6" style={morphName('page-title')}>Stations and platforms</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stations.map((s) => (
           <Link key={s.id} to={`/stations/${s.id}`} className="sci-card p-4 hover:border-[var(--pol-accent-2)] transition-colors">
             <span className="text-xs font-semibold sci-accent">{s.domain}</span>
-            <h2 className="font-['Space_Grotesk'] text-lg font-bold">{s.name}</h2>
+            <h2 className="vt-named font-['Space_Grotesk'] text-lg font-bold w-fit" style={morphName(`station-${s.id}`)}>{s.name}</h2>
             <p className="text-sm sci-muted">{s.locationName}</p>
             <p className="text-xs sci-mono sci-ink-2 mt-2">{s.coordinates}</p>
           </Link>
@@ -76,12 +77,25 @@ export function StationPage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
         </Link>
       </Page>
     );
-  if (!station)
+  if (!station) {
+    // The name is already known from the bootstrap data, so the heading is there at once (and the
+    // station card's title can morph into it) while the details load.
+    const known = stations.find((s) => s.id === id);
     return (
       <Page>
-        <p className="sci-muted">Loading station…</p>
+        {known && (
+          <>
+            <nav className="text-xs sci-muted mb-2 flex gap-1.5">
+              <Link to="/" className="hover:underline">Home</Link>/<Link to="/stations" className="hover:underline">Stations</Link>/<span className="sci-ink-2">{known.name}</span>
+            </nav>
+            <h1 className="vt-named font-['Space_Grotesk'] text-2xl md:text-3xl font-bold tracking-tight w-fit" style={morphName(`station-${id}`)}>{known.name}</h1>
+            <p className="text-sm sci-ink-2 mt-1">{known.locationName}</p>
+          </>
+        )}
+        <p className="sci-muted text-sm mt-4">Loading station details…</p>
       </Page>
     );
+  }
 
   // Fixed stations get live model weather; the ship has no fixed position, so it keeps the labelled sample readings.
   const live = !station.id.includes('sagar');
@@ -101,7 +115,7 @@ export function StationPage({ onOpenDataset, onOpenRecord }: { onOpenDataset: (r
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 mb-5">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="font-['Space_Grotesk'] text-2xl md:text-3xl font-bold tracking-tight">{station.name}</h1>
+            <h1 className="vt-named font-['Space_Grotesk'] text-2xl md:text-3xl font-bold tracking-tight w-fit" style={morphName(`station-${station.id}`)}>{station.name}</h1>
             <DataStatusBadge status={station.dataStatus} />
           </div>
           <p className="text-sm sci-ink-2 mt-1">{station.locationName}</p>

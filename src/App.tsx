@@ -1,5 +1,6 @@
-import { Suspense, lazy, useEffect, useRef, useState } from 'react';
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { lazyWithPreload, registerRoute, useMorphLocation } from './lib/morph';
 import { NavTab, ScientificPaper, SimulationMission } from './types/polaris';
 import { Header } from './components/Header';
 import { MobileNav } from './components/MobileNav';
@@ -32,10 +33,15 @@ import { usePolarisData } from './context/PolarisDataContext';
 import { api, type ArchiveItem } from './lib/api';
 
 // Heavy routes (three.js, React Flow) load on demand.
-const StationRoutes = lazy(() => import('./pages/StationPage').then((m) => ({ default: m.StationPage })));
-const StationsIndex = lazy(() => import('./pages/StationPage').then((m) => ({ default: m.StationsIndex })));
-const KnowledgeGraphPage = lazy(() => import('./pages/KnowledgeGraphPage'));
-const AtlasPage = lazy(() => import('./pages/AtlasPage'));
+// Code-split pages. lazyWithPreload lets the page morph load a page's code before it starts (src/lib/morph.ts).
+const StationRoutes = lazyWithPreload(() => import('./pages/StationPage').then((m) => ({ default: m.StationPage })));
+const StationsIndex = lazyWithPreload(() => import('./pages/StationPage').then((m) => ({ default: m.StationsIndex })));
+const KnowledgeGraphPage = lazyWithPreload(() => import('./pages/KnowledgeGraphPage'));
+const AtlasPage = lazyWithPreload(() => import('./pages/AtlasPage'));
+registerRoute((p) => p === '/stations', StationsIndex.preload);
+registerRoute((p) => p.startsWith('/stations/'), StationRoutes.preload);
+registerRoute((p) => p.startsWith('/knowledge-graph'), KnowledgeGraphPage.preload);
+registerRoute((p) => p.startsWith('/atlas'), AtlasPage.preload);
 
 function recordToPaper(r: ArchiveItem): ScientificPaper {
   return {
@@ -54,7 +60,8 @@ function recordToPaper(r: ArchiveItem): ScientificPaper {
 
 export default function App() {
   const navigate = useNavigate();
-  const location = useLocation();
+  // The location being shown; it changes inside a view transition so pages morph (src/lib/morph.ts).
+  const location = useMorphLocation();
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   const [activeSimulation, setActiveSimulation] = useState<SimulationMission | null>(null);
@@ -104,6 +111,15 @@ export default function App() {
     setSkycamOpen(false);
     setCommandPaletteOpen(false);
   }, [location.pathname]);
+
+  // Warm the small station-page chunk after start-up, so opening a station morphs straight away.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      StationsIndex.preload();
+      StationRoutes.preload();
+    }, 2500);
+    return () => clearTimeout(t);
+  }, []);
 
   // Anonymous page-view counter (path only) for the admin usage panel.
   useEffect(() => {
@@ -174,12 +190,13 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-[#f8f9ff] text-[#0b1c30] transition-colors">
       <Header
+        pathname={location.pathname}
         onOpenCommandPalette={() => setCommandPaletteOpen(true)}
       />
 
       <main className="w-full pt-16 md:pt-24 pb-20 md:pb-0 flex-1">
         <Suspense fallback={loading}>
-          <Routes>
+          <Routes location={location}>
             <Route
               path="/"
               element={

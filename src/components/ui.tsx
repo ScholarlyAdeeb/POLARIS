@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { adminToken } from '../lib/api';
 import { isReviewerRole, useAuth } from '../lib/auth';
+import { morphName } from '../lib/morph';
 
 const STATUS_STYLE: Record<string, { label: string; cls: string; title: string }> = {
   OFFICIAL: { label: 'Official', cls: 'bg-emerald-100 text-emerald-800', title: 'Published by NCPOR / MoES' },
@@ -26,7 +27,7 @@ export function PageHeader({ title, text, children }: { title: string; text?: st
   return (
     <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-6">
       <div className="max-w-3xl">
-        <h1 className="font-['Space_Grotesk'] text-2xl md:text-3xl font-bold tracking-tight">{title}</h1>
+        <h1 className="vt-named font-['Space_Grotesk'] text-2xl md:text-3xl font-bold tracking-tight" style={morphName('page-title')}>{title}</h1>
         {text && <p className="sci-muted text-sm mt-1">{text}</p>}
       </div>
       {children}

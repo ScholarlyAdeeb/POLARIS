@@ -184,3 +184,33 @@
 .claim-supported { background: color-mix(in srgb, var(--pol-ok) 14%, transparent); }
 .claim-partial { background: color-mix(in srgb, var(--pol-warn) 16%, transparent); }
 .claim-unsupported { background: color-mix(in srgb, var(--pol-bad) 16%, transparent); text-decoration: underline wavy color-mix(in srgb, var(--pol-bad) 70%, transparent); }
+
+/* ---- Morph transitions (View Transitions API; see src/lib/morph.ts) --------------------------------
+   Names exist only while a page transition runs (html.vt-page) or the boot splash hands over (html.vt-boot),
+   so they never affect normal rendering. Elements sharing a name glide from their old box to the new one. */
+html.vt-page header { view-transition-name: site-header; }
+html.vt-page .vt-nav-pill { view-transition-name: nav-pill; }
+/* The label gets its own layer too, so it rides on top of the sliding pill instead of under it */
+html.vt-page .vt-nav-label { view-transition-name: nav-label; }
+html.vt-page .vt-named { view-transition-name: var(--vt-name); }
+
+::view-transition-group(*) { animation-duration: 0.5s; animation-timing-function: cubic-bezier(0.65, 0, 0.25, 1); }
+::view-transition-old(*), ::view-transition-new(*) { mix-blend-mode: normal; }
+/* Titles keep their aspect ratio while they move, instead of stretching between two text boxes */
+::view-transition-old(page-title), ::view-transition-new(page-title) { height: 100%; width: auto; object-fit: none; object-position: left center; }
+
+html.vt-page::view-transition-old(root) { animation: vt-page-out 0.26s ease both; }
+html.vt-page::view-transition-new(root) { animation: vt-page-in 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) 0.06s both; }
+@keyframes vt-page-out { to { opacity: 0; transform: translateY(-10px); } }
+@keyframes vt-page-in { from { opacity: 0; transform: translateY(16px); } }
+
+/* Boot splash -> header logo */
+::view-transition-group(polaris-emblem) { animation-duration: 0.95s; animation-timing-function: cubic-bezier(0.7, 0, 0.2, 1); }
+html.vt-boot::view-transition-old(root) { animation: vt-boot-out 0.8s ease both; }
+html.vt-boot::view-transition-new(root) { animation: vt-boot-in 0.8s ease 0.15s both; }
+@keyframes vt-boot-out { to { opacity: 0; transform: scale(1.04); } }
+@keyframes vt-boot-in { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}

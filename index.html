@@ -101,8 +101,25 @@
         function finish() {
           if (finished) return;
           finished = true;
-          el.classList.add('done');
           try { sessionStorage.setItem('polaris-booted', '1'); } catch (e) {}
+          // Morph: the splash emblem flies into the header logo (View Transitions API), the splash dissolves.
+          var logo = document.querySelector('[data-boot-logo]');
+          var img = el.querySelector('.boot-mark img');
+          if (document.startViewTransition && logo && img && !reduce) {
+            img.style.animation = 'none'; // hold the emblem steady for the snapshot
+            img.style.viewTransitionName = 'polaris-emblem';
+            document.documentElement.classList.add('vt-boot');
+            var t = document.startViewTransition(function () {
+              el.remove();
+              logo.style.viewTransitionName = 'polaris-emblem';
+            });
+            t.finished.finally(function () {
+              logo.style.viewTransitionName = '';
+              document.documentElement.classList.remove('vt-boot');
+            });
+            return;
+          }
+          el.classList.add('done');
           setTimeout(function () { el.remove(); }, 800);
         }
         // Data ready (or the time-out): finish once the intro has played for at least `min` ms.
