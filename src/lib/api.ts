@@ -461,10 +461,17 @@ async function uploadFile(path: string, file: File) {
 
 // When the server has a Vercel Blob store, the browser uploads straight to Blob (no 4.5 MB function limit)
 // and then registers the finished file; otherwise the bytes are posted to the API as before.
-let blobUploads: Promise<boolean> | null = null;
+let uploadConfig: Promise<{ blobUploads?: boolean; maxServerUploadBytes?: number }> | null = null;
 async function contributorUpload(file: File): Promise<Uploaded> {
-  blobUploads ??= request<{ blobUploads?: boolean }>('/auth/config').then((c) => Boolean(c.blobUploads)).catch(() => false);
-  if (!(await blobUploads)) return uploadFile('/me/uploads', file);
+  uploadConfig ??= request<{ blobUploads?: boolean; maxServerUploadBytes?: number }>('/auth/config').catch(() => ({}));
+  const cfg = await uploadConfig;
+  if (!cfg.blobUploads) {
+    // Through the server: serverless hosts cap the request body (4.5 MB on Vercel).
+    const max = cfg.maxServerUploadBytes;
+    if (max && file.size > max)
+      throw new ApiError(413, `This file is ${(file.size / 1048576).toFixed(1)} MB; this server accepts uploads up to ${(max / 1048576).toFixed(1)} MB. Compress it or share a smaller version.`);
+    return uploadFile('/me/uploads', file);
+  }
   const { upload } = await import('@vercel/blob/client');
   const safe = file.name.replace(/[^A-Za-z0-9._-]+/g, '-');
   const blob = await upload(`uploads/${safe}`, file, { access: 'public', handleUploadUrl: '/api/me/uploads/blob', multipart: file.size > 20 * 1024 * 1024 });
@@ -491,7 +498,7 @@ export const api = {
     register: (b: { name: string; email: string; password: string; institution?: string }) =>
       request<User>('/auth/register', { method: 'POST', body: JSON.stringify(b) }),
     logout: () => request<null>('/auth/logout', { method: 'POST' }),
-    config: () => request<{ demoAccounts: { username: string; password: string; role: Role }[]; blobUploads?: boolean }>('/auth/config'),
+    config: () => request<{ demoAccounts: { username: string; password: string; role: Role }[]; blobUploads?: boolean; uploadStorage?: 'blob' | 'disk'; maxServerUploadBytes?: number }>('/auth/config'),
   },
   me: {
     upload: (file: File) => contributorUpload(file),

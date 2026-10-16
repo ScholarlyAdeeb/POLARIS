@@ -84,3 +84,21 @@ test('keyword fallback coverage: loose matches are dropped, close ones kept', as
   assert.ok(termCoverage(['won', 'fifa', 'world', 'cup'], 'World Data Centre for glaciology') < KEYWORD_FALLBACK_COVERAGE);
   assert.equal(termCoverage([], 'anything'), 0);
 });
+
+test('Blob storage modes: store id (OIDC) or read-write token; direct browser uploads only with the token', async () => {
+  const { blobEnabled, blobDirectUploads } = await import('../server/uploads.ts');
+  const saved = { rw: process.env.BLOB_READ_WRITE_TOKEN, id: process.env.BLOB_STORE_ID };
+  try {
+    delete process.env.BLOB_READ_WRITE_TOKEN;
+    delete process.env.BLOB_STORE_ID;
+    assert.equal(blobEnabled(), false);
+    process.env.BLOB_STORE_ID = 'store_abc';
+    assert.equal(blobEnabled(), true);
+    assert.equal(blobDirectUploads(), false); // newer stores: uploads go through the server
+    process.env.BLOB_READ_WRITE_TOKEN = 'vercel_blob_rw_abc_xyz';
+    assert.equal(blobDirectUploads(), true);
+  } finally {
+    if (saved.rw === undefined) delete process.env.BLOB_READ_WRITE_TOKEN; else process.env.BLOB_READ_WRITE_TOKEN = saved.rw;
+    if (saved.id === undefined) delete process.env.BLOB_STORE_ID; else process.env.BLOB_STORE_ID = saved.id;
+  }
+});

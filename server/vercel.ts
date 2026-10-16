@@ -8,6 +8,10 @@ import { createApp } from './app.ts';
 let ready: ReturnType<typeof createApp> | null = null;
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  // Newer Blob stores authenticate with the deployment's OIDC token, which Vercel sends on every request.
+  // This bundle does not run inside Vercel's request context, so hand the token to the SDK explicitly.
+  const oidc = req.headers['x-vercel-oidc-token'];
+  if (typeof oidc === 'string' && oidc) process.env.VERCEL_OIDC_TOKEN = oidc;
   ready ??= createApp().catch((err) => {
     ready = null; // let the next request retry (e.g. database briefly unreachable)
     throw err;

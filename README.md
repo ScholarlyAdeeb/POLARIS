@@ -422,7 +422,7 @@ Model files (`data/models`), uploads, build output and `.env` are not in the rep
 | Area | Actual state |
 |---|---|
 | Real NCPOR data | 790 papers from NCPOR's expedition scientific reports, 80 Crossref articles and the PANGAEA datasets are real metadata (`EXTERNAL`) linking to the source; NCPOR's repository is "All Rights Reserved", so the full papers are not copied. A few seeded datasets, reports, photos and the video remain demo records labelled `SAMPLE` / `SYNTHETIC`. |
-| Uploads on Vercel | Need a Vercel Blob store (`BLOB_READ_WRITE_TOKEN`); it is not connected on the live portal yet, so files uploaded elsewhere do not show there. |
+| Uploads on Vercel | Files go to the connected Vercel Blob store. With `BLOB_STORE_ID` (newer stores, OIDC) they pass through the server, so the limit is 4.5 MB per file; add `BLOB_READ_WRITE_TOKEN` to let browsers upload larger files (up to 100 MB) straight to Blob. |
 | Ask POLARIS quality | Answers are only as good as the records. Locally the 1.5B model sometimes includes a loosely related record; the claim check marks such sentences "partly supported". Questions in Hindi or Tamil are not tuned. |
 | Free model usage | The hosted backend uses the Hugging Face free monthly allowance; beyond it, answers fall back to quoted sentences. |
 | Accounts | No email verification or password reset. |

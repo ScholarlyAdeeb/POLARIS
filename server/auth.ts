@@ -2,7 +2,7 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import crypto from 'crypto';
 import { NOW, type Db } from './pg.ts';
 import { HttpError, intOrNull, rateLimit, str, wrap } from './http.ts';
-import { blobEnabled } from './uploads.ts';
+import { blobDirectUploads, blobEnabled, SERVER_UPLOAD_LIMIT } from './uploads.ts';
 
 /**
  * Accounts and sessions.
@@ -204,7 +204,10 @@ export function createAuthRouter(db: Db) {
   r.get('/config', (_req, res) =>
     res.json({
       demoAccounts: demoAccountsEnabled() ? DEMO.map((d) => ({ username: d.username, password: d.password, role: d.role })) : [],
-      blobUploads: blobEnabled(),
+      // Browsers upload straight to Blob only with a read-write token; otherwise files go through the server.
+      blobUploads: blobDirectUploads(),
+      uploadStorage: blobEnabled() ? 'blob' : 'disk',
+      maxServerUploadBytes: SERVER_UPLOAD_LIMIT,
     })
   );
   return r;

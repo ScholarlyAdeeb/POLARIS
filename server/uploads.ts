@@ -25,10 +25,18 @@ const CONTENT_TYPES: Record<string, string> = {
 const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 
 /**
- * Where uploads live. With a Vercel Blob store connected (BLOB_READ_WRITE_TOKEN), files go to Blob and
- * browsers upload straight to it; otherwise they are written to UPLOAD_DIR and served from /uploads.
+ * Where uploads live. With a Vercel Blob store connected, files go to Blob; otherwise they are written to
+ * UPLOAD_DIR and served from /uploads. A connected store gives the project either BLOB_READ_WRITE_TOKEN
+ * (older stores) or BLOB_STORE_ID, authenticated through the deployment's OIDC token (newer stores).
+ * Browsers can upload straight to Blob (no 4.5 MB function limit) only with the read-write token.
  */
-export const blobEnabled = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+export const blobEnabled = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
+export const blobDirectUploads = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+/** Largest upload a serverless function accepts in its request body (Vercel: 4.5 MB). */
+export const SERVER_UPLOAD_LIMIT = process.env.VERCEL ? 4.5 * 1024 * 1024 : MAX_UPLOAD_BYTES_LOCAL();
+function MAX_UPLOAD_BYTES_LOCAL() {
+  return 100 * 1024 * 1024;
+}
 const isBlobUrl = (url: string) => /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\//i.test(url);
 
 /** Body parser for raw file uploads (the file bytes are the request body, the name is in X-Filename). */
@@ -58,7 +66,7 @@ export async function saveUpload(req: Request) {
 
 /** Token exchange for a direct browser → Blob upload (keeps large files off the 4.5 MB function body limit). */
 export async function blobUploadToken(req: Request) {
-  if (!blobEnabled()) throw new HttpError(404, 'Blob uploads are not configured');
+  if (!blobDirectUploads()) throw new HttpError(404, 'Direct Blob uploads need BLOB_READ_WRITE_TOKEN on this deployment');
   return handleUpload({
     body: req.body as HandleUploadBody,
     request: req,
