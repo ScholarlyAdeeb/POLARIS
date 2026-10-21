@@ -132,6 +132,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCommandPalette, pathname }
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="font-['Space_Grotesk'] text-lg md:text-xl tracking-tight text-[#0b1c30] font-bold leading-none">HIMAKSHA</span>
+                <span className="hidden md:inline font-['JetBrains_Mono'] text-[10px] tracking-wider text-[#5f6f73] leading-none" title="Name used during early development">
+                  codename: POLARIS
+                </span>
                 <span className="hidden sm:inline text-[11px] px-2 py-0.5 rounded-full bg-[#e5eeff] text-[#00677d] font-semibold">SIH 2026 prototype</span>
               </div>
               <span className="text-xs text-[#3d494d] truncate max-w-xs md:max-w-xl hidden sm:inline mt-0.5">{SUBTITLE[lang]}</span>
