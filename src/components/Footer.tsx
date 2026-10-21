@@ -35,7 +35,7 @@ export const Footer: React.FC = () => (
             <span className="font-['Space_Grotesk'] text-lg font-bold text-[#0b1c30]">HIMAKSHA</span>
           </div>
           <p className="text-sm text-slate-600 leading-relaxed">
-            One place to archive, search and share India’s polar science. A Smart India Hackathon 2026 prototype by Team Pehchaan. Codename POLARIS during early development.
+            One place to archive, search and share India’s polar science. A Smart India Hackathon 2026 prototype by Team Pehchaan.
           </p>
         </div>
 
