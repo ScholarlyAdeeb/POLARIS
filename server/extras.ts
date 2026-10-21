@@ -172,7 +172,7 @@ function shuffle<T>(a: T[], r: () => number): T[] {
   return x;
 }
 
-async function buildQuiz(db: Db, seed: number) {
+export async function buildQuiz(db: Db, seed: number) {
   const r = seeded(seed);
   const stations = listStations();
   const year = (s: string) => s.match(/(19|20)\d{2}/)?.[0] ?? null;

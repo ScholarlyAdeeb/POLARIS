@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { api, type Role, type Submission, type User } from '../lib/api';
+import { api, type AccessLevel, type AuditEntry, type Role, type Submission, type User } from '../lib/api';
 import { useAuth } from '../lib/auth';
-import { DataStatusBadge, ErrorNote } from './ui';
+import { AccessBadge, DataStatusBadge, ErrorNote } from './ui';
+import { AuditList } from './RecordExtras';
 import { Mini } from './SeriesChart';
 
 const ROLES: Role[] = ['contributor', 'reviewer', 'admin'];
@@ -79,6 +80,34 @@ export function SubmissionsPanel({ onOpenRecord }: { onOpenRecord?: (id: string)
                 </p>
               )}
               {s.reviewNote && <p className="text-xs">Previous note: {s.reviewNote}</p>}
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <AccessBadge item={s} />
+                <label className="flex items-center gap-1">
+                  File access
+                  <select
+                    className="sci-input text-xs py-1"
+                    value={s.meta.access?.level ?? 'open'}
+                    aria-label="File access"
+                    onChange={async (e) => {
+                      const level = e.target.value as AccessLevel;
+                      const until = level === 'embargoed' ? prompt('Embargo ends on (YYYY-MM-DD)', new Date(Date.now() + 365 * 864e5).toISOString().slice(0, 10)) : undefined;
+                      if (level === 'embargoed' && !until) return;
+                      setError(null);
+                      try {
+                        await api.admin.updateRecord(s.id, { access: { level, ...(until ? { until } : {}) } });
+                        await load();
+                      } catch (err: any) {
+                        setError(err.message);
+                      }
+                    }}
+                  >
+                    <option value="open">Open</option>
+                    <option value="restricted">Restricted</option>
+                    <option value="embargoed">Embargoed</option>
+                  </select>
+                </label>
+              </div>
+              <HindiEditor s={s} onSaved={load} onError={setError} />
               <div className="flex flex-wrap items-center gap-2 mt-1">
                 <input value={notes[s.id] ?? ''} onChange={(e) => setNotes({ ...notes, [s.id]: e.target.value })} className="sci-input text-xs flex-1 min-w-[12rem]" placeholder="Note to the contributor" aria-label="Review note" />
                 <select value={status[s.id] ?? s.dataStatus} onChange={(e) => setStatus({ ...status, [s.id]: e.target.value })} className="sci-input text-xs py-1" aria-label="Data status on approval">
@@ -103,6 +132,65 @@ export function SubmissionsPanel({ onOpenRecord }: { onOpenRecord?: (id: string)
           </li>
         ))}
       </ul>
+    </section>
+  );
+}
+
+/** Reviewer check of the machine Hindi translation: correct it and confirm, or leave it marked as machine output. */
+function HindiEditor({ s, onSaved, onError }: { s: Submission; onSaved: () => void; onError: (m: string | null) => void }) {
+  const hi = s.meta.hi;
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState(hi?.title ?? '');
+  const [summary, setSummary] = useState(hi?.summary ?? '');
+  if (!hi?.summary && s.reviewStatus !== 'APPROVED') return null;
+  return (
+    <div className="text-xs">
+      <button type="button" className="underline sci-accent" onClick={() => setOpen(!open)} aria-expanded={open}>
+        Hindi summary {hi?.summary ? (hi.reviewed ? '(checked)' : '(machine translation, unchecked)') : '(none yet)'}
+      </button>
+      {open && (
+        <div className="flex flex-col gap-1.5 mt-1.5" lang="hi">
+          <input className="sci-input text-xs" value={title} onChange={(e) => setTitle(e.target.value)} aria-label="Hindi title" placeholder="हिन्दी शीर्षक" />
+          <textarea className="sci-input text-xs" rows={3} value={summary} onChange={(e) => setSummary(e.target.value)} aria-label="Hindi summary" placeholder="हिन्दी सारांश" />
+          <button
+            className="sci-btn text-xs py-1 w-fit"
+            disabled={!summary.trim()}
+            onClick={async () => {
+              onError(null);
+              try {
+                await api.admin.updateRecord(s.id, { meta: { hi: { ...hi, title: title.trim(), summary: summary.trim(), reviewed: true, at: new Date().toISOString() } } });
+                setOpen(false);
+                onSaved();
+              } catch (err: any) {
+                onError(err.message);
+              }
+            }}
+          >
+            Save as checked
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Append-only trail of review decisions (who approved, rejected, published what, and when). */
+export function AuditPanel() {
+  const [rows, setRows] = useState<AuditEntry[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    api.admin.audit(60).then(setRows).catch((e) => setError(e.message));
+  }, []);
+  return (
+    <section className="sci-card p-4" data-testid="audit-panel">
+      <h2 className="font-semibold">Audit trail</h2>
+      <p className="text-xs sci-muted">Every submission, review decision, access change and publication, newest first. Entries are never edited or deleted.</p>
+      <ErrorNote error={error} />
+      {rows && (
+        <div className="max-h-80 overflow-y-auto">
+          <AuditList rows={rows} showTarget empty="No decisions recorded yet." />
+        </div>
+      )}
     </section>
   );
 }

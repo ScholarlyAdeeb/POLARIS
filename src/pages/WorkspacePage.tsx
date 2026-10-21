@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api, type ArchiveItem, type ArchiveType, type MappingSuggestion, type OutreachChannel, type OutreachPost } from '../lib/api';
+import { api, type AccessLevel, type ArchiveItem, type ArchiveType, type MappingSuggestion, type OutreachChannel, type OutreachLanguage, type OutreachPost } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { useT } from '../lib/i18n';
 import { usePolarisData } from '../context/PolarisDataContext';
-import { DataStatusBadge, ErrorNote, Page, PageHeader } from '../components/ui';
+import { AccessBadge, DataStatusBadge, ErrorNote, Page, PageHeader } from '../components/ui';
 
 const TYPES: ArchiveType[] = ['report', 'dataset', 'publication', 'photo', 'video', 'expedition', 'activity'];
-const CHANNELS: OutreachChannel[] = ['website', 'x', 'linkedin', 'instagram'];
-const CHANNEL_LABEL: Record<OutreachChannel, string> = { website: 'Website article', x: 'X / Twitter', linkedin: 'LinkedIn', instagram: 'Instagram' };
+const CHANNELS: OutreachChannel[] = ['website', 'press', 'x', 'linkedin', 'instagram', 'facebook'];
+const CHANNEL_LABEL: Record<OutreachChannel, string> = { website: 'Website article', press: 'Press release', x: 'X / Twitter', linkedin: 'LinkedIn', instagram: 'Instagram', facebook: 'Facebook' };
 const RELATION_LABEL: Record<string, string> = {
   documents: 'documents',
   collected_during: 'collected during',
@@ -31,7 +31,7 @@ function typeFromUpload(kind: string, name: string): ArchiveType {
   return /paper|article|journal/i.test(name) ? 'publication' : 'report';
 }
 
-const EMPTY = { type: 'report' as ArchiveType, title: '', summary: '', body: '', stationId: '', year: String(new Date().getFullYear()), tags: '', lat: '', lon: '', doi: '' };
+const EMPTY = { type: 'report' as ArchiveType, title: '', summary: '', body: '', stationId: '', year: String(new Date().getFullYear()), tags: '', lat: '', lon: '', doi: '', access: 'open' as AccessLevel, until: '', accessReason: '' };
 
 function ReviewPill({ status }: { status: string }) {
   const { t } = useT();
@@ -136,6 +136,7 @@ function ShareForm({ onCreated }: { onCreated: (r: ArchiveItem) => void }) {
         doi: form.doi || null,
         location,
         links: Object.entries(picked).map(([id, relation]) => ({ id, relation })),
+        access: form.access === 'open' ? null : { level: form.access, ...(form.access === 'embargoed' ? { until: form.until } : {}), ...(form.accessReason ? { reason: form.accessReason } : {}) },
       });
       setForm(EMPTY);
       setFile(null);
@@ -252,6 +253,20 @@ function ShareForm({ onCreated }: { onCreated: (r: ArchiveItem) => void }) {
             <input value={form.doi} onChange={set('doi')} className="sci-input sci-mono" placeholder="10.xxxx/xxxxx" />
           </label>
         )}
+        <fieldset className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-3" data-testid="access-field">
+          <legend className="text-xs sci-muted mb-1">Who can download the file? The catalogue entry is public once approved.</legend>
+          <select value={form.access} onChange={set('access')} className="sci-input" aria-label="File access">
+            <option value="open">Open: anyone</option>
+            <option value="restricted">Restricted: on request to NCPOR</option>
+            <option value="embargoed">Embargoed until a date</option>
+          </select>
+          {form.access === 'embargoed' && (
+            <input type="date" required value={form.until} onChange={set('until')} className="sci-input" aria-label="Embargo ends" min={new Date().toISOString().slice(0, 10)} />
+          )}
+          {form.access !== 'open' && (
+            <input value={form.accessReason} onChange={set('accessReason')} maxLength={300} className="sci-input md:col-span-1" placeholder="Why (e.g. unpublished, sensitive site)" aria-label="Reason" />
+          )}
+        </fieldset>
       </div>
 
       <section className="sci-well p-3 flex flex-col gap-2" data-testid="mapping-panel">
@@ -335,7 +350,7 @@ function PostEditor({ post, onSaved }: { post: OutreachPost; onSaved: () => void
           {published ? <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-sky-100 text-sky-800">Published</span> : <ReviewPill status={post.review_status} />}
         </span>
       </div>
-      <textarea value={text} onChange={(e) => setText(e.target.value)} rows={post.channel === 'website' ? 8 : 5} readOnly={published} className="sci-input text-xs leading-relaxed" aria-label="Post text" />
+      <textarea value={text} onChange={(e) => setText(e.target.value)} rows={post.channel === 'website' || post.channel === 'press' ? 8 : 5} readOnly={published} className="sci-input text-xs leading-relaxed" aria-label="Post text" />
       {c?.checked !== undefined && (
         <p className="text-[11px]">
           Fact check: <span style={{ color: 'var(--pol-ok)' }}>{c.supported} supported</span> · <span style={{ color: 'var(--pol-warn)' }}>{c.partial} partly</span> ·{' '}
@@ -394,6 +409,7 @@ function Submission({ r, onChanged, onPosts }: { r: ArchiveItem; onChanged: () =
   const { t } = useT();
   const [open, setOpen] = useState(false);
   const [channels, setChannels] = useState<OutreachChannel[]>(CHANNELS);
+  const [language, setLanguage] = useState<OutreachLanguage>('EN');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   return (
@@ -414,6 +430,7 @@ function Submission({ r, onChanged, onPosts }: { r: ArchiveItem; onChanged: () =
           <div className="flex flex-wrap gap-1.5 mt-1">
             <ReviewPill status={r.reviewStatus} />
             <DataStatusBadge status={r.dataStatus} />
+            <AccessBadge item={r} />
           </div>
         </div>
       </div>
@@ -455,6 +472,14 @@ function Submission({ r, onChanged, onPosts }: { r: ArchiveItem; onChanged: () =
               </label>
             ))}
           </div>
+          <div className="flex flex-wrap gap-3 text-xs" role="radiogroup" aria-label="Language">
+            {(['EN', 'HI'] as OutreachLanguage[]).map((l) => (
+              <label key={l} className="flex items-center gap-1.5">
+                <input type="radio" name={`lang-${r.id}`} checked={language === l} onChange={() => setLanguage(l)} />
+                {l === 'EN' ? 'English' : 'हिन्दी (from the Hindi summary)'}
+              </label>
+            ))}
+          </div>
           <button
             className="sci-btn text-xs w-fit"
             disabled={busy || !channels.length}
@@ -462,7 +487,7 @@ function Submission({ r, onChanged, onPosts }: { r: ArchiveItem; onChanged: () =
               setBusy(true);
               setError(null);
               try {
-                await api.me.generate(r.id, channels);
+                await api.me.generate(r.id, channels, language);
                 setOpen(false);
                 onPosts();
               } catch (e: any) {

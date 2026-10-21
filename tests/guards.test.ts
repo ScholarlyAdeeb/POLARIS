@@ -25,7 +25,6 @@ test('demo sandbox blocks account, proposal and destructive admin routes', async
     ['GET', '/proposals'],
     ['PATCH', '/proposals/NCPOR-PRP-1'],
     ['POST', '/archive'],
-    ['PATCH', '/archive/REC-1'],
     ['DELETE', '/archive/REC-1'],
     ['POST', '/uploads'],
   ]) {
@@ -38,6 +37,8 @@ test('demo sandbox lets review routes through and never limits real reviewers', 
   assert.equal(await run(demoAdmin, 'GET', '/submissions'), null);
   assert.equal(await run(demoAdmin, 'POST', '/archive/REC-1/review'), null);
   assert.equal(await run(demoAdmin, 'PATCH', '/outreach/4'), null);
+  // Passed through; api.ts limits it to access and Hindi text on demo-owned records.
+  assert.equal(await run(demoAdmin, 'PATCH', '/archive/REC-1'), null);
   assert.equal(await run(realAdmin, 'DELETE', '/archive/REC-1'), null);
   assert.equal(await run(realAdmin, 'GET', '/users'), null);
 });

@@ -4,7 +4,7 @@ import { api, type OutreachChannel, type OutreachPost, type SearchResult } from 
 import { AdminGate, DataStatusBadge, ErrorNote, Page, PageHeader } from '../components/ui';
 import { useAuth } from '../lib/auth';
 
-const CHANNELS: OutreachChannel[] = ['website', 'x', 'linkedin', 'instagram'];
+const CHANNELS: OutreachChannel[] = ['website', 'press', 'x', 'linkedin', 'instagram', 'facebook'];
 const REVIEW_LABEL: Record<string, string> = {
   PENDING_REVIEW: 'Waiting for review',
   APPROVED: 'Approved',

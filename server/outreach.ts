@@ -1,7 +1,10 @@
 import type { ArchiveItem } from './db.ts';
 
-export type Channel = 'website' | 'x' | 'linkedin' | 'instagram';
-export const CHANNELS: Channel[] = ['website', 'x', 'linkedin', 'instagram'];
+export type Channel = 'website' | 'press' | 'x' | 'linkedin' | 'instagram' | 'facebook';
+export const CHANNELS: Channel[] = ['website', 'press', 'x', 'linkedin', 'instagram', 'facebook'];
+
+export type Language = 'EN' | 'HI';
+export const LANGUAGES: Language[] = ['EN', 'HI'];
 
 export interface GeneratedContent {
   channel: Channel;
@@ -126,7 +129,61 @@ function facts(item: ArchiveItem): string[] {
   return out;
 }
 
-export function generateContent(item: ArchiveItem, link: string, channels: Channel[] = CHANNELS): GeneratedContent[] {
+/** Hindi labels for the Hindi drafts (built from the record's reviewed or machine-translated Hindi summary). */
+const TYPE_LABEL_HI: Record<string, string> = {
+  expedition: 'अभियान',
+  report: 'अभियान रिपोर्ट',
+  dataset: 'खुला डेटासेट',
+  publication: 'नया प्रकाशन',
+  photo: 'फ़ोटो संग्रह से',
+  video: 'देखें',
+  activity: 'अपडेट',
+};
+
+/** The record with its Hindi title and summary in place of the English ones (null when there is no Hindi summary yet). */
+export function inHindi(item: ArchiveItem): ArchiveItem | null {
+  const hi = item.meta?.hi;
+  if (!hi?.summary) return null;
+  return { ...item, title: hi.title || item.title, summary: hi.summary, body: '' };
+}
+
+function generateHindi(item: ArchiveItem, link: string, channels: Channel[]): GeneratedContent[] {
+  const label = TYPE_LABEL_HI[item.type] ?? 'अपडेट';
+  const emoji = TYPE_EMOJI[item.type] ?? '❄️';
+  const tags = hashtags(item).join(' ');
+  const credit = item.meta.contributor?.name ? `HIMAKSHA पर ${item.meta.contributor.name} द्वारा साझा किया गया।` : 'राष्ट्रीय ध्रुवीय एवं समुद्री अनुसंधान केंद्र (NCPOR) से।';
+  const note = item.meta.hi?.reviewed ? '' : '(मशीन अनुवाद; मूल अंग्रेज़ी रिकॉर्ड देखें।)';
+  const lines = (l: string[]) => l.filter((x, i, a) => !(x === '' && a[i - 1] === '')).join('\n').trim();
+  return channels.map((channel) => {
+    let text: string;
+    if (channel === 'website' || channel === 'press')
+      text = lines([`# ${item.title}`, '', `*${label}${item.year ? ` · ${item.year}` : ''}*`, '', item.summary, '', credit, '', `[HIMAKSHA पर पूरा रिकॉर्ड देखें](${link})`, '', note]);
+    else if (channel === 'x') {
+      const room = X_LIMIT - X_URL_LENGTH - 4 - label.length - item.title.length - 8;
+      text = [`${emoji} ${label}: ${item.title}`, room > 40 ? sentence(item.summary, room) : '', link].filter(Boolean).join('\n\n');
+    } else
+      text = lines([
+        `${emoji} ${label}: ${item.title}`,
+        '',
+        sentence(item.summary, channel === 'instagram' ? 300 : 900),
+        '',
+        credit,
+        channel === 'instagram' ? 'लिंक बायो में → HIMAKSHA' : `पूरा रिकॉर्ड: ${link}`,
+        note,
+        '',
+        tags,
+      ]);
+    const counted = channel === 'x' ? text.length - link.length + X_URL_LENGTH : text.length;
+    return { channel, title: item.title, text, characters: counted, ...(channel === 'x' ? { limit: X_LIMIT } : {}) };
+  });
+}
+
+export function generateContent(item: ArchiveItem, link: string, channels: Channel[] = CHANNELS, language: Language = 'EN'): GeneratedContent[] {
+  if (language === 'HI') {
+    const hi = inHindi(item);
+    if (!hi) return [];
+    return generateHindi(hi, link, channels);
+  }
   const label = TYPE_LABEL[item.type] ?? 'Update';
   const emoji = TYPE_EMOJI[item.type] ?? '❄️';
   const ctx = context(item);
@@ -154,6 +211,53 @@ export function generateContent(item: ArchiveItem, link: string, channels: Chann
         .join('\n')
         .trim();
       results.push({ channel, title: item.title, slug: slugify(item.title), metaDescription, text: body, characters: body.length });
+    }
+
+    if (channel === 'press') {
+      const place = item.stationId && STATION_NAMES[item.stationId] ? `${STATION_NAMES[item.stationId]} station` : 'Goa';
+      const dateline = `${place.toUpperCase()}, ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+      const body = [
+        'PRESS RELEASE · FOR IMMEDIATE RELEASE',
+        '',
+        `# ${item.title}`,
+        '',
+        `**${dateline}**: ${item.summary}`,
+        '',
+        item.body ? sentence(item.body, 900) + '\n' : '',
+        facts(item).length ? '## Key facts\n\n' + facts(item).map((f) => `- ${f}`).join('\n') + '\n' : '',
+        '## About NCPOR',
+        '',
+        "The National Centre for Polar and Ocean Research (NCPOR), Goa, an autonomous institute of the Ministry of Earth Sciences, runs India's research stations in Antarctica, the Arctic and the Himalaya.",
+        '',
+        `Full record, data and citations: ${link}`,
+        '',
+        sampleNote,
+        '',
+        '###',
+      ]
+        .filter((l, i, a) => !(l === '' && a[i - 1] === ''))
+        .join('\n')
+        .trim();
+      results.push({ channel, title: item.title, text: body, characters: body.length });
+    }
+
+    if (channel === 'facebook') {
+      const text = [
+        `${emoji} ${label}: ${item.title}`,
+        '',
+        sentence(item.summary, 900),
+        ctx ? `\n📍 ${ctx}` : '',
+        item.meta.contributor?.name ? `Shared on HIMAKSHA by ${item.meta.contributor.name}${item.meta.contributor.institution ? `, ${item.meta.contributor.institution}` : ''}.` : '',
+        '',
+        `Read more and download the data: ${link}`,
+        sampleNote ? `\n${sampleNote}` : '',
+        '',
+        tags.slice(0, 5).join(' '),
+      ]
+        .join('\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+      results.push({ channel, text, characters: text.length, limit: 63206 });
     }
 
     if (channel === 'x') {

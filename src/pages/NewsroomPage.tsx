@@ -5,7 +5,7 @@ import { useT } from '../lib/i18n';
 import { DataStatusBadge, ErrorNote, Page, PageHeader } from '../components/ui';
 import { VerifyBadge } from '../components/VerifyBadge';
 
-const CHANNEL_LABEL: Record<OutreachChannel, string> = { website: 'Website', x: 'X', linkedin: 'LinkedIn', instagram: 'Instagram' };
+const CHANNEL_LABEL: Record<OutreachChannel, string> = { website: 'Website', press: 'Press release', x: 'X', linkedin: 'LinkedIn', instagram: 'Instagram', facebook: 'Facebook' };
 
 /** Minimal markdown for website articles: headings, emphasis, bullet lists, links. Text is escaped by React. */
 function Article({ text }: { text: string }) {
@@ -59,7 +59,7 @@ function PostCard({ p }: { p: PublishedPost }) {
   const shareX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(p.content.slice(0, 280))}`;
   const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`${location.origin}/?record=${p.item_id}`)}`;
   return (
-    <article className={`sci-card overflow-hidden flex flex-col ${p.channel === 'website' ? 'md:col-span-2' : ''}`} data-testid="news-post">
+    <article className={`sci-card overflow-hidden flex flex-col ${p.channel === 'website' || p.channel === 'press' ? 'md:col-span-2' : ''}`} data-testid="news-post">
       {p.item_thumbnail && <img src={p.item_thumbnail} alt="" className="w-full h-44 object-cover" loading="lazy" />}
       <div className="p-4 flex flex-col gap-3 flex-1">
         <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -67,7 +67,7 @@ function PostCard({ p }: { p: PublishedPost }) {
           <DataStatusBadge status={p.data_status} />
           <span className="sci-muted ml-auto">{new Date(p.published_at ?? p.updated_at).toLocaleDateString()}</span>
         </div>
-        {p.channel === 'website' ? <Article text={p.content} /> : <p className="text-sm whitespace-pre-line leading-relaxed">{p.content}</p>}
+        {p.channel === 'website' || p.channel === 'press' ? <Article text={p.content} /> : <p className="text-sm whitespace-pre-line leading-relaxed">{p.content}</p>}
         {p.verification_code && (
           <div className="flex">
             <VerifyBadge code={p.verification_code} />
@@ -133,7 +133,7 @@ export function NewsroomPage() {
     <Page>
       <PageHeader title={t('newsroom.title')} text={t('newsroom.text')}>
         <div className="flex rounded-lg sci-well p-1 text-xs" role="group" aria-label="Channel">
-          {['', 'website', 'x', 'linkedin', 'instagram'].map((c) => (
+          {['', 'website', 'press', 'x', 'linkedin', 'instagram', 'facebook'].map((c) => (
             <button key={c} onClick={() => setChannel(c)} aria-pressed={channel === c} className={`px-2.5 py-1 rounded ${channel === c ? 'bg-white font-semibold' : 'sci-muted'}`}>
               {c ? CHANNEL_LABEL[c as OutreachChannel] : t('common.all')}
             </button>

@@ -175,6 +175,30 @@ CREATE TABLE IF NOT EXISTS usage_counts (
   PRIMARY KEY (day, kind, key)
 );
 
+-- Append-only trail of review decisions (server/audit.ts).
+CREATE TABLE IF NOT EXISTS audit_log (
+  id BIGSERIAL PRIMARY KEY,
+  at TEXT NOT NULL DEFAULT ${NOW},
+  actor_id INTEGER,
+  actor TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'public',
+  action TEXT NOT NULL,
+  target_type TEXT NOT NULL,
+  target_id TEXT NOT NULL,
+  detail TEXT NOT NULL DEFAULT '{}'
+);
+CREATE INDEX IF NOT EXISTS idx_audit_target ON audit_log(target_type, target_id);
+
+-- Learning certificates, verifiable on /verify (server/certificates.ts).
+CREATE TABLE IF NOT EXISTS certificates (
+  code TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  score INTEGER NOT NULL,
+  total INTEGER NOT NULL,
+  seed INTEGER NOT NULL,
+  issued_at TEXT NOT NULL DEFAULT ${NOW}
+);
+
 CREATE TABLE IF NOT EXISTS schema_migrations (
   version INTEGER PRIMARY KEY,
   name TEXT NOT NULL,

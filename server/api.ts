@@ -12,8 +12,13 @@ import { facets, filterSql, parseQuery, search, tsQuery, type SearchFilters } fr
 import { HttpError, intOrNull, publicBase, rateLimit, sendDownload, str, tag, wrap } from './http.ts';
 import { attachUser, createAuthRouter, createUsersRouter, isReviewer, requireRole, seedDemoAccounts } from './auth.ts';
 import { createVerifyRouter } from './verify.ts';
-import { assertDemoMayAct, assertNotOwnWork, demoSandbox, demoScopeSql } from './guards.ts';
-import { checkAgainst, createContributorRouter, createDraft, createPublicContentRouter, postRow } from './contrib.ts';
+import { audit, createAuditRouter } from './audit.ts';
+import { assertMayDownload, readAccess, redact } from './access.ts';
+import { createTraceRouter } from './trace.ts';
+import { createCertificateRouter } from './certificates.ts';
+import { translateLater } from './translate.ts';
+import { assertDemoMayAct, assertNotOwnWork, demoSandbox, demoScopeSql, isDemoUser } from './guards.ts';
+import { checkAgainst, createContributorRouter, createDraft, createPublicContentRouter, lang, postRow } from './contrib.ts';
 import { countUsage, createExtrasRouter } from './extras.ts';
 import { rawBody, saveUpload } from './uploads.ts';
 import { climateCsv, fixedStation, liveReadings, recentHourlyCsv, withLive } from './realdata.ts';
@@ -147,6 +152,9 @@ export async function createApiRouter() {
   api.use('/me', createContributorRouter(db));
   api.use(createPublicContentRouter(db));
   api.use(createVerifyRouter(db)); // public: is this post a genuine published HIMAKSHA post?
+  api.use(createAuditRouter(db));
+  api.use(createTraceRouter(db));
+  api.use(createCertificateRouter(db));
   // Public: the latest Ask HIMAKSHA evaluation (scripts/eval-ask.ts writes it; /accuracy shows it).
   api.get(
     '/accuracy',
@@ -311,7 +319,7 @@ export async function createApiRouter() {
       const whereSql = `WHERE ${where.join(' AND ')}`;
       const { total } = (await db.get(`SELECT COUNT(*) AS total FROM archive_items a ${whereSql}`, ...params))!;
       const rows = await db.all(`SELECT a.* FROM archive_items a ${whereSql} ORDER BY ${sort} LIMIT ? OFFSET ?`, ...params, limit, offset);
-      res.json({ items: rows.map(rowToItem), total, limit, offset });
+      res.json({ items: rows.map((r) => redact(rowToItem(r), req.user)), total, limit, offset });
     })
   );
 
@@ -320,7 +328,7 @@ export async function createApiRouter() {
     wrap(async (req, res) => {
       const item = await visibleItem(req, req.params.id);
       if (!item) throw new HttpError(404, 'Record not found');
-      res.json({ ...item, links: await linksFor(db, item.id) });
+      res.json({ ...redact(item, req.user), links: await linksFor(db, item.id) });
     })
   );
 
@@ -329,7 +337,7 @@ export async function createApiRouter() {
     wrap(async (req, res) => {
       const item = await visibleItem(req, req.params.id);
       if (!item) throw new HttpError(404, 'Record not found');
-      sendDownload(res, `${item.id}.metadata.json`, 'application/json', JSON.stringify(metadataRecord(item, await linksFor(db, item.id)), null, 2));
+      sendDownload(res, `${item.id}.metadata.json`, 'application/json', JSON.stringify(metadataRecord(redact(item, req.user), await linksFor(db, item.id)), null, 2));
     })
   );
 
@@ -348,7 +356,7 @@ export async function createApiRouter() {
       const item = await findDataset(db, req.params.ref);
       if (!item) throw new HttpError(404, 'Dataset not found');
       // Only HIMAKSHA sample records get a generated CF header; real datasets are described by their own metadata.
-      res.json({ ...item, header: item.meta.sample ? datasetHeader(item) : '', links: await linksFor(db, item.id) });
+      res.json({ ...redact(item, req.user), header: item.meta.sample ? datasetHeader(item) : '', links: await linksFor(db, item.id) });
     })
   );
 
@@ -357,6 +365,7 @@ export async function createApiRouter() {
     wrap(async (req, res) => {
       const item = await findDataset(db, req.params.ref);
       if (!item) throw new HttpError(404, 'Dataset not found');
+      assertMayDownload(item, req.user);
       await db.run('UPDATE archive_items SET downloads = downloads + 1 WHERE id = ?', item.id);
       countUsage(db, 'download', item.id);
       // Real datasets: the contributor's uploaded file, or the publisher's landing page. Never generated values.
@@ -391,6 +400,7 @@ export async function createApiRouter() {
       );
       res.json({
         ...result,
+        results: result.results.map((r) => redact(r, req.user)),
         stations: stations.map((s) => ({ id: s.id, name: s.name, domain: s.domain, locationName: s.locationName })),
       });
     })
@@ -486,7 +496,7 @@ export async function createApiRouter() {
       const requested: Channel[] = Array.isArray(req.body?.channels) && req.body.channels.length ? req.body.channels : CHANNELS;
       for (const c of requested) if (!CHANNELS.includes(c)) throw new HttpError(400, `Unknown channel: ${c}`);
       const link = `${publicBase(req)}/?record=${encodeURIComponent(item.id)}`;
-      res.json({ itemId: item.id, link, content: generateContent(item, link, requested) });
+      res.json({ itemId: item.id, link, content: generateContent(item, link, requested, lang(req.body?.language)) });
     })
   );
 
@@ -541,6 +551,7 @@ export async function createApiRouter() {
           }
         }
       });
+      await audit(db, req, 'create', 'record', id, { title });
       res.status(201).json(await getItem(id));
     })
   );
@@ -551,6 +562,13 @@ export async function createApiRouter() {
       const item = await getItem(req.params.id);
       if (!item) throw new HttpError(404, 'Record not found');
       const b = req.body ?? {};
+      if (isDemoUser(req.user)) {
+        // The shared demo reviewer may only set file access or check the Hindi text of demo-owned records.
+        await assertDemoMayAct(db, req, [item.ownerId]);
+        const keys = Object.keys(b);
+        const ok = keys.every((k) => k === 'access' || (k === 'meta' && b.meta && Object.keys(b.meta).every((m) => m === 'hi')));
+        if (!keys.length || !ok) throw new HttpError(403, 'The demo reviewer can only change file access or the Hindi text of demo records.');
+      }
       const cols: Record<string, [string, (v: unknown) => unknown]> = {
         title: ['title', (v) => str(v, 'title', { required: true, max: 300 })],
         summary: ['summary', (v) => str(v, 'summary', { max: 5000 })],
@@ -592,6 +610,7 @@ export async function createApiRouter() {
             return v.map(tag).filter(Boolean).join(', ');
           },
         ],
+        access: ['meta', (v) => JSON.stringify({ ...item.meta, access: readAccess(v) })],
         meta: [
           'meta',
           (v) => {
@@ -610,7 +629,9 @@ export async function createApiRouter() {
       }
       if (!sets.length) throw new HttpError(400, 'Nothing to update');
       sets.push(`updated_at = ${NOW}`);
+      if ('access' in b && 'meta' in b) throw new HttpError(400, 'Send access and meta in separate requests');
       await db.run(`UPDATE archive_items SET ${sets.join(', ')} WHERE id = ?`, ...params, item.id);
+      await audit(db, req, 'access' in b ? 'access_change' : 'edit', 'record', item.id, { fields: Object.keys(b).filter((k) => k in cols), ...('access' in b ? { access: b.access } : {}) });
       res.json(await getItem(item.id));
     })
   );
@@ -620,6 +641,7 @@ export async function createApiRouter() {
     wrap(async (req, res) => {
       const { changes } = await db.run('DELETE FROM archive_items WHERE id = ?', req.params.id);
       if (!changes) throw new HttpError(404, 'Record not found');
+      await audit(db, req, 'delete', 'record', req.params.id);
       res.status(204).end();
     })
   );
@@ -701,8 +723,10 @@ export async function createApiRouter() {
         JSON.stringify(provenance),
         item.id
       );
+      await audit(db, req, action, 'record', item.id, { reviewer, note: note || null, dataStatus });
       touchIndex();
       if (!process.env.VERCEL) syncIndex(db).catch(() => undefined); // approved work becomes answerable right away
+      if (next === 'APPROVED') translateLater(db, item.id); // Hindi title and summary (local model only)
       res.json(await getItem(item.id));
     })
   );
@@ -717,7 +741,9 @@ export async function createApiRouter() {
       const channel = str(req.body?.channel, 'channel', { required: true }) as Channel;
       if (!CHANNELS.includes(channel)) throw new HttpError(400, `channel must be one of: ${CHANNELS.join(', ')}`);
       const by = req.user && req.user.id > 0 ? req.user.id : null;
-      res.status(201).json(await createDraft(db, item, channel, publicBase(req), by));
+      const draft = await createDraft(db, item, channel, publicBase(req), by, lang(req.body?.language));
+      await audit(db, req, 'draft', 'post', draft!.id, { itemId: item.id, channel, language: draft!.language });
+      res.status(201).json(draft);
     })
   );
 
@@ -730,14 +756,17 @@ export async function createApiRouter() {
       const channel = str(req.body?.channel, 'channel', { required: true }) as Channel;
       if (!CHANNELS.includes(channel)) throw new HttpError(400, `channel must be one of: ${CHANNELS.join(', ')}`);
       const content = str(req.body?.content, 'content', { required: true, max: 20000 });
+      const language = lang(req.body?.language);
       const row = await db.get(
-        `INSERT INTO outreach_posts (item_id, channel, content, data_status, provider, claim_check, created_by) VALUES (?, ?, ?, 'TEMPLATE', 'template', ?, ?) RETURNING id`,
+        `INSERT INTO outreach_posts (item_id, channel, language, content, data_status, provider, claim_check, created_by) VALUES (?, ?, ?, ?, 'TEMPLATE', 'template', ?, ?) RETURNING id`,
         itemId,
         channel,
+        language,
         content,
-        JSON.stringify((await checkAgainst(itemId, content)) ?? {}),
+        JSON.stringify((await checkAgainst(itemId, content, language)) ?? {}),
         req.user && req.user.id > 0 ? req.user.id : null
       );
+      await audit(db, req, 'draft', 'post', row.id, { itemId, channel, handWritten: true });
       res.status(201).json(await postRow(db, row.id));
     })
   );
@@ -803,7 +832,7 @@ export async function createApiRouter() {
       if (action === 'approve') assertNotOwnWork(req.user, [post.created_by], 'a post');
       if (action === 'edit') {
         const content = str(b.content, 'content', { required: true, max: 20000 });
-        await set({ content, claim_check: JSON.stringify((await checkAgainst(post.item_id, content)) ?? {}), review_status: 'PENDING_REVIEW', status: 'DRAFT' });
+        await set({ content, claim_check: JSON.stringify((await checkAgainst(post.item_id, content, post.language)) ?? {}), review_status: 'PENDING_REVIEW', status: 'DRAFT' });
       } else if (action === 'approve') {
         if (!reviewer) throw new HttpError(400, 'reviewer is required to approve');
         if ((post.claim_check?.unsupported ?? 0) > 0 && !note)
@@ -828,6 +857,8 @@ export async function createApiRouter() {
         if (status === 'APPROVED' && post.review_status !== 'APPROVED') throw new HttpError(409, 'Use action "approve" with a reviewer name');
         await set({ status });
       } else throw new HttpError(400, 'action must be one of: edit, approve, request_changes, reject, publish');
+      const done = action === 'status' ? (b.status === 'PUBLISHED' ? 'publish' : `status:${b.status}`) : action;
+      await audit(db, req, done, 'post', id!, { reviewer: reviewer || null, note: note || null });
       res.json(await postRow(db, id));
     })
   );

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, type ArchiveItem, type RagStatus } from '../lib/api';
 import { AdminGate, DataStatusBadge, ErrorNote, Page, PageHeader } from '../components/ui';
-import { AnalyticsPanel, SubmissionsPanel, UsersPanel } from '../components/AdminPanels';
+import { AnalyticsPanel, AuditPanel, SubmissionsPanel, UsersPanel } from '../components/AdminPanels';
 import { useAuth } from '../lib/auth';
 
 const DATA_STATUSES = ['OFFICIAL', 'VERIFIED', 'EXTERNAL', 'SAMPLE', 'SYNTHETIC', 'UNVERIFIED'];
@@ -163,6 +163,7 @@ function Console({ logout, onOpenRecord }: { logout: () => void; onOpenRecord?: 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
         <AnalyticsPanel />
         {(!user || user.role === 'admin') && !demo && <UsersPanel />}
+        <AuditPanel />
       </div>
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">

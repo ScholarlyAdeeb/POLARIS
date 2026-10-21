@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { api, download, downloadUrls, type DatasetDetail } from '../../lib/api';
 import { OutreachPanel } from './OutreachPanel';
-import { DataStatusBadge } from '../ui';
+import { AccessBadge, DataStatusBadge } from '../ui';
+import { AccessNotice, HindiSummary, HistoryPanel, LinkedRecords, TracePanel } from '../RecordExtras';
 import { SeriesChart } from '../SeriesChart';
 import { CitePanel } from '../CitePanel';
 
@@ -88,10 +89,13 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
 
           {dataset && (
             <>
+              <AccessNotice item={dataset} />
               {dataset.summary && <p className="text-sm text-slate-700 leading-relaxed">{dataset.summary}</p>}
+              <HindiSummary hi={dataset.meta.hi} />
 
               <div className="flex flex-wrap items-center gap-2">
                 <DataStatusBadge status={dataset.dataStatus} />
+                <AccessBadge item={dataset} />
                 {dataset.provenance?.source && <span className="text-xs text-slate-500">Source: {dataset.provenance.source}</span>}
               </div>
               {dataset.meta.sample && (
@@ -128,24 +132,11 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
                 </div>
               )}
 
-              {dataset.links.length > 0 && (
-                <div>
-                  <h4 className="font-['Space_Grotesk'] font-bold text-xs uppercase tracking-wider text-slate-500 mb-2">Linked Records</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {dataset.links.map((l) => (
-                      <button
-                        key={`${l.id}-${l.relation}`}
-                        onClick={() => onOpenRecord?.(l.id)}
-                        className="px-3 py-1.5 rounded-lg bg-[#eff4ff] font-['JetBrains_Mono'] text-[11px] text-[#00677d] hover:underline text-left"
-                      >
-                        {l.type}: {l.title}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <LinkedRecords item={dataset} links={dataset.links} onOpenRecord={(id) => onOpenRecord?.(id)} />
 
               <CitePanel recordId={dataset.id} />
+              <TracePanel recordId={dataset.id} onOpenRecord={(id) => onOpenRecord?.(id)} />
+              <HistoryPanel recordId={dataset.id} />
 
               <OutreachPanel itemId={dataset.id} />
             </>
@@ -169,7 +160,8 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
                 else download(downloadUrls.dataset(dataset.id));
                 setDataset({ ...dataset, downloads: dataset.downloads + 1 });
               }}
-              disabled={!dataset || (external && !dataset.url && !dataset.meta.climateStation)}
+              disabled={!dataset || !!dataset.access?.held || (external && !dataset.url && !dataset.meta.climateStation)}
+              title={dataset?.access?.held ? 'The file is not public; see the notice above' : undefined}
               className="px-4 py-2 rounded-xl bg-[#00b4d8] hover:bg-[#0077b6] disabled:opacity-50 text-white font-['JetBrains_Mono'] text-xs font-bold flex items-center gap-1.5 shadow-md"
             >
               <span className="material-symbols-outlined text-[16px]">{opensPublisher ? 'open_in_new' : 'download'}</span>

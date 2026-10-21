@@ -17,7 +17,8 @@
     "import:ncpor": "tsx scripts/import-ncpor-dspace.ts",
     "android:sync": "node scripts/android-config.mjs && cap sync android",
     "android:apk": "npm run android:sync && cd android && gradlew assembleDebug",
-    "rag:models": "tsx scripts/rag-models.ts"
+    "rag:models": "tsx scripts/rag-models.ts",
+    "translate": "tsx scripts/translate-hi.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",

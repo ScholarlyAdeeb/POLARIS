@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { api, download, downloadUrls, type ArchiveItem, type LinkedRecord } from '../../lib/api';
 import { Link } from 'react-router-dom';
 import { OutreachPanel } from './OutreachPanel';
-import { DataStatusBadge } from '../ui';
+import { AccessBadge, DataStatusBadge } from '../ui';
+import { AccessNotice, HindiSummary, HistoryPanel, LinkedRecords, TracePanel } from '../RecordExtras';
 import { SeriesChart } from '../SeriesChart';
 import { CitePanel } from '../CitePanel';
 
@@ -102,6 +103,7 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
 
               <div className="flex flex-wrap items-center gap-2 text-xs">
                 <DataStatusBadge status={record.dataStatus} />
+                <AccessBadge item={record} />
                 {record.meta.contributor?.name && record.ownerId ? (
                   <span className="sci-muted">
                     Shared by{' '}
@@ -115,7 +117,9 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
                 )}
               </div>
 
+              <AccessNotice item={record} />
               <p className="text-sm text-slate-700 leading-relaxed">{record.summary}</p>
+              <HindiSummary hi={record.meta.hi} />
               {record.body && <p className="text-sm text-slate-600 leading-relaxed">{record.body}</p>}
 
               {Array.isArray(record.meta.highlights) && (
@@ -136,22 +140,7 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
                 </div>
               )}
 
-              {record.links.length > 0 && (
-                <div>
-                  <h4 className="font-['Space_Grotesk'] font-bold text-xs uppercase tracking-wider text-slate-500 mb-2">Linked Records</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {record.links.map((l) => (
-                      <button
-                        key={`${l.id}-${l.relation}`}
-                        onClick={() => onOpenRecord(l.id)}
-                        className="px-3 py-1.5 rounded-lg bg-[#eff4ff] font-['JetBrains_Mono'] text-[11px] text-[#00677d] hover:underline text-left"
-                      >
-                        {l.type}: {l.title}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <LinkedRecords item={record} links={record.links} onOpenRecord={onOpenRecord} />
 
               {record.url && !isVideoFile && !image && (
                 <a href={record.url} target="_blank" rel="noopener noreferrer" className="sci-btn-ghost text-xs w-fit">
@@ -162,6 +151,8 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
 
               <SeriesChart recordId={record.id} />
               <CitePanel recordId={record.id} />
+              <TracePanel recordId={record.id} onOpenRecord={onOpenRecord} />
+              <HistoryPanel recordId={record.id} />
 
               <OutreachPanel key={record.id} itemId={record.id} />
             </>

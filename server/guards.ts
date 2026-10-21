@@ -31,7 +31,7 @@ const DEMO_BLOCKED: [string, RegExp][] = [
   ['*', /^\/users(\/|$)/],
   ['*', /^\/proposals(\/|$)/],
   ['POST', /^\/archive\/?$/],
-  ['PATCH', /^\/archive\/[^/]+\/?$/],
+  // PATCH /archive/:id is allowed for demo-owned records, limited to access and the Hindi text (see api.ts).
   ['DELETE', /^\/archive\/[^/]+\/?$/],
   ['POST', /^\/uploads\/?$/],
 ];

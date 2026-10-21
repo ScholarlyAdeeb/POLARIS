@@ -24,6 +24,58 @@ export interface ArchiveItem {
   reviewStatus: string;
   reviewNote?: string | null;
   ownerId?: number | null;
+  /** Who may download the file (server/access.ts); held files come without url. */
+  access?: RecordAccess;
+}
+
+export type AccessLevel = 'open' | 'restricted' | 'embargoed';
+export interface RecordAccess {
+  level: AccessLevel;
+  until: string | null;
+  reason: string | null;
+  held: boolean;
+}
+
+/** meta.hi: Hindi title and summary (machine translation until a reviewer confirms it). */
+export interface HindiText {
+  title?: string;
+  summary?: string;
+  by?: string;
+  at?: string;
+  reviewed?: boolean;
+}
+
+export interface AuditEntry {
+  id: number;
+  at: string;
+  actor: string;
+  role: string;
+  action: string;
+  target_type: 'record' | 'post' | 'certificate';
+  target_id: string;
+  detail: Record<string, any>;
+}
+
+export interface TraceStep {
+  depth: number;
+  from: { id: string; type: ArchiveType; title: string; year: number | null };
+  to: { id: string; type: ArchiveType; title: string; year: number | null };
+  relation: string;
+  reasons: string[];
+}
+
+export interface Trace {
+  root: { id: string; type: ArchiveType; title: string; year: number | null };
+  steps: TraceStep[];
+  stations: { id: string; name: string; region: string; coordinates: string; instruments: { id: string; title: string; dataset: string | null }[] }[];
+}
+
+export interface Certificate {
+  code: string;
+  name: string;
+  score: number;
+  total: number;
+  issued_at: string;
 }
 
 export interface LinkedRecord {
@@ -72,7 +124,8 @@ export interface BootstrapData {
   valueGraph: { step: string; phase: string; title: string; desc: string; tag: string; color: string }[];
 }
 
-export type OutreachChannel = 'website' | 'x' | 'linkedin' | 'instagram';
+export type OutreachChannel = 'website' | 'press' | 'x' | 'linkedin' | 'instagram' | 'facebook';
+export type OutreachLanguage = 'EN' | 'HI';
 
 export interface OutreachContent {
   channel: OutreachChannel;
@@ -252,6 +305,7 @@ export interface OutreachPost {
   author_institution?: string | null;
   published_at?: string | null;
   channel: OutreachChannel;
+  language?: OutreachLanguage;
   content: string;
   status: string;
   data_status: string;
@@ -295,6 +349,7 @@ export interface RecordInput {
   doi?: string | null;
   location?: { lat: number; lon: number } | null;
   links?: { id: string; relation: string }[];
+  access?: { level: AccessLevel; until?: string; reason?: string } | null;
 }
 
 export interface PublishedPost {
@@ -508,13 +563,18 @@ export const api = {
     create: (b: RecordInput) => request<ArchiveItem>('/me/records', { method: 'POST', body: JSON.stringify(b) }),
     update: (id: string, b: Partial<RecordInput>) => request<ArchiveItem>(`/me/records/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(b) }),
     remove: (id: string) => request<null>(`/me/records/${encodeURIComponent(id)}`, { method: 'DELETE' }),
-    generate: (id: string, channels: OutreachChannel[]) =>
-      request<OutreachPost[]>(`/me/records/${encodeURIComponent(id)}/content`, { method: 'POST', body: JSON.stringify({ channels }) }),
+    generate: (id: string, channels: OutreachChannel[], language: OutreachLanguage = 'EN') =>
+      request<OutreachPost[]>(`/me/records/${encodeURIComponent(id)}/content`, { method: 'POST', body: JSON.stringify({ channels, language }) }),
     content: () => request<OutreachPost[]>('/me/content'),
     editContent: (id: number, content: string) => request<OutreachPost>(`/me/content/${id}`, { method: 'PATCH', body: JSON.stringify({ content }) }),
   },
   published: (params: { channel?: string; user?: number } = {}) => request<PublishedPost[]>(`/content/published?${qs(params)}`),
   verify: (code: string, text?: string) => request<VerifyResult>(`/verify/${encodeURIComponent(code)}?${qs({ text: text || undefined })}`),
+  certificate: (code: string) => request<Certificate>(`/certificates/${encodeURIComponent(code)}`),
+  issueCertificate: (b: { name: string; seed: number; answers: string[] }) => request<Certificate>('/learn/certificate', { method: 'POST', body: JSON.stringify(b) }),
+  history: (id: string) => request<AuditEntry[]>(`/archive/${encodeURIComponent(id)}/history`),
+  trace: (id: string) => request<Trace>(`/archive/${encodeURIComponent(id)}/trace`),
+  explainLink: (from: string, to: string) => request<{ relation: string; reasons: string[] }>(`/links/explain?${qs({ from, to })}`),
   contributor: (id: number) =>
     request<{ id: number; name: string; institution: string; role: Role; created_at: string; records: ArchiveItem[]; publishedPosts: number }>(`/contributors/${id}`),
   atlas: () =>
@@ -540,16 +600,17 @@ export const api = {
     users: () => adminRequest<(User & { created_at: string; records: number })[]>('/users'),
     setRole: (id: number, role: Role) => adminRequest<User>(`/users/${id}`, { method: 'PATCH', body: JSON.stringify({ role }) }),
     analytics: (days = 30) => adminRequest<any>(`/analytics?${qs({ days })}`),
+    audit: (limit = 100) => adminRequest<AuditEntry[]>(`/audit?${qs({ limit })}`),
     updateRecord: (id: string, patch: Record<string, unknown>) =>
       adminRequest<ArchiveItem>(`/archive/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(patch) }),
     proposals: () => adminRequest<any[]>('/proposals'),
     setProposal: (ref: string, status: string) =>
       adminRequest<any>(`/proposals/${encodeURIComponent(ref)}`, { method: 'PATCH', body: JSON.stringify({ status }) }),
     outreach: (review?: string) => adminRequest<OutreachPost[]>(`/outreach?${qs({ review })}`),
-    draft: (itemId: string, channel: OutreachChannel) =>
+    draft: (itemId: string, channel: OutreachChannel, language: OutreachLanguage = 'EN') =>
       adminRequest<OutreachPost>('/outreach/draft', {
         method: 'POST',
-        body: JSON.stringify({ itemId, channel }),
+        body: JSON.stringify({ itemId, channel, language }),
       }),
     review: (id: number, body: { action: string; content?: string; reviewer?: string; note?: string }) =>
       adminRequest<OutreachPost>(`/outreach/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),

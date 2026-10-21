@@ -9,7 +9,9 @@ import { requireRole, type SessionUser } from './auth.ts';
 import { blobUploadToken, describeBlobUpload, rawBody, saveUpload } from './uploads.ts';
 import { search } from './search.ts';
 import { nearestStation, regionFor, validLatLon } from './geo.ts';
-import { CHANNELS, generateContent, type Channel } from './outreach.ts';
+import { CHANNELS, LANGUAGES, generateContent, inHindi, type Channel, type Language } from './outreach.ts';
+import { audit } from './audit.ts';
+import { readAccess } from './access.ts';
 import { toSource, verifyClaims } from './claims.ts';
 
 /**
@@ -42,22 +44,33 @@ export const postRow = async (db: Db, id: unknown) => {
   return p ? { ...p, claim_check: JSON.parse(p.claim_check || '{}') } : null;
 };
 
-export const checkAgainst = async (itemId: string, content: string) => {
+export const lang = (v: unknown): Language => {
+  const l = String(v ?? 'EN').toUpperCase() as Language;
+  if (!LANGUAGES.includes(l)) throw new HttpError(400, `language must be one of: ${LANGUAGES.join(', ')}`);
+  return l;
+};
+
+/** Fact check against the record; Hindi posts are checked against the record's Hindi title and summary. */
+export const checkAgainst = async (itemId: string, content: string, language: Language = 'EN') => {
   const item = await getItem(itemId);
-  return item ? verifyClaims(content, [toSource(item, 0)]) : null;
+  if (!item) return null;
+  const source = language === 'HI' ? inHindi(item) : item;
+  return source ? verifyClaims(content, [toSource(source, 0)]) : null;
 };
 
 /** One draft for one channel, written from the record by the template generator and fact-checked against it. */
-export async function createDraft(db: Db, item: ArchiveItem, channel: Channel, base: string, createdBy: number | null) {
-  const t = generateContent(item, `${base}/?record=${encodeURIComponent(item.id)}`, [channel])[0];
+export async function createDraft(db: Db, item: ArchiveItem, channel: Channel, base: string, createdBy: number | null, language: Language = 'EN') {
+  const t = generateContent(item, `${base}/?record=${encodeURIComponent(item.id)}`, [channel], language)[0];
+  if (!t) throw new HttpError(409, 'This record has no Hindi summary yet. Run npm run translate, or add one as a reviewer.');
   const content = [channel === 'website' ? '' : t.title, t.text].filter(Boolean).join('\n\n');
   const row = await db.get(
-    `INSERT INTO outreach_posts (item_id, channel, content, status, data_status, review_status, provider, claim_check, created_by)
-     VALUES (?, ?, ?, 'DRAFT', 'TEMPLATE', 'PENDING_REVIEW', 'template', ?, ?) RETURNING id`,
+    `INSERT INTO outreach_posts (item_id, channel, language, content, status, data_status, review_status, provider, claim_check, created_by)
+     VALUES (?, ?, ?, ?, 'DRAFT', 'TEMPLATE', 'PENDING_REVIEW', 'template', ?, ?) RETURNING id`,
     item.id,
     channel,
+    language,
     content,
-    JSON.stringify((await checkAgainst(item.id, content)) ?? {}),
+    JSON.stringify((await checkAgainst(item.id, content, language)) ?? {}),
     createdBy
   );
   return postRow(db, row.id);
@@ -139,6 +152,7 @@ function readRecordBody(b: any, partial = false) {
     thumbnailUrl: thumbnailUrl || null,
     doi: str(b.doi, 'doi', { max: 200 }) || null,
     location,
+    access: b.access === undefined || b.access === null ? undefined : readAccess(b.access),
     links: Array.isArray(b.links) ? (b.links as any[]).slice(0, 20) : [],
   };
 }
@@ -228,7 +242,7 @@ export function createContributorRouter(db: Db) {
           url: b.url,
           thumbnailUrl: b.thumbnailUrl || (isImage ? b.url : null),
           doi: b.doi,
-          meta: { ...(b.location ? { location: b.location } : {}), contributor: { name: u.name, institution: u.institution } },
+          meta: { ...(b.location ? { location: b.location } : {}), ...(b.access ? { access: b.access } : {}), contributor: { name: u.name, institution: u.institution } },
           dataStatus: 'UNVERIFIED',
           provenance: {
             source: 'Contributor upload',
@@ -242,6 +256,7 @@ export function createContributorRouter(db: Db) {
         });
         await writeLinks(t, id, b.type!, b.links);
       });
+      await audit(db, req, 'submit', 'record', id, { title: b.title, access: b.access?.level ?? 'open' });
       res.status(201).json(await getItem(id));
     })
   );
@@ -254,7 +269,7 @@ export function createContributorRouter(db: Db) {
       // An explicit `location: null` clears the coordinates; leaving the field out keeps them.
       const location = 'location' in body ? body.location : item.meta.location ?? null;
       const b = readRecordBody({ ...item, ...body, location, links: body.links }, true);
-      const meta = { ...item.meta, location: b.location ?? undefined };
+      const meta = { ...item.meta, location: b.location ?? undefined, ...(b.access ? { access: b.access } : {}) };
       const st = listStations().find((s) => s.id === b.stationId);
       const domain = st?.domain || (b.location ? regionFor(b.location) : '') || item.domain;
       await db.tx(async (t) => {
@@ -265,6 +280,7 @@ export function createContributorRouter(db: Db) {
         );
         if (b.links.length) await writeLinks(t, item.id, item.type, b.links);
       });
+      await audit(db, req, 'resubmit', 'record', item.id, { fields: Object.keys(body) });
       res.json(await getItem(item.id));
     })
   );
@@ -275,6 +291,7 @@ export function createContributorRouter(db: Db) {
       const item = await ownRecord(req.user!, req.params.id);
       if (item.reviewStatus === 'APPROVED') throw new HttpError(409, 'Approved records are part of the archive; ask a reviewer to remove it');
       await db.run('DELETE FROM archive_items WHERE id = ?', item.id);
+      await audit(db, req, 'withdraw', 'record', item.id);
       res.status(204).end();
     })
   );
@@ -286,8 +303,13 @@ export function createContributorRouter(db: Db) {
       const item = await ownRecord(req.user!, req.params.id);
       const channels: Channel[] = Array.isArray(req.body?.channels) && req.body.channels.length ? req.body.channels : CHANNELS;
       for (const c of channels) if (!CHANNELS.includes(c)) throw new HttpError(400, `Unknown channel: ${c}`);
+      const language = lang(req.body?.language);
       const out = [];
-      for (const c of channels) out.push(await createDraft(db, item, c, publicBase(req), req.user!.id));
+      for (const c of channels) {
+        const d = await createDraft(db, item, c, publicBase(req), req.user!.id, language);
+        await audit(db, req, 'draft', 'post', d!.id, { itemId: item.id, channel: c, language });
+        out.push(d);
+      }
       res.status(201).json(out);
     })
   );
@@ -315,9 +337,10 @@ export function createContributorRouter(db: Db) {
       await db.run(
         `UPDATE outreach_posts SET content = ?, claim_check = ?, review_status = 'PENDING_REVIEW', status = 'DRAFT', updated_at = ${NOW} WHERE id = ?`,
         content,
-        JSON.stringify((await checkAgainst(post.item_id, content)) ?? {}),
+        JSON.stringify((await checkAgainst(post.item_id, content, post.language)) ?? {}),
         post.id
       );
+      await audit(db, req, 'edit', 'post', post.id);
       res.json(await postRow(db, post.id));
     })
   );

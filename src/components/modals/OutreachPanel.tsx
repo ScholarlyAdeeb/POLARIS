@@ -3,9 +3,11 @@ import { api, type OutreachChannel, type OutreachContent } from '../../lib/api';
 
 const CHANNEL_LABEL: Record<OutreachChannel, string> = {
   website: 'Website article',
+  press: 'Press release',
   x: 'X / Twitter',
   linkedin: 'LinkedIn',
   instagram: 'Instagram',
+  facebook: 'Facebook',
 };
 
 /** Generates website + social media copy for an archive record (server-side templates). */

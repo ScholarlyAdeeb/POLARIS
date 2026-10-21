@@ -14,6 +14,22 @@ const STATUS_STYLE: Record<string, { label: string; cls: string; title: string }
   TEMPLATE: { label: 'Template', cls: 'bg-sky-100 text-sky-800', title: 'Assembled by a deterministic template from the record' },
 };
 
+/** Open / restricted / embargoed file access (server/access.ts). Nothing is shown for open records. */
+export function AccessBadge({ item }: { item: { meta?: Record<string, any>; access?: { level: string; until: string | null; held: boolean } } }) {
+  const a = item.access ?? (item.meta?.access ? { level: item.meta.access.level, until: item.meta.access.until ?? null, held: true } : null);
+  if (!a || a.level === 'open') return null;
+  const embargo = a.level === 'embargoed';
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${embargo ? 'bg-violet-100 text-violet-800' : 'bg-rose-100 text-rose-800'}`}
+      title={embargo ? `File opens on ${a.until}` : 'File available on request to NCPOR'}
+    >
+      <span className="material-symbols-outlined text-[13px]" aria-hidden="true">{embargo ? 'schedule' : 'lock'}</span>
+      {embargo ? `Embargoed to ${a.until}` : 'Restricted file'}
+    </span>
+  );
+}
+
 export function DataStatusBadge({ status, className = '' }: { status?: string | null; className?: string }) {
   const s = STATUS_STYLE[status ?? ''] ?? STATUS_STYLE.UNVERIFIED;
   return (
