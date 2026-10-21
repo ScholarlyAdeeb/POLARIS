@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#00677d" />
-    <title>POLARIS</title>
+    <title>HIMAKSHA</title>
     <style>
       :root {
         --surface: #f8f9ff;
@@ -54,16 +54,16 @@
   <body>
     <main>
       <img src="polaris-emblem.svg" alt="" />
-      <h1>POLARIS</h1>
+      <h1>HIMAKSHA</h1>
       <p class="tag">Indian Polar Science Knowledge Platform</p>
 
       <div id="status" class="status"></div>
 
       <form id="form">
-        <label for="url">POLARIS server address</label>
+        <label for="url">HIMAKSHA server address</label>
         <input id="url" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="http://192.168.1.10:3000" required />
         <button class="primary" type="submit">Connect</button>
-        <p class="hint">Use the address shown when POLARIS starts on your PC (phone and PC on the same Wi-Fi), or your hosted address such as https://polaris.onrender.com.</p>
+        <p class="hint">Use the address shown when HIMAKSHA starts on your PC (phone and PC on the same Wi-Fi), or your hosted address such as https://polaris.onrender.com.</p>
       </form>
       <button id="change" class="ghost" type="button">Change server</button>
     </main>
@@ -110,7 +110,7 @@
           location.replace(url + '/');
         } catch {
           if (cancelled) return;
-          setStatus("Can't reach " + url.replace(/</g, '&lt;') + '. Check that POLARIS is running and the phone is on the same network.', true);
+          setStatus("Can't reach " + url.replace(/</g, '&lt;') + '. Check that HIMAKSHA is running and the phone is on the same network.', true);
           showForm(url);
         } finally {
           clearTimeout(timer);

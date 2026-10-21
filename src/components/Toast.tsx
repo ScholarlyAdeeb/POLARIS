@@ -31,7 +31,7 @@ export const Toast: React.FC<ToastProps> = ({ toasts, onDismiss }) => {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2">
               <span className="font-['Space_Grotesk'] text-xs font-bold text-[#4cd6fb] uppercase tracking-wider">
-                {toast.title || 'POLARIS TELEMETRY NODE'}
+                {toast.title || 'HIMAKSHA TELEMETRY NODE'}
               </span>
               <button
                 onClick={() => onDismiss(toast.id)}

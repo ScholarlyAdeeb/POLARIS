@@ -16,7 +16,7 @@ import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.BridgeWebViewClient;
 
 /**
- * Hosts the POLARIS web app. The launcher page (mobile-shell/) opens the POLARIS server;
+ * Hosts the HIMAKSHA web app. The launcher page (mobile-shell/) opens the HIMAKSHA server;
  * this activity adds what a plain WebView lacks: file downloads, the hardware back button,
  * opening outside links (DOI pages, publishers) in the phone's browser, and location and
  * clipboard when the server is reached over plain http on the local network (see NativeBridge).

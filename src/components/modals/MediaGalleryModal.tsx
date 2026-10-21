@@ -23,7 +23,7 @@ export const MediaGalleryModal: React.FC<MediaGalleryModalProps> = ({ isOpen, on
     api
       .archive({ type: filter, limit: 60 })
       .then((r) => !cancelled && setItems(r.items))
-      .catch(() => !cancelled && setError('The POLARIS API is unreachable.'));
+      .catch(() => !cancelled && setError('The HIMAKSHA API is unreachable.'));
     return () => {
       cancelled = true;
     };

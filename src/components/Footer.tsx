@@ -32,10 +32,10 @@ export const Footer: React.FC = () => (
             <span className="h-7 w-7 rounded-md bg-white p-0.5 ring-1 ring-slate-200">
               <img alt="" className="h-full w-full object-contain" src="/polaris-emblem.svg" />
             </span>
-            <span className="font-['Space_Grotesk'] text-lg font-bold text-[#0b1c30]">POLARIS</span>
+            <span className="font-['Space_Grotesk'] text-lg font-bold text-[#0b1c30]">HIMAKSHA</span>
           </div>
           <p className="text-sm text-slate-600 leading-relaxed">
-            One place to archive, search and share India’s polar science. A Smart India Hackathon 2026 prototype by Team Pehchaan.
+            One place to archive, search and share India’s polar science. A Smart India Hackathon 2026 prototype by Team Pehchaan. Codename POLARIS during early development.
           </p>
         </div>
 

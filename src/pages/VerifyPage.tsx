@@ -5,8 +5,8 @@ import { ErrorNote, Page, PageHeader } from '../components/ui';
 
 const VERDICT: Record<VerifyResult['status'], { title: string; text: string; tone: string; icon: string }> = {
   genuine: {
-    title: 'Genuine POLARIS post',
-    text: 'This code belongs to a post that a named reviewer approved and POLARIS published.',
+    title: 'Genuine HIMAKSHA post',
+    text: 'This code belongs to a post that a named reviewer approved and HIMAKSHA published.',
     tone: 'border-[#2e7d32] bg-[#e8f5e9] text-[#1b5e20]',
     icon: 'verified',
   },
@@ -24,7 +24,7 @@ const VERDICT: Record<VerifyResult['status'], { title: string; text: string; ton
   },
   no_match: {
     title: 'No match',
-    text: 'No POLARIS post has this code. Check for typing mistakes; if the code is right, the post did not come from POLARIS.',
+    text: 'No HIMAKSHA post has this code. Check for typing mistakes; if the code is right, the post did not come from HIMAKSHA.',
     tone: 'border-[#c62828] bg-[#ffebee] text-[#b71c1c]',
     icon: 'gpp_bad',
   },
@@ -59,7 +59,7 @@ export function VerifyPage() {
   const v = result ? VERDICT[result.status] : null;
   return (
     <Page>
-      <PageHeader title="Verify a post" text="Every published POLARIS post carries an 8-character code and a QR code. Check a copy you received before you share it." />
+      <PageHeader title="Verify a post" text="Every published HIMAKSHA post carries an 8-character code and a QR code. Check a copy you received before you share it." />
       <form
         className="sci-card p-4 flex flex-col gap-3 max-w-2xl"
         onSubmit={(e) => {

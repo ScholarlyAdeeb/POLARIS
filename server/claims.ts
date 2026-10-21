@@ -61,7 +61,7 @@ export function splitSentences(text: string): string[] {
     .filter((s) => s.length > 1);
 }
 
-/** Links, hashtag lines and "explore it on POLARIS" calls to action are navigation, not factual claims. */
+/** Links, hashtag lines and "explore it on HIMAKSHA" calls to action are navigation, not factual claims. */
 const NAVIGATION = /^(explore|view|read|watch|see|visit|learn more|find out more|link in bio|download)\b.*(https?:\/\/|polaris)/i;
 const stripNonClaims = (s: string) => s.replace(/https?:\/\/\S+/g, ' ').replace(/(^|\s)#[\p{L}\p{N}_]+/gu, ' ');
 
@@ -119,10 +119,10 @@ export function attachCitations(text: string, sources: Source[]): string {
 
 export function toSource(item: ArchiveItem, i: number): Source {
   const c = item.meta?.contributor;
-  const credit = c?.name ? `Shared on POLARIS by ${c.name}${c.institution ? `, ${c.institution}` : ''}.` : '';
+  const credit = c?.name ? `Shared on HIMAKSHA by ${c.name}${c.institution ? `, ${c.institution}` : ''}.` : '';
   // The record's own catalogue fields count as evidence too (type, station, year, region).
   const where = item.stationId ? ` at ${item.stationId.replace(/-/g, ' ')} station` : '';
-  const catalogue = `${TYPE_LABEL[item.type] ?? item.type}: ${item.type} record in the POLARIS archive${where}${item.year ? `, ${item.year}` : ''}${item.domain ? `, ${item.domain}` : ''}.`;
+  const catalogue = `${TYPE_LABEL[item.type] ?? item.type}: ${item.type} record in the HIMAKSHA archive${where}${item.year ? `, ${item.year}` : ''}${item.domain ? `, ${item.domain}` : ''}.`;
   const text =
     [item.title, item.summary, item.body].filter(Boolean).join('. ').replace(/\s+/g, ' ').slice(0, 1600) + ` ${catalogue}` + (credit ? ` ${credit}` : '');
   return {

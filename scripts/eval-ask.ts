@@ -1,4 +1,4 @@
-// Runs the fixed Ask POLARIS questions against a running portal and writes server/data/eval/results.json,
+// Runs the fixed Ask HIMAKSHA questions against a running portal and writes server/data/eval/results.json,
 // which the public /accuracy page shows. Uses the same endpoint visitors use, so it measures the real system.
 //
 //   npm run eval                                   (local server on :3000)

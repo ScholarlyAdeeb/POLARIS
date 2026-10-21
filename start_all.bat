@@ -1,9 +1,9 @@
 @echo off
 setlocal EnableExtensions
-title POLARIS
+title HIMAKSHA
 
 rem ---------------------------------------------------------------------------
-rem  POLARIS launcher: backend (Express API + PostgreSQL from DATABASE_URL in .env)
+rem  HIMAKSHA launcher: backend (Express API + PostgreSQL from DATABASE_URL in .env)
 rem  and frontend (Vite/React) on one port. The Android app connects to the address it prints.
 rem
 rem    start_all.bat           dev mode (hot reload)
@@ -33,14 +33,14 @@ goto :args
 :argsdone
 
 echo.
-echo  ==================  POLARIS  ==================
+echo  ==================  HIMAKSHA  ==================
 echo.
 
 rem ---- 1. Node.js 22.13+ ---------------------------------------------------------
 where node >nul 2>&1 || (echo [x] Node.js not found. Install Node 22.13 or newer from https://nodejs.org & goto :fail)
 node -e "const [a,b]=process.versions.node.split('.').map(Number);process.exit(a>22||(a===22&&b>=13)?0:1)"
 if errorlevel 1 (
-    for /f %%v in ('node -v') do echo [x] Node %%v is too old. POLARIS needs Node 22.13 or newer.
+    for /f %%v in ('node -v') do echo [x] Node %%v is too old. HIMAKSHA needs Node 22.13 or newer.
     goto :fail
 )
 for /f %%v in ('node -v') do echo [ok] Node %%v
@@ -113,7 +113,7 @@ if defined POLARIS_NO_BROWSER set "HELPER_FLAGS=%HELPER_FLAGS% -NoBrowser"
 start "" /b powershell -NoProfile -ExecutionPolicy Bypass -File "%CD%\scripts\start-helper.ps1" -Port %PORT% %HELPER_FLAGS%
 
 echo.
-echo  POLARIS  http://localhost:%PORT%
+echo  HIMAKSHA  http://localhost:%PORT%
 if defined LAN_URL echo  Android app / phone on the same Wi-Fi:  %LAN_URL%
 echo    Explore, map, stations, knowledge graph, learn: open to everyone
 echo    Outreach studio and Admin: sign in with ADMIN_TOKEN = %ADMIN_TOKEN%
@@ -144,14 +144,14 @@ goto :args
 :argsdone
 
 echo.
-echo  ==================  POLARIS  ==================
+echo  ==================  HIMAKSHA  ==================
 echo.
 
 rem ---- 1. Node.js 22.13+ ---------------------------------------------------------
 where node >nul 2>&1 || (echo [x] Node.js not found. Install Node 22.13 or newer from https://nodejs.org & goto :fail)
 node -e "const [a,b]=process.versions.node.split('.').map(Number);process.exit(a>22||(a===22&&b>=13)?0:1)"
 if errorlevel 1 (
-    for /f %%v in ('node -v') do echo [x] Node %%v is too old. POLARIS needs Node 22.13 or newer.
+    for /f %%v in ('node -v') do echo [x] Node %%v is too old. HIMAKSHA needs Node 22.13 or newer.
     goto :fail
 )
 for /f %%v in ('node -v') do echo [ok] Node %%v
@@ -224,7 +224,7 @@ if defined POLARIS_NO_BROWSER set "HELPER_FLAGS=%HELPER_FLAGS% -NoBrowser"
 start "" /b powershell -NoProfile -ExecutionPolicy Bypass -File "%CD%\scripts\start-helper.ps1" -Port %PORT% %HELPER_FLAGS%
 
 echo.
-echo  POLARIS  http://localhost:%PORT%
+echo  HIMAKSHA  http://localhost:%PORT%
 if defined LAN_URL echo  Android app / phone on the same Wi-Fi:  %LAN_URL%
 echo    Explore, map, stations, knowledge graph, learn: open to everyone
 echo    Outreach studio and Admin: sign in with ADMIN_TOKEN = %ADMIN_TOKEN%

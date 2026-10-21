@@ -50,7 +50,7 @@ public class NativeBridge {
     public void copy(String text) {
         activity.runOnUiThread(() -> {
             ClipboardManager cm = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-            cm.setPrimaryClip(ClipData.newPlainText("POLARIS", text));
+            cm.setPrimaryClip(ClipData.newPlainText("HIMAKSHA", text));
         });
     }
 

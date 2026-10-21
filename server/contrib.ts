@@ -14,7 +14,7 @@ import { toSource, verifyClaims } from './claims.ts';
 
 /**
  * Contributor workflow:
- *   upload file(s) -> describe the work -> POLARIS suggests where it belongs (station, region,
+ *   upload file(s) -> describe the work -> HIMAKSHA suggests where it belongs (station, region,
  *   related records) -> submit for review -> reviewer approves -> it appears on the map, graph,
  *   search and station pages -> contributor drafts website / social posts from it -> reviewer
  *   approves -> published on the newsroom with a credit to the contributor.
@@ -235,7 +235,7 @@ export function createContributorRouter(db: Db) {
             submittedBy: u.name,
             institution: u.institution || null,
             submittedAt: new Date().toISOString(),
-            note: 'Submitted through the POLARIS contributor workspace; not yet verified.',
+            note: 'Submitted through the HIMAKSHA contributor workspace; not yet verified.',
           },
           ownerId: u.id,
           reviewStatus: 'PENDING_REVIEW',

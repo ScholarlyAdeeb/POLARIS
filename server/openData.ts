@@ -9,7 +9,7 @@ import { ERA5_SOURCE, fixedStation } from './realdata.ts';
 /**
  * Loads real open metadata (server/data/open-data.json, refreshed by scripts/import-open-data.ts)
  * into the archive. Records are marked EXTERNAL: metadata from Crossref / PANGAEA with a DOI;
- * POLARIS neither produced nor verified the underlying science. Idempotent: existing ids are skipped.
+ * HIMAKSHA neither produced nor verified the underlying science. Idempotent: existing ids are skipped.
  */
 
 const SNAPSHOT = path.resolve(process.cwd(), 'server', 'data', 'open-data.json');
@@ -147,7 +147,7 @@ export async function loadOpenData(db: Db): Promise<number> {
         provenance: {
           source: 'NCPOR DSpace repository (OAI-PMH)',
           retrievedAt: snap.ncporRetrievedAt ?? snap.retrievedAt,
-          licence: 'NCPOR: All rights reserved. POLARIS stores metadata only.',
+          licence: 'NCPOR: All rights reserved. HIMAKSHA stores metadata only.',
           method: 'OAI-PMH ListRecords (Dublin Core); expedition and section from the repository’s community structure',
           note: 'Read the paper on NCPOR’s repository at the link.',
         },
@@ -179,6 +179,6 @@ export async function loadOpenData(db: Db): Promise<number> {
     }
   }
   const added = await insertItems(db, items);
-  if (added) console.log(`[POLARIS] Loaded ${added} open-data records (Crossref, PANGAEA, NCPOR DSpace)`);
+  if (added) console.log(`[HIMAKSHA] Loaded ${added} open-data records (Crossref, PANGAEA, NCPOR DSpace)`);
   return added;
 }

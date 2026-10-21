@@ -133,7 +133,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         {/* Footer shortcuts */}
         <div className="px-4 py-2.5 bg-[#f8f9ff] border-t border-slate-200 flex items-center justify-between text-[11px] font-['JetBrains_Mono'] text-slate-400">
           <span>Navigate with arrows or click</span>
-          <span>POLARIS Knowledge Directory</span>
+          <span>HIMAKSHA Knowledge Directory</span>
         </div>
       </div>
     </div>

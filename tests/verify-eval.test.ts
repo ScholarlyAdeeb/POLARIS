@@ -41,9 +41,9 @@ test('a factual answer passes only when it cites the right record and states the
   assert.equal(scoreAnswer({ ...q, facts: [['Ny-Ålesund']] }, { answer: 'At ny-alesund [S2].', mode: 'generative', sources }).facts, true);
 });
 
-test('off-topic questions pass when POLARIS declines', () => {
+test('off-topic questions pass when HIMAKSHA declines', () => {
   const off: EvalQuestion = { id: 'o', category: 'x', question: 'Who won the World Cup?', offTopic: true };
-  assert.equal(scoreAnswer(off, { answer: 'The POLARIS archive does not have this yet.', mode: 'no_sources', sources: [] }).pass, true);
+  assert.equal(scoreAnswer(off, { answer: 'The HIMAKSHA archive does not have this yet.', mode: 'no_sources', sources: [] }).pass, true);
   assert.equal(scoreAnswer(off, { answer: 'France won in 2018.', mode: 'generative', sources: [] }).pass, false);
 });
 

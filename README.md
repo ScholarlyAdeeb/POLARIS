@@ -1,25 +1,27 @@
 <p align="center">
-  <img src="public/polaris-emblem.svg" alt="POLARIS emblem" width="150">
+  <img src="public/polaris-emblem.svg" alt="HIMAKSHA emblem" width="150">
 </p>
 
-# POLARIS — Integrated Polar Science Outreach, Knowledge Repository & Media Dissemination Portal
+# HIMAKSHA — Integrated Polar Science Outreach, Knowledge Repository & Media Dissemination Portal
 
 **Smart India Hackathon 2026 · Problem Statement 26063** · Ministry of Earth Sciences (MoES) ·
 National Centre for Polar and Ocean Research (NCPOR) · Theme: **Smart Education** · Team Pehchaan
 
-POLARIS is one home for India's polar science. Researchers upload expedition reports,
-datasets, publications, photographs, videos and institutional activities. POLARIS places
+*Codename **POLARIS** during early development.* **HIMAKSHA** (हिमाक्ष) joins Hindi *him* (snow) with Sanskrit *akṣa* (axis), the same word as English *axis*: the snow axis, India's polar knowledge axis.
+
+HIMAKSHA is one home for India's polar science. Researchers upload expedition reports,
+datasets, publications, photographs, videos and institutional activities. HIMAKSHA places
 each record on the map, links it to its station, expedition and related work, and makes it
-searchable once a reviewer approves it. **Ask POLARIS** answers questions from those
+searchable once a reviewer approves it. **Ask HIMAKSHA** answers questions from those
 records with an open-source language model, citing every record it used. From any record,
-POLARIS writes website and social media posts that are fact-checked against the record and
+HIMAKSHA writes website and social media posts that are fact-checked against the record and
 credited to the researcher who shared it.
 
 | | |
 |---|---|
 | Live portal | https://polaris2-ecru.vercel.app |
-| Ask POLARIS | https://polaris2-ecru.vercel.app/ask |
-| Accuracy of Ask POLARIS (fixed questions, every answer published) | https://polaris2-ecru.vercel.app/accuracy |
+| Ask HIMAKSHA | https://polaris2-ecru.vercel.app/ask |
+| Accuracy of Ask HIMAKSHA (fixed questions, every answer published) | https://polaris2-ecru.vercel.app/accuracy |
 | Verify a post (QR / 8-character code) | https://polaris2-ecru.vercel.app/verify |
 | Deployment (Vercel, Docker, Render, Android) | [DEPLOY.md](DEPLOY.md) |
 | Configuration | [.env.example](.env.example) |
@@ -38,15 +40,15 @@ These are shared demonstration accounts, so the server sandboxes them (`server/g
 flow: sign in as `user1`, upload and generate posts; then sign in as `admin` to approve and publish them.
 New accounts created at `/login` start as contributors. Set `DEMO_ACCOUNTS=off` to remove both logins.
 
-![Ask POLARIS: a cited answer, fact-checked sentence by sentence, with the records it used](docs/screenshots/02-ask.png)
+![Ask HIMAKSHA: a cited answer, fact-checked sentence by sentence, with the records it used](docs/screenshots/02-ask.png)
 
 ---
 
 ## Contents
 
-1. [What POLARIS does](#what-polaris-does)
+1. [What HIMAKSHA does](#what-himaksha-does)
 2. [From a researcher's upload to a published post](#from-a-researchers-upload-to-a-published-post)
-3. [Ask POLARIS (RAG)](#ask-polaris-rag)
+3. [Ask HIMAKSHA (RAG)](#ask-himaksha-rag)
 4. [Trust, provenance and honest labels](#trust-provenance-and-honest-labels)
 5. [Screens](#screens)
 6. [Architecture](#architecture)
@@ -59,9 +61,9 @@ New accounts created at `/login` start as contributors. Set `DEMO_ACCOUNTS=off` 
 
 ---
 
-## What POLARIS does
+## What HIMAKSHA does
 
-| Need in the problem statement | What POLARIS does | How |
+| Need in the problem statement | What HIMAKSHA does | How |
 |---|---|---|
 | **Archive** expedition reports, datasets, publications, photos, videos, activities | One archive with seven record types; uploads up to 100 MB (images, MP4/WebM, PDF, CSV, NetCDF, JSON, TXT) | `archive_items` in PostgreSQL; uploads on disk or Vercel Blob |
 | **Map** the material | Every record with a place appears on polar, Himalaya and world maps; station pages show records as hotspots on a 3D model | Station coordinates, uploaded GPS, Natural Earth coastlines, React Three Fiber |
@@ -90,7 +92,7 @@ flowchart LR
     R -- changes requested --> C
     R -- approved --> P["Public record"]
     P --> S["Search, atlas,<br/>knowledge graph, timeline"]
-    P --> A["Ask POLARIS index<br/>(embedded automatically)"]
+    P --> A["Ask HIMAKSHA index<br/>(embedded automatically)"]
     P --> G["Generate posts<br/>website, X, LinkedIn, Instagram"]
     G --> F["Claim check<br/>sentence by sentence"]
     F --> H{"Named human<br/>reviewer"}
@@ -100,9 +102,9 @@ flowchart LR
 | Step | What happens |
 |---|---|
 | 1. Share | In **My workspace**, a contributor uploads a file (or takes a photo on the phone and attaches its GPS position) and describes it. |
-| 2. Auto-map | POLARIS suggests the station (nearest to the coordinates, or named in the text), the region, and related records with a relation for each. The contributor ticks the right ones. |
+| 2. Auto-map | HIMAKSHA suggests the station (nearest to the coordinates, or named in the text), the region, and related records with a relation for each. The contributor ticks the right ones. |
 | 3. Review | The record stays private until a reviewer approves it, asks for changes or rejects it, with a note the contributor sees. |
-| 4. Publish the record | Approved records appear in search, the atlas, the knowledge graph, station pages and the timeline, and are embedded for Ask POLARIS. |
+| 4. Publish the record | Approved records appear in search, the atlas, the knowledge graph, station pages and the timeline, and are embedded for Ask HIMAKSHA. |
 | 5. Generate content | From the record, the contributor or the outreach team generates a website article and X / LinkedIn / Instagram posts. |
 | 6. Fact check | Every sentence of a post is compared with the record: shared words and exact numbers. Unsupported sentences block approval unless a reviewer explains why. |
 | 7. Publish the post | A named reviewer approves it in the **Outreach studio**; it then appears in the public **Newsroom** and on the contributor's profile at `/contributors/<id>`. Nothing is published automatically. |
@@ -111,7 +113,7 @@ Roles: `contributor` → `reviewer` (approves records and posts) → `admin` (al
 
 ---
 
-## Ask POLARIS (RAG)
+## Ask HIMAKSHA (RAG)
 
 `/ask` answers questions using only the records researchers have shared on the portal, and
 names who shared them.
@@ -146,7 +148,7 @@ flowchart LR
 | Runs on | Inside the Node server (transformers.js, ONNX Runtime CPU); nothing leaves the machine | Hugging Face Inference Providers (`HF_TOKEN`) |
 | Measured | Retrieval ~1–2 s, answer ~10–30 s (about 6 tokens/s on a laptop i9) | Retrieval ~150 ms, answer ~3–6 s |
 
-Without a language model (`RAG_LLM=off`, or the service unavailable), Ask POLARIS still
+Without a language model (`RAG_LLM=off`, or the service unavailable), Ask HIMAKSHA still
 returns the best-matching sentences from the records, cited.
 
 **Tested questions** on the live portal:
@@ -184,7 +186,7 @@ Every record carries a **data status**, shown as a badge everywhere it appears:
 - **Climate history** (daily, 1981 to about a week ago) comes from the ERA5 reanalysis and
   downloads as CSV.
 - **Review gates**: contributor records are private until approved; posts need a named human
-  reviewer; Ask POLARIS only reads approved records.
+  reviewer; Ask HIMAKSHA only reads approved records.
 - **Provenance**: who reviewed a record, when, and the decision are stored with it.
 - **Two-person rule**: nobody approves their own submission or their own drafted post; the server refuses it.
 - **Verifiable posts**: every published post carries an 8-character code and a QR code. `/verify/<code>`
@@ -217,7 +219,7 @@ at the station as a hotspot, live conditions and climate history.
 | ![Upload, describe and map new work](docs/screenshots/10-workspace.png) | ![Draft, claim check, human review, publish](docs/screenshots/12-studio.png) |
 
 **Admin**: contributor submissions, usage analytics, accounts and roles, database status
-and the Ask POLARIS index.
+and the Ask HIMAKSHA index.
 
 ![Admin](docs/screenshots/11-admin.png)
 
@@ -227,7 +229,7 @@ workspace. The same screens ship in the Android app.
 <p>
   <img src="docs/screenshots/13-mobile-home.png" alt="Home on a phone" width="300">
   &nbsp;
-  <img src="docs/screenshots/14-mobile-ask.png" alt="Ask POLARIS on a phone" width="300">
+  <img src="docs/screenshots/14-mobile-ask.png" alt="Ask HIMAKSHA on a phone" width="300">
 </p>
 
 ---
@@ -244,7 +246,7 @@ flowchart TB
       S1["Archive, search, atlas, graph"]
       S2["Accounts, roles, review"]
       S3["Outreach generator + claim check"]
-      S4["Ask POLARIS: indexer, retrieval, answers"]
+      S4["Ask HIMAKSHA: indexer, retrieval, answers"]
     end
     B --> Server
     A --> Server
@@ -265,7 +267,7 @@ flowchart TB
 
 **One archive, seven record types.** `expedition`, `report`, `dataset`, `publication`,
 `photo`, `video` and `activity` all live in `archive_items`, so search, linking, metadata
-export, outreach and Ask POLARIS work the same way for every kind of record.
+export, outreach and Ask HIMAKSHA work the same way for every kind of record.
 
 ---
 
@@ -282,7 +284,7 @@ export, outreach and Ask POLARIS work the same way for every kind of record.
 | Post integrity | Published posts carry a code derived from their exact text; `/verify` detects altered copies | `server/verify.ts` |
 | Uploads | Allow-listed file types, 100 MB limit, generated file names, `dotfiles` denied | `server/uploads.ts` |
 | Input | Length and format checks on every field; station ids, URLs and coordinates validated | `server/http.ts`, `server/contrib.ts` |
-| Abuse | Per-client rate limits on sign-in, proposals and Ask POLARIS, with the real client IP behind Vercel / Render proxies | `server/http.ts`, `server/app.ts` |
+| Abuse | Per-client rate limits on sign-in, proposals and Ask HIMAKSHA, with the real client IP behind Vercel / Render proxies | `server/http.ts`, `server/app.ts` |
 | Redirects | Sign-in `?next=` accepts same-site paths only | `src/pages/LoginPage.tsx` |
 | Secrets | `DATABASE_URL`, `ADMIN_TOKEN`, `HF_TOKEN` only in environment variables; `.env` is git-ignored | `.env.example` |
 
@@ -305,7 +307,7 @@ the address the Android app can use on the same Wi-Fi.
 On first start the server creates the tables, seeds the archive and loads the open-data
 records. If `ADMIN_TOKEN` is not set, a random admin token is printed in the server log.
 
-**Ask POLARIS locally**: download the open models once (about 1.8 GB, resumable):
+**Ask HIMAKSHA locally**: download the open models once (about 1.8 GB, resumable):
 
 ```bash
 npm run rag:models
@@ -338,7 +340,7 @@ API function. Environment variables:
 | Variable | Needed for |
 |---|---|
 | `DATABASE_URL` | Everything (PostgreSQL with pgvector) |
-| `HF_TOKEN` | Ask POLARIS (a Hugging Face token with "Make calls to Inference Providers") |
+| `HF_TOKEN` | Ask HIMAKSHA (a Hugging Face token with "Make calls to Inference Providers") |
 | `ADMIN_TOKEN` | Admin access with a token (optional when admin accounts exist) |
 | `BLOB_READ_WRITE_TOKEN` | Uploads on Vercel (connect a Vercel Blob store) |
 | `DEMO_ACCOUNTS` | `on` to create the demo logins, `off` for a real deployment |
@@ -346,7 +348,7 @@ API function. Environment variables:
 **Docker / Render**: `Dockerfile` and `render.yaml` run the same server with a disk for
 uploads. Details in [DEPLOY.md](DEPLOY.md).
 
-**Android app**: `android/` is a Capacitor project. The app opens the POLARIS server
+**Android app**: `android/` is a Capacitor project. The app opens the HIMAKSHA server
 (the hosted portal, or a PC on the same Wi-Fi) and adds native file downloads, camera
 capture, location, clipboard and the back button. Build with `npm run android:apk`
 (JDK 21 and the Android SDK); set `POLARIS_SERVER_URL` to make the hosted portal the
@@ -371,7 +373,7 @@ Public:
 | `GET /api/search?q=` | Ranked full-text search with highlighted snippets |
 | `GET /api/facets` · `/api/atlas` · `/api/graph` · `/api/learn` | Filters, map points, knowledge graph, lessons and quiz |
 | `GET /api/content/published` | Newsroom posts |
-| `GET /api/rag/status` | Ask POLARIS backend, models and index size |
+| `GET /api/rag/status` | Ask HIMAKSHA backend, models and index size |
 | `POST /api/rag/ask` | `{ question, filters? }` → server-sent events: `sources`, `token`…, `done` (answer, citations, claim check) |
 
 Signed in:
@@ -403,7 +405,7 @@ server/                      Express API
   search.ts                  full-text search and filters
   auth.ts, contrib.ts        accounts, roles, contributor workspace and auto-mapping
   outreach.ts, claims.ts     post generator and sentence-level claim check
-  rag/                       Ask POLARIS: config, models, indexer, retrieval and answers
+  rag/                       Ask HIMAKSHA: config, models, indexer, retrieval and answers
   openData.ts, realdata.ts   Crossref / PANGAEA records, Open-Meteo and ERA5
   files.ts, extras.ts        downloads, citations, atlas, lessons, usage counters
   uploads.ts, vercel.ts      uploads (disk or Vercel Blob), Vercel function entry
@@ -423,7 +425,7 @@ Model files (`data/models`), uploads, build output and `.env` are not in the rep
 |---|---|
 | Real NCPOR data | 790 papers from NCPOR's expedition scientific reports, 80 Crossref articles and the PANGAEA datasets are real metadata (`EXTERNAL`) linking to the source; NCPOR's repository is "All Rights Reserved", so the full papers are not copied. A few seeded datasets, reports, photos and the video remain demo records labelled `SAMPLE` / `SYNTHETIC`. |
 | Uploads on Vercel | Files go to the connected Vercel Blob store. With `BLOB_STORE_ID` (newer stores, OIDC) they pass through the server, so the limit is 4.5 MB per file; add `BLOB_READ_WRITE_TOKEN` to let browsers upload larger files (up to 100 MB) straight to Blob. |
-| Ask POLARIS quality | Answers are only as good as the records. Locally the 1.5B model sometimes includes a loosely related record; the claim check marks such sentences "partly supported". Questions in Hindi or Tamil are not tuned. |
+| Ask HIMAKSHA quality | Answers are only as good as the records. Locally the 1.5B model sometimes includes a loosely related record; the claim check marks such sentences "partly supported". Questions in Hindi or Tamil are not tuned. |
 | Free model usage | The hosted backend uses the Hugging Face free monthly allowance; beyond it, answers fall back to quoted sentences. |
 | Accounts | No email verification or password reset. |
 | Social networks | Posts are copied or opened in the network's share dialog; there is no direct posting. |

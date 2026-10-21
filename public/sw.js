@@ -1,4 +1,4 @@
-/* POLARIS service worker: works offline at stations with poor links.
+/* HIMAKSHA service worker: works offline at stations with poor links.
  * - app shell and hashed assets: cache first
  * - public API reads: network first, cached copy when offline
  * - signed-in, admin and write requests are never cached */

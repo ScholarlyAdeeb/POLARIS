@@ -1,5 +1,5 @@
 {
-  "about": "Fixed questions for Ask POLARIS. Each expected fact was checked by hand against the text of the expected record (its title, summary or catalogue fields) before the run. A question passes when the answer cites an expected record AND states every expected fact (any one spelling per fact). Off-topic questions pass when the answer says the archive does not have it.",
+  "about": "Fixed questions for Ask HIMAKSHA. Each expected fact was checked by hand against the text of the expected record (its title, summary or catalogue fields) before the run. A question passes when the answer cites an expected record AND states every expected fact (any one spelling per fact). Off-topic questions pass when the answer says the archive does not have it.",
   "checkedOn": "2026-10-16",
   "questions": [
     { "id": "q01", "category": "Expeditions", "question": "Which ship carried the first Indian Scientific Expedition to Antarctica?", "records": ["exp-1981-1st-indian-scientific-ex"], "facts": [["Polar Circle"]] },

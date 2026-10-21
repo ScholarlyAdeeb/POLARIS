@@ -19,13 +19,13 @@ export function deriveDataStatus(type: string, meta: Record<string, any>): DataS
 export function deriveProvenance(type: string, meta: Record<string, any>): Record<string, any> {
   if (meta?.sample) {
     return {
-      source: 'POLARIS demo seed (server/seed.ts)',
+      source: 'HIMAKSHA demo seed (server/seed.ts)',
       method: type === 'dataset' ? 'Synthetic sample extract generated from record metadata' : 'Illustrative demo record',
       note: 'Not an NCPOR data product. Replace through the admin API.',
     };
   }
   return {
-    source: 'POLARIS seed from src/data/polarisData.ts',
+    source: 'HIMAKSHA seed from src/data/polarisData.ts',
     method: 'Compiled by the project team from public descriptions; not yet verified against NCPOR records',
   };
 }

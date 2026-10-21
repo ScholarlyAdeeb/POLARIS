@@ -60,8 +60,8 @@ export function AccuracyPage() {
   return (
     <Page>
       <PageHeader
-        title="How accurate is Ask POLARIS?"
-        text="We ask Ask POLARIS a fixed set of questions whose answers we checked by hand against the records, and publish every answer it gave, right or wrong."
+        title="How accurate is Ask HIMAKSHA?"
+        text="We ask Ask HIMAKSHA a fixed set of questions whose answers we checked by hand against the records, and publish every answer it gave, right or wrong."
       />
       <ErrorNote error={error} />
       {data && !r && <p className="sci-muted text-sm">No evaluation has been run on this server yet.</p>}
@@ -152,7 +152,7 @@ export function AccuracyPage() {
             </table>
           </section>
           <p className="text-xs sci-muted">
-            Try it yourself on <Link className="underline" to="/ask">Ask POLARIS</Link>.
+            Try it yourself on <Link className="underline" to="/ask">Ask HIMAKSHA</Link>.
           </p>
         </div>
       )}

@@ -111,7 +111,7 @@ export function warmLocalLlm() {
       return { pipe: await m.pipeline('text-generation', cfg.llmLocal, { device, dtype: llmDtype(device) }), device };
     } catch (err: any) {
       if (device === 'cpu') throw err;
-      console.warn(`[POLARIS] RAG: ${device} unavailable (${err.message}); using CPU`);
+      console.warn(`[HIMAKSHA] RAG: ${device} unavailable (${err.message}); using CPU`);
       return { pipe: await m.pipeline('text-generation', cfg.llmLocal, { device: 'cpu', dtype: llmDtype('cpu') }), device: 'cpu' };
     }
   })().catch((err) => {

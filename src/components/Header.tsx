@@ -127,11 +127,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCommandPalette, pathname }
         <div className="flex items-center justify-between gap-4">
           <div onClick={() => navigate('/')} className="flex items-center gap-2 sm:gap-3 cursor-pointer group select-none min-w-0">
             <span className="h-9 w-9 shrink-0 rounded-lg bg-white p-0.5 ring-1 ring-slate-200 flex items-center justify-center">
-              <img alt="POLARIS emblem" className="h-full w-full object-contain" src="/polaris-emblem.svg" data-boot-logo />
+              <img alt="HIMAKSHA emblem" className="h-full w-full object-contain" src="/polaris-emblem.svg" data-boot-logo />
             </span>
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <span className="font-['Space_Grotesk'] text-lg md:text-xl tracking-tight text-[#0b1c30] font-bold leading-none">POLARIS</span>
+                <span className="font-['Space_Grotesk'] text-lg md:text-xl tracking-tight text-[#0b1c30] font-bold leading-none" title="Codename POLARIS during early development">HIMAKSHA</span>
                 <span className="hidden sm:inline text-[11px] px-2 py-0.5 rounded-full bg-[#e5eeff] text-[#00677d] font-semibold">SIH 2026 prototype</span>
               </div>
               <span className="text-xs text-[#3d494d] truncate max-w-xs md:max-w-xl hidden sm:inline mt-0.5">{SUBTITLE[lang]}</span>

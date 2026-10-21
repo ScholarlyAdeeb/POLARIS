@@ -91,7 +91,7 @@ export function connect(connectionString: string): Db {
   // (and avoid the driver's deprecation warning).
   const url = connectionString.replace(/sslmode=(require|prefer|verify-ca)\b/, 'sslmode=verify-full');
   const pool = new pg.Pool({ connectionString: url, max: Number(process.env.PG_POOL_MAX || 10), idleTimeoutMillis: 30_000 });
-  pool.on('error', (err) => console.error('[POLARIS DB] idle client error:', err.message));
+  pool.on('error', (err) => console.error('[HIMAKSHA DB] idle client error:', err.message));
   return wrapQueryable(pool, pool);
 }
 

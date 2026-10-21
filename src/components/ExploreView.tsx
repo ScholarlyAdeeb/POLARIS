@@ -88,7 +88,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
     try {
       setSearchResults(await api.search(query, 12));
     } catch {
-      onShowToast?.('Archive search is unavailable while the POLARIS API is offline.', 'POLAR ARCHIVE SEARCH', 'warning');
+      onShowToast?.('Archive search is unavailable while the HIMAKSHA API is offline.', 'POLAR ARCHIVE SEARCH', 'warning');
     } finally {
       setSearching(false);
     }

@@ -3,7 +3,7 @@ import { createApiRouter, UPLOAD_DIR } from './api.ts';
 import { initDb } from './db.ts';
 
 /**
- * The POLARIS Express app: REST API under /api and uploaded media under /uploads.
+ * The HIMAKSHA Express app: REST API under /api and uploaded media under /uploads.
  * server.ts adds the frontend (Vite in dev, dist/ in production) and listens;
  * server/vercel.ts exports it as a Vercel function, where Vercel serves the frontend itself.
  */

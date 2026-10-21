@@ -35,7 +35,7 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
     api
       .record(recordId)
       .then((r) => !cancelled && setRecord(r))
-      .catch((err) => !cancelled && setError(err?.status === 404 ? 'Record not found.' : 'The POLARIS API is unreachable.'));
+      .catch((err) => !cancelled && setError(err?.status === 404 ? 'Record not found.' : 'The HIMAKSHA API is unreachable.'));
     return () => {
       cancelled = true;
     };

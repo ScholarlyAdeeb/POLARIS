@@ -146,8 +146,8 @@ export async function createApiRouter() {
   api.use('/auth', createAuthRouter(db));
   api.use('/me', createContributorRouter(db));
   api.use(createPublicContentRouter(db));
-  api.use(createVerifyRouter(db)); // public: is this post a genuine published POLARIS post?
-  // Public: the latest Ask POLARIS evaluation (scripts/eval-ask.ts writes it; /accuracy shows it).
+  api.use(createVerifyRouter(db)); // public: is this post a genuine published HIMAKSHA post?
+  // Public: the latest Ask HIMAKSHA evaluation (scripts/eval-ask.ts writes it; /accuracy shows it).
   api.get(
     '/accuracy',
     wrap((_req, res) => {
@@ -347,7 +347,7 @@ export async function createApiRouter() {
     wrap(async (req, res) => {
       const item = await findDataset(db, req.params.ref);
       if (!item) throw new HttpError(404, 'Dataset not found');
-      // Only POLARIS sample records get a generated CF header; real datasets are described by their own metadata.
+      // Only HIMAKSHA sample records get a generated CF header; real datasets are described by their own metadata.
       res.json({ ...item, header: item.meta.sample ? datasetHeader(item) : '', links: await linksFor(db, item.id) });
     })
   );
@@ -840,7 +840,7 @@ export async function createApiRouter() {
     if (err instanceof HttpError) return res.status(err.status).json({ error: err.message });
     if (err?.type === 'entity.too.large') return res.status(413).json({ error: 'Payload too large' });
     if (err?.type === 'entity.parse.failed') return res.status(400).json({ error: 'Malformed JSON body' });
-    console.error('[POLARIS API]', err);
+    console.error('[HIMAKSHA API]', err);
     res.status(500).json({ error: 'Internal server error' });
   });
 

@@ -30,11 +30,11 @@ async function startServer() {
   }
 
   app.listen(port, '0.0.0.0', () => {
-    console.log(`POLARIS server running on http://0.0.0.0:${port}`);
+    console.log(`HIMAKSHA server running on http://0.0.0.0:${port}`);
   });
 }
 
 startServer().catch((err) => {
-  console.error('[POLARIS] Could not start:', err.message);
+  console.error('[HIMAKSHA] Could not start:', err.message);
   process.exit(1);
 });

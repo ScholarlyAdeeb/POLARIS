@@ -1,7 +1,7 @@
 /**
- * Scoring for the Ask POLARIS evaluation (scripts/eval-ask.ts, shown at /accuracy).
+ * Scoring for the Ask HIMAKSHA evaluation (scripts/eval-ask.ts, shown at /accuracy).
  * A factual question passes when the answer cites one of the expected records AND states every expected
- * fact (any spelling in a group). An off-topic question passes when POLARIS declines instead of answering.
+ * fact (any spelling in a group). An off-topic question passes when HIMAKSHA declines instead of answering.
  */
 
 export interface EvalQuestion {

@@ -1,4 +1,4 @@
-# POLARIS web app (API + built frontend) in one container.
+# HIMAKSHA web app (API + built frontend) in one container.
 # Data lives in PostgreSQL: pass DATABASE_URL at run time.
 FROM node:22-slim
 

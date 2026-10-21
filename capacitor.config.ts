@@ -1,10 +1,10 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
-// Android app: a small launcher (mobile-shell/) that opens the POLARIS server inside the app,
+// Android app: a small launcher (mobile-shell/) that opens the HIMAKSHA server inside the app,
 // so every page, login, upload and download works exactly as on the web.
 const config: CapacitorConfig = {
   appId: 'in.teampehchaan.polaris',
-  appName: 'POLARIS',
+  appName: 'HIMAKSHA',
   webDir: 'mobile-shell',
   server: {
     androidScheme: 'http',

@@ -83,7 +83,7 @@ function PostCard({ p }: { p: PublishedPost }) {
               {p.author_institution ? `, ${p.author_institution}` : ''}
             </span>
           ) : (
-            <span className="sci-muted">POLARIS archive</span>
+            <span className="sci-muted">HIMAKSHA archive</span>
           )}
           {p.reviewer && <span className="sci-muted">· approved by {p.reviewer}</span>}
           <span className="ml-auto flex gap-1.5">

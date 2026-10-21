@@ -1,6 +1,6 @@
-# Deploying POLARIS
+# Deploying HIMAKSHA
 
-POLARIS is one Node process (Express API + built React app) backed by PostgreSQL (`DATABASE_URL`), plus an uploads folder.
+HIMAKSHA is one Node process (Express API + built React app) backed by PostgreSQL (`DATABASE_URL`), plus an uploads folder.
 Anything that runs a Docker image works; a persistent disk keeps uploaded files.
 
 ## Render (simplest)
@@ -27,7 +27,7 @@ Mount a volume at `/data`. Set `DATABASE_URL`, `ADMIN_TOKEN` and `APP_URL`; the 
 
 ## Android app
 
-`android/` is a Capacitor project. The app opens the POLARIS server (a hosted URL, or your PC on the same Wi-Fi), so every web feature works in it, plus file downloads, camera capture and location.
+`android/` is a Capacitor project. The app opens the HIMAKSHA server (a hosted URL, or your PC on the same Wi-Fi), so every web feature works in it, plus file downloads, camera capture and location.
 
 ```bash
 npm run android:apk
@@ -35,7 +35,7 @@ npm run android:apk
 
 Needs JDK 21 and the Android SDK (`ANDROID_HOME`, or `sdk.dir` in `android/local.properties`). The APK is written to `android/app/build/outputs/apk/debug/app-debug.apk`. Set `POLARIS_SERVER_URL=https://your.domain` before building to make a hosted server the default; otherwise the app defaults to this PC's Wi-Fi address on port 3000. The address can be changed in the app.
 
-## Ask POLARIS (RAG)
+## Ask HIMAKSHA (RAG)
 
 - **Local / Docker**: run `npm run rag:models` once (downloads the open models to `data/models`). The index builds itself on startup.
 - **Vercel**: add `HF_TOKEN` (a Hugging Face access token) to the project's environment variables. The function uses Hugging Face Inference Providers with the same embedding model, so it shares the index in PostgreSQL. `vercel.json` skips the ONNX Runtime download (`ONNXRUNTIME_NODE_INSTALL=skip`) because local models never run there.

@@ -6,7 +6,7 @@ import { HttpError, rateLimit, str, wrap } from './http.ts';
 /**
  * Public verification of outreach posts. Every post has a short code derived from its id and exact text;
  * the newsroom shows it with a QR code. Anyone holding a copy (a screenshot, a forwarded post) can check
- * whether it is a genuine published POLARIS post, and paste the text to see whether it was altered.
+ * whether it is a genuine published HIMAKSHA post, and paste the text to see whether it was altered.
  * Editing a post sends it back to review, so a published code always belongs to the approved wording.
  */
 

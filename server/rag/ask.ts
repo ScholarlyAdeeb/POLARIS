@@ -10,7 +10,7 @@ import { embed, generate, llmName, localLlmDevice, localLlmState, warmLocalLlm, 
 import { ensureRagSchema, indexStatus, indexVersion, recordHeader, syncIndex } from './indexer.ts';
 
 /**
- * Ask POLARIS: questions answered from the records researchers have shared on the portal.
+ * Ask HIMAKSHA: questions answered from the records researchers have shared on the portal.
  * Retrieval is hybrid (pgvector cosine similarity + PostgreSQL full-text, fused with reciprocal
  * rank fusion); the language model answers only from the retrieved records and cites them as [S1];
  * every sentence of the answer is then checked against the cited records.
@@ -79,7 +79,7 @@ async function retrieveWithFallback(db: Db, question: string, f: SearchFilters):
   try {
     return { hits: await retrieve(db, question, f), degraded: null };
   } catch (err: any) {
-    console.warn('[POLARIS] Ask POLARIS: semantic search unavailable, using keyword search:', err.message);
+    console.warn('[HIMAKSHA] Ask HIMAKSHA: semantic search unavailable, using keyword search:', err.message);
     return {
       hits: await keywordRetrieve(db, question, f),
       degraded: 'Semantic search is unavailable right now, so these records were found by keyword search.',
@@ -186,14 +186,14 @@ async function buildSources(db: Db, hits: Hit[]): Promise<RagSource[]> {
 
 const SYSTEM =
   "You answer questions about India's polar research (NCPOR, MoES) using only the sources the user gives you. " +
-  'The sources are records that researchers shared on the POLARIS portal. You always cite them in square brackets, like [S1].';
+  'The sources are records that researchers shared on the HIMAKSHA portal. You always cite them in square brackets, like [S1].';
 
 // Rules come after the sources: small models follow the most recent instructions best.
 const RULES = `Instructions:
 - Answer in 2 to 5 plain sentences. No lists, no bold text, no headings.
 - End every sentence with the source it comes from, for example [S2].
 - Use only facts stated in the sources and copy numbers, dates and names exactly.
-- If the sources do not answer the question, reply only: The POLARIS archive does not have this yet.
+- If the sources do not answer the question, reply only: The HIMAKSHA archive does not have this yet.
 - If a source names the researcher who contributed it, credit them by name.
 
 Format: <fact from a source> [S1]. <another fact> [S3].`;
@@ -315,7 +315,7 @@ async function answer(
 
   const base = { question, sources, timings: { retrievalMs, generationMs: 0 } };
   if (!sources.length) {
-    const answer = 'No approved record on POLARIS matches this question yet. Try other words, or share your own work from the Share page.';
+    const answer = 'No approved record on HIMAKSHA matches this question yet. Try other words, or share your own work from the Share page.';
     emit('token', answer);
     return { ...base, answer, mode: 'no_sources', model: null, verification: null, note: degraded };
   }
@@ -335,7 +335,7 @@ async function answer(
   }
   const refused = /does not have this/i.test(answer) && answer.length < 120;
   if (refused) {
-    const text = 'The POLARIS archive does not have this yet. The closest records are listed alongside.';
+    const text = 'The HIMAKSHA archive does not have this yet. The closest records are listed alongside.';
     return { ...base, answer: text, mode: 'no_sources', model: llmName(cfg), verification: null, timings: { retrievalMs, generationMs: Date.now() - t1 }, note };
   }
   if (answer.trim()) answer = tidy(answer, sources);
@@ -391,7 +391,7 @@ export function createRagRouter(db: Db) {
     '/rag/ask',
     rateLimit(20, 60_000),
     wrap(async (req: Request, res: Response) => {
-      if (!ragConfig().enabled) throw new HttpError(503, 'Ask POLARIS is turned off on this server (RAG=off)');
+      if (!ragConfig().enabled) throw new HttpError(503, 'Ask HIMAKSHA is turned off on this server (RAG=off)');
       const question = str(req.body?.question, 'question', { required: true, max: 500 });
       res.status(200).set({ 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-cache, no-transform', 'x-accel-buffering': 'no' });
       res.flushHeaders();
@@ -428,5 +428,5 @@ export function startRag(db: Db) {
   if (!cfg.enabled || process.env.VERCEL) return;
   syncIndex(db, { force: false, budgetMs: 10 * 60_000 })
     .then(() => (cfg.backend === 'local' ? warmLocalLlm() : null))
-    .catch((err) => console.warn('[POLARIS] RAG not ready:', err.message));
+    .catch((err) => console.warn('[HIMAKSHA] RAG not ready:', err.message));
 }

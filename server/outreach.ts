@@ -114,7 +114,7 @@ function context(item: ArchiveItem): string {
 function facts(item: ArchiveItem): string[] {
   const m = item.meta;
   const out: string[] = [];
-  if (m.contributor?.name) out.push(`Shared on POLARIS by ${m.contributor.name}${m.contributor.institution ? `, ${m.contributor.institution}` : ''}`);
+  if (m.contributor?.name) out.push(`Shared on HIMAKSHA by ${m.contributor.name}${m.contributor.institution ? `, ${m.contributor.institution}` : ''}`);
   if (m.authors) out.push(`Authors: ${m.authors}`);
   if (m.journal) out.push(`Journal: ${m.journal}`);
   if (m.format) out.push(`Format: ${m.format}${m.size ? ` (${m.size})` : ''}`);
@@ -131,7 +131,7 @@ export function generateContent(item: ArchiveItem, link: string, channels: Chann
   const emoji = TYPE_EMOJI[item.type] ?? '❄️';
   const ctx = context(item);
   const tags = hashtags(item);
-  const sampleNote = item.meta.sample ? 'Note: this is a sample record in the POLARIS demo archive.' : '';
+  const sampleNote = item.meta.sample ? 'Note: this is a sample record in the HIMAKSHA demo archive.' : '';
   const results: GeneratedContent[] = [];
 
   for (const channel of channels) {
@@ -146,7 +146,7 @@ export function generateContent(item: ArchiveItem, link: string, channels: Chann
         '',
         item.body ? item.body + '\n' : '',
         facts(item).length ? '## Key facts\n\n' + facts(item).map((f) => `- ${f}`).join('\n') + '\n' : '',
-        `[View the full record on POLARIS](${link})`,
+        `[View the full record on HIMAKSHA](${link})`,
         '',
         sampleNote,
       ]
@@ -173,7 +173,7 @@ export function generateContent(item: ArchiveItem, link: string, channels: Chann
     if (channel === 'linkedin') {
       const text = [
         item.meta.contributor?.name
-          ? `${emoji} ${label} shared on POLARIS by ${item.meta.contributor.name}${item.meta.contributor.institution ? `, ${item.meta.contributor.institution}` : ''}`
+          ? `${emoji} ${label} shared on HIMAKSHA by ${item.meta.contributor.name}${item.meta.contributor.institution ? `, ${item.meta.contributor.institution}` : ''}`
           : `${emoji} ${label} from the National Centre for Polar and Ocean Research (NCPOR)`,
         '',
         item.title,
@@ -181,7 +181,7 @@ export function generateContent(item: ArchiveItem, link: string, channels: Chann
         sentence(item.summary, 600),
         facts(item).length ? '\n' + facts(item).slice(0, 4).map((f) => `• ${f}`).join('\n') : '',
         '',
-        `Explore the record, linked datasets and publications on POLARIS: ${link}`,
+        `Explore the record, linked datasets and publications on HIMAKSHA: ${link}`,
         sampleNote ? `\n${sampleNote}` : '',
         '',
         tags.join(' '),
@@ -198,9 +198,9 @@ export function generateContent(item: ArchiveItem, link: string, channels: Chann
         '',
         sentence(item.summary, 300),
         ctx ? `\n📍 ${ctx}` : '',
-        item.meta.contributor?.name ? `📸 Shared on POLARIS by ${item.meta.contributor.name}${item.meta.contributor.institution ? `, ${item.meta.contributor.institution}` : ''}` : '',
+        item.meta.contributor?.name ? `📸 Shared on HIMAKSHA by ${item.meta.contributor.name}${item.meta.contributor.institution ? `, ${item.meta.contributor.institution}` : ''}` : '',
         '',
-        'Link in bio → POLARIS knowledge portal',
+        'Link in bio → HIMAKSHA knowledge portal',
         sampleNote ? `\n${sampleNote}` : '',
         '',
         '.',

@@ -1,4 +1,4 @@
-# Background helper for start_all.bat: waits for the POLARIS web server, then opens the browser.
+# Background helper for start_all.bat: waits for the HIMAKSHA web server, then opens the browser.
 param(
     [int]$Port = 3000,
     [switch]$NoBrowser

@@ -36,7 +36,7 @@ declare global {
 
 export const ADMIN_TOKEN = process.env.ADMIN_TOKEN || crypto.randomBytes(18).toString('base64url');
 if (!process.env.ADMIN_TOKEN) {
-  console.log(`[POLARIS] ADMIN_TOKEN not set; generated one for this run: ${ADMIN_TOKEN}`);
+  console.log(`[HIMAKSHA] ADMIN_TOKEN not set; generated one for this run: ${ADMIN_TOKEN}`);
 }
 const TOKEN_ADMIN: SessionUser = { id: 0, email: '', name: 'Admin (token)', institution: '', role: 'admin' };
 
@@ -130,8 +130,8 @@ async function startSession(db: Db, req: Request, res: Response, userId: number)
  */
 export const demoAccountsEnabled = () => (process.env.DEMO_ACCOUNTS ?? 'on') !== 'off';
 const DEMO = [
-  { username: 'user1', password: '1234', email: 'user1@demo.polaris.local', name: 'Demo Contributor', institution: 'POLARIS demo', role: 'contributor' },
-  { username: 'admin', password: '0786', email: 'admin@demo.polaris.local', name: 'Demo Admin', institution: 'POLARIS demo', role: 'admin' },
+  { username: 'user1', password: '1234', email: 'user1@demo.polaris.local', name: 'Demo Contributor', institution: 'HIMAKSHA demo', role: 'contributor' },
+  { username: 'admin', password: '0786', email: 'admin@demo.polaris.local', name: 'Demo Admin', institution: 'HIMAKSHA demo', role: 'admin' },
 ];
 
 export async function seedDemoAccounts(db: Db) {

@@ -1,7 +1,7 @@
 // Harvests article metadata from NCPOR's DSpace repository ("DSPACE AT NCAOR") over OAI-PMH and stores it
 // in server/data/open-data.json under `ncporReports`. Each record is a paper in the Scientific Report of an
 // Indian Expedition to Antarctica, linked to its NCPOR handle page. Metadata only: NCPOR's site states
-// "All Rights Reserved", so POLARIS links to the report instead of copying it.
+// "All Rights Reserved", so HIMAKSHA links to the report instead of copying it.
 //
 //   npm run import:ncpor         (polite: one request at a time, a pause between pages)
 import fs from 'fs';
@@ -15,7 +15,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 async function get(url: string, tries = 4): Promise<string> {
   for (let i = 1; ; i++) {
     try {
-      const res = await fetch(url, { headers: { 'user-agent': 'POLARIS-SIH26063-harvester (metadata only)' }, signal: AbortSignal.timeout(120_000) });
+      const res = await fetch(url, { headers: { 'user-agent': 'HIMAKSHA-SIH26063-harvester (metadata only)' }, signal: AbortSignal.timeout(120_000) });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.text();
     } catch (err) {

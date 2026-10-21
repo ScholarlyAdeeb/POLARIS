@@ -10,7 +10,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const UA = { 'User-Agent': 'POLARIS-SIH-prototype/1.0 (https://github.com/ScholarlyAdeeb/POLARIS)' };
+const UA = { 'User-Agent': 'HIMAKSHA-SIH-prototype/1.0 (https://github.com/ScholarlyAdeeb/POLARIS)' };
 const OUT = path.resolve('server', 'data', 'open-data.json');
 
 const POLAR = /antarc|arctic|himalay|southern ocean|svalbard|glacier|sea[- ]ice|ice shelf|ice core|polar|snow|permafrost|cryo|maitri|bharati|himadri|himansh|kongsfjord|larsemann|schirmacher|ny[- ]?[aå]lesund|spitsbergen|chandra basin/i;

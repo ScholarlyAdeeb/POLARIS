@@ -24,7 +24,7 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
     api
       .dataset(datasetName)
       .then((d) => !cancelled && setDataset(d))
-      .catch((err) => !cancelled && setError(err?.status === 404 ? 'This dataset is not in the archive yet.' : 'The POLARIS API is unreachable.'));
+      .catch((err) => !cancelled && setError(err?.status === 404 ? 'This dataset is not in the archive yet.' : 'The HIMAKSHA API is unreachable.'));
     return () => {
       cancelled = true;
     };
@@ -62,7 +62,7 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
             </span>
             <div className="min-w-0">
               <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-bold">
-                POLARIS ARCHIVE{dataset ? ` • ${dataset.id}` : ''}
+                HIMAKSHA ARCHIVE{dataset ? ` • ${dataset.id}` : ''}
               </span>
               <h3 className="font-['Space_Grotesk'] font-bold text-base text-[#0b1c30] mt-0.5 truncate">
                 {dataset?.title ?? datasetName}
@@ -156,7 +156,7 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({ datasetName, onClose
         <div className="px-6 py-4 bg-[#f8f9ff] border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
           <span className="font-['JetBrains_Mono'] text-xs text-slate-500">
             {dataset?.dataStatus === 'OFFICIAL' || dataset?.dataStatus === 'VERIFIED'
-              ? 'Checked against its source by a POLARIS reviewer'
+              ? 'Checked against its source by a HIMAKSHA reviewer'
               : dataset?.dataStatus === 'EXTERNAL'
               ? `Metadata from ${dataset.meta.registry ?? 'an open registry'}; data stays with the publisher`
               : 'Not an official NCPOR data product'}

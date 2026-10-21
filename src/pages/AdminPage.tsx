@@ -18,7 +18,7 @@ function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
-/** Ask POLARIS: what the RAG index holds and which open models answer. */
+/** Ask HIMAKSHA: what the RAG index holds and which open models answer. */
 function RagPanel() {
   const [st, setSt] = useState<RagStatus | null>(null);
   const [busy, setBusy] = useState(false);
@@ -44,11 +44,11 @@ function RagPanel() {
       setBusy(false);
     }
   };
-  if (!st) return <div className="sci-card p-4 text-sm sci-muted">{msg ?? 'Loading Ask POLARIS status…'}</div>;
+  if (!st) return <div className="sci-card p-4 text-sm sci-muted">{msg ?? 'Loading Ask HIMAKSHA status…'}</div>;
   const ix = st.index;
   return (
     <div className="sci-card p-4">
-      <h2 className="font-semibold mb-3">Ask POLARIS (RAG)</h2>
+      <h2 className="font-semibold mb-3">Ask HIMAKSHA (RAG)</h2>
       {ix.ready ? (
         <div className="grid grid-cols-2 gap-2 mb-3">
           <Stat label="Records indexed" value={`${ix.records} / ${ix.approved}`} />

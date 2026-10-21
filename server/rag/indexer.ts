@@ -282,7 +282,7 @@ export function syncIndex(db: Db, { budgetMs = 60_000, force = false } = {}): Pr
       await db.run(`UPDATE rag_index_state s SET indexed_at = ${NOW} FROM archive_items a WHERE a.id = s.item_id AND a.updated_at > s.indexed_at`);
       lastFullCheck = Date.now();
     }
-    if (result.indexed || result.removed) console.log(`[POLARIS] RAG index: ${result.indexed} records embedded, ${result.removed} removed`);
+    if (result.indexed || result.removed) console.log(`[HIMAKSHA] RAG index: ${result.indexed} records embedded, ${result.removed} removed`);
     return result;
   })().finally(() => {
     running = null;
