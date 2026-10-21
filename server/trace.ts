@@ -46,13 +46,13 @@ export function explainLink(from: ArchiveItem, to: ArchiveItem, relation: string
   else if (from.domain && from.domain === to.domain) reasons.push(`Both belong to the same region (${from.domain.toLowerCase()}).`);
   if (from.year && to.year) {
     const gap = from.year - to.year;
-    reasons.push(gap === 0 ? `Both are from ${from.year}.` : `${from.year} and ${to.year}${gap > 0 ? `: it came ${gap} year${gap > 1 ? 's' : ''} later` : ''}.`);
+    reasons.push(gap === 0 ? `Both are from ${from.year}.` : gap > 0 ? `${from.year} and ${to.year}: it came ${gap} year${gap > 1 ? 's' : ''} later.` : `Dated ${from.year}; the linked record is dated ${to.year}.`);
   }
   const shared = from.tags.filter((t) => to.tags.some((u) => u.toLowerCase() === t.toLowerCase()));
   if (shared.length) reasons.push(`Shared keywords: ${shared.slice(0, 5).join(', ')}.`);
   const p = from.provenance ?? {};
   if (p.submittedBy) reasons.push(`Linked by ${p.submittedBy} when submitting${p.reviewedBy ? `; checked by reviewer ${p.reviewedBy}` : ''}.`);
-  else if (p.source) reasons.push(`From the catalogue source: ${p.source}.`);
+  else if (p.source) reasons.push(/seed/i.test(p.source) ? 'A curated link in the demo catalogue.' : `From the catalogue source: ${p.source}.`);
   return reasons;
 }
 

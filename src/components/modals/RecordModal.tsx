@@ -149,6 +149,13 @@ export const RecordModal: React.FC<RecordModalProps> = ({ recordId, onClose, onO
                 </a>
               )}
 
+              {record.meta.sourcePage && (
+                <a href={record.meta.sourcePage} target="_blank" rel="noopener noreferrer" className="sci-btn-ghost text-xs w-fit">
+                  <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                  File page, author and licence ({record.meta.registry ?? 'source'})
+                </a>
+              )}
+
               <SeriesChart recordId={record.id} />
               <CitePanel recordId={record.id} />
               <TracePanel recordId={record.id} onOpenRecord={onOpenRecord} />

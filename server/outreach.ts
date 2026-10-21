@@ -144,7 +144,10 @@ const TYPE_LABEL_HI: Record<string, string> = {
 export function inHindi(item: ArchiveItem): ArchiveItem | null {
   const hi = item.meta?.hi;
   if (!hi?.summary) return null;
-  return { ...item, title: hi.title || item.title, summary: hi.summary, body: '' };
+  // The Hindi catalogue line and credit, so the fact check of a Hindi post has the same evidence as an English one.
+  const catalogue = `${TYPE_LABEL_HI[item.type] ?? 'अपडेट'}${item.year ? ` · ${item.year}` : ''}.`;
+  const credit = item.meta.contributor?.name ? ` HIMAKSHA पर ${item.meta.contributor.name} द्वारा साझा किया गया।` : '';
+  return { ...item, title: hi.title || item.title, summary: hi.summary, body: catalogue + credit };
 }
 
 function generateHindi(item: ArchiveItem, link: string, channels: Channel[]): GeneratedContent[] {

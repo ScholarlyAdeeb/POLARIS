@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 /** QR code + short code for a published post. Scanning opens /verify/<code>, which says whether the copy is genuine. */
-export function VerifyBadge({ code }: { code: string }) {
+export function VerifyBadge({ code, label = 'Verify this post' }: { code: string; label?: string }) {
   const [svg, setSvg] = useState<string | null>(null);
   const url = `${location.origin}/verify/${code}`;
   useEffect(() => {
@@ -19,7 +19,7 @@ export function VerifyBadge({ code }: { code: string }) {
     <Link to={`/verify/${code}`} className="flex items-center gap-2 text-xs sci-well px-2 py-1.5 rounded-lg hover:shadow" title="Scan or open to check this post is genuine" data-testid="verify-badge">
       {svg ? <span className="w-10 h-10 shrink-0 [&>svg]:w-full [&>svg]:h-full" aria-hidden dangerouslySetInnerHTML={{ __html: svg }} /> : <span className="w-10 h-10" />}
       <span className="leading-tight">
-        <span className="block sci-muted">Verify this post</span>
+        <span className="block sci-muted">{label}</span>
         <span className="sci-mono font-semibold tracking-wider">{code}</span>
       </span>
     </Link>

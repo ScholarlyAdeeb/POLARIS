@@ -15,6 +15,7 @@
     "eval": "tsx scripts/eval-ask.ts",
     "import:open-data": "tsx scripts/import-open-data.ts",
     "import:ncpor": "tsx scripts/import-ncpor-dspace.ts",
+    "import:extra": "tsx scripts/import-extra-sources.ts",
     "android:sync": "node scripts/android-config.mjs && cap sync android",
     "android:apk": "npm run android:sync && cd android && gradlew assembleDebug",
     "rag:models": "tsx scripts/rag-models.ts",

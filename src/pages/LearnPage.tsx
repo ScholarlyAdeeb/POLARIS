@@ -1,11 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api, type LessonPack, type QuizQuestion } from '../lib/api';
+import { api, type Certificate, type LessonPack, type QuizQuestion } from '../lib/api';
+import { VerifyBadge } from '../components/VerifyBadge';
 import { useT } from '../lib/i18n';
 import { DataStatusBadge, ErrorNote, Page, PageHeader } from '../components/ui';
 
-function Quiz({ quiz, onNew }: { quiz: QuizQuestion[]; onNew: () => void }) {
+const PASS = 0.75; // server/certificates.ts PASS_MARK
+
+/** Printable certificate; the code and QR open /verify, which checks it against the database. */
+function CertificateCard({ c }: { c: Certificate }) {
+  return (
+    <div className="w-full rounded-xl border-2 border-[#00677d] p-4 bg-gradient-to-br from-[#eff9fc] to-white flex flex-col gap-2 print:break-inside-avoid" data-testid="certificate">
+      <p className="text-[11px] tracking-[0.2em] sci-muted">HIMAKSHA · CERTIFICATE OF COMPLETION</p>
+      <p className="font-['Space_Grotesk'] text-xl font-bold">{c.name}</p>
+      <p className="text-sm">
+        completed the HIMAKSHA polar science quiz with {c.score} of {c.total} correct answers on{' '}
+        {new Date(c.issued_at).toLocaleDateString('en-IN', { dateStyle: 'long' })}.
+      </p>
+      <p className="text-[11px] sci-muted">Questions are built from NCPOR station and expedition records. Anyone can check this certificate with its code.</p>
+      <div className="flex flex-wrap items-center gap-2">
+        <VerifyBadge code={c.code} label="Verify this certificate" />
+        <button className="sci-btn-ghost text-xs py-1 print:hidden" onClick={() => window.print()}>
+          Print
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function CertificateForm({ seed, answers, score, total }: { seed: number; answers: string[]; score: number; total: number }) {
+  const [name, setName] = useState('');
+  const [cert, setCert] = useState<Certificate | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  if (cert) return <CertificateCard c={cert} />;
+  if (score / total < PASS) return <p className="text-sm sci-muted">Get {Math.ceil(PASS * total)} or more right to earn a certificate.</p>;
+  return (
+    <form
+      className="flex flex-col gap-2 w-full"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setBusy(true);
+        setError(null);
+        try {
+          setCert(await api.issueCertificate({ name: name.trim(), seed, answers }));
+        } catch (err: any) {
+          setError(err.message);
+        } finally {
+          setBusy(false);
+        }
+      }}
+    >
+      <label className="text-xs sci-muted flex flex-col gap-1">
+        Name on your certificate
+        <input required maxLength={80} value={name} onChange={(e) => setName(e.target.value)} className="sci-input" placeholder="e.g. Ananya Sharma, Class 9" />
+      </label>
+      <button className="sci-btn w-fit" disabled={busy || !name.trim()}>
+        {busy ? 'Checking your answers…' : 'Get my certificate'}
+      </button>
+      <ErrorNote error={error} />
+    </form>
+  );
+}
+
+function Quiz({ quiz, seed, onNew }: { quiz: QuizQuestion[]; seed: number; onNew: () => void }) {
   const { t } = useT();
+  const [answers, setAnswers] = useState<string[]>([]);
   const [i, setI] = useState(0);
   const [choice, setChoice] = useState<string | null>(null);
   const [checked, setChecked] = useState(false);
@@ -15,6 +75,7 @@ function Quiz({ quiz, onNew }: { quiz: QuizQuestion[]; onNew: () => void }) {
     setChoice(null);
     setChecked(false);
     setScore(0);
+    setAnswers([]);
   }, [quiz]);
 
   if (!quiz.length) return <p className="text-sm sci-muted">Not enough records to build a quiz yet.</p>;
@@ -34,6 +95,7 @@ function Quiz({ quiz, onNew }: { quiz: QuizQuestion[]; onNew: () => void }) {
           <p className="text-lg font-semibold">
             {t('learn.score')}: {score} / {quiz.length}
           </p>
+          <CertificateForm seed={seed} answers={answers} score={score} total={quiz.length} />
           <button className="sci-btn" onClick={onNew}>
             {t('learn.newQuiz')}
           </button>
@@ -74,6 +136,7 @@ function Quiz({ quiz, onNew }: { quiz: QuizQuestion[]; onNew: () => void }) {
                 disabled={!choice}
                 onClick={() => {
                   setChecked(true);
+                  setAnswers((a) => [...a, choice!]);
                   if (choice === q.answer) setScore((s) => s + 1);
                 }}
               >
@@ -163,7 +226,7 @@ export function LearnPage({ onOpenRecord }: { onOpenRecord: (id: string) => void
             )}
           </section>
           <div className="xl:col-span-5">
-            <Quiz quiz={data.quiz} onNew={() => load(Math.floor(Math.random() * 1e6))} />
+            <Quiz quiz={data.quiz} seed={data.seed} onNew={() => load(Math.floor(Math.random() * 1e6))} />
           </div>
         </div>
       )}

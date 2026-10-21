@@ -3,7 +3,10 @@
  "sources": {
   "crossref": "https://api.crossref.org (metadata released under CC0)",
   "pangaea": "https://www.pangaea.de (dataset metadata; each dataset carries its own licence)",
-  "ncpor": "http://14.139.119.23:8080/dspace-oai/request (NCPOR DSpace, OAI-PMH; metadata only, articles stay on NCPOR's site)"
+  "ncpor": "http://14.139.119.23:8080/dspace-oai/request (NCPOR DSpace, OAI-PMH; metadata only, articles stay on NCPOR's site)",
+  "nsidc": "NSIDC Sea Ice Index v4, G02135 (NOAA/NSIDC, public domain), doi:10.7265/a98x-0f50",
+  "openalex": "https://openalex.org (metadata released under CC0)",
+  "commons": "https://commons.wikimedia.org (each file under its own free licence)"
  },
  "papers": [
   {
@@ -19368,6 +19371,9165 @@
    "expedition": 30,
    "section": "Introduction",
    "url": "http://14.139.119.23:8080/dspace/handle/123456789/1260"
+  }
+ ],
+ "extraRetrievedAt": "2026-10-21T18:50:09.846Z",
+ "seaIce": {
+  "north": [
+   {
+    "year": 1978,
+    "month": 11,
+    "extent": 11.65,
+    "area": 9.04
+   },
+   {
+    "year": 1978,
+    "month": 12,
+    "extent": 13.67,
+    "area": 10.9
+   },
+   {
+    "year": 1979,
+    "month": 1,
+    "extent": 15.41,
+    "area": 12.41
+   },
+   {
+    "year": 1979,
+    "month": 2,
+    "extent": 16.18,
+    "area": 13.18
+   },
+   {
+    "year": 1979,
+    "month": 3,
+    "extent": 16.34,
+    "area": 13.21
+   },
+   {
+    "year": 1979,
+    "month": 4,
+    "extent": 15.45,
+    "area": 12.53
+   },
+   {
+    "year": 1979,
+    "month": 5,
+    "extent": 13.86,
+    "area": 11.11
+   },
+   {
+    "year": 1979,
+    "month": 6,
+    "extent": 12.53,
+    "area": 9.34
+   },
+   {
+    "year": 1979,
+    "month": 7,
+    "extent": 10.31,
+    "area": 6.69
+   },
+   {
+    "year": 1979,
+    "month": 8,
+    "extent": 8.04,
+    "area": 5.06
+   },
+   {
+    "year": 1979,
+    "month": 9,
+    "extent": 7.05,
+    "area": 4.58
+   },
+   {
+    "year": 1979,
+    "month": 10,
+    "extent": 8.75,
+    "area": 6.19
+   },
+   {
+    "year": 1979,
+    "month": 11,
+    "extent": 10.94,
+    "area": 8.37
+   },
+   {
+    "year": 1979,
+    "month": 12,
+    "extent": 13.34,
+    "area": 10.63
+   },
+   {
+    "year": 1980,
+    "month": 1,
+    "extent": 14.86,
+    "area": 11.94
+   },
+   {
+    "year": 1980,
+    "month": 2,
+    "extent": 15.96,
+    "area": 12.9
+   },
+   {
+    "year": 1980,
+    "month": 3,
+    "extent": 16.04,
+    "area": 12.99
+   },
+   {
+    "year": 1980,
+    "month": 4,
+    "extent": 15.43,
+    "area": 12.52
+   },
+   {
+    "year": 1980,
+    "month": 5,
+    "extent": 13.79,
+    "area": 10.96
+   },
+   {
+    "year": 1980,
+    "month": 6,
+    "extent": 12.2,
+    "area": 9
+   },
+   {
+    "year": 1980,
+    "month": 7,
+    "extent": 10.1,
+    "area": 6.53
+   },
+   {
+    "year": 1980,
+    "month": 8,
+    "extent": 7.98,
+    "area": 4.94
+   },
+   {
+    "year": 1980,
+    "month": 9,
+    "extent": 7.67,
+    "area": 4.87
+   },
+   {
+    "year": 1980,
+    "month": 10,
+    "extent": 9.18,
+    "area": 6.5
+   },
+   {
+    "year": 1980,
+    "month": 11,
+    "extent": 11.38,
+    "area": 8.73
+   },
+   {
+    "year": 1980,
+    "month": 12,
+    "extent": 13.59,
+    "area": 10.78
+   },
+   {
+    "year": 1981,
+    "month": 1,
+    "extent": 14.91,
+    "area": 11.91
+   },
+   {
+    "year": 1981,
+    "month": 2,
+    "extent": 15.6,
+    "area": 12.53
+   },
+   {
+    "year": 1981,
+    "month": 3,
+    "extent": 15.63,
+    "area": 12.71
+   },
+   {
+    "year": 1981,
+    "month": 4,
+    "extent": 15.01,
+    "area": 12.24
+   },
+   {
+    "year": 1981,
+    "month": 5,
+    "extent": 13.8,
+    "area": 10.99
+   },
+   {
+    "year": 1981,
+    "month": 6,
+    "extent": 12.43,
+    "area": 9.03
+   },
+   {
+    "year": 1981,
+    "month": 7,
+    "extent": 10.27,
+    "area": 6.31
+   },
+   {
+    "year": 1981,
+    "month": 8,
+    "extent": 7.84,
+    "area": 4.48
+   },
+   {
+    "year": 1981,
+    "month": 9,
+    "extent": 7.14,
+    "area": 4.44
+   },
+   {
+    "year": 1981,
+    "month": 10,
+    "extent": 8.86,
+    "area": 6.27
+   },
+   {
+    "year": 1981,
+    "month": 11,
+    "extent": 10.93,
+    "area": 8.31
+   },
+   {
+    "year": 1981,
+    "month": 12,
+    "extent": 13.34,
+    "area": 10.54
+   },
+   {
+    "year": 1982,
+    "month": 1,
+    "extent": 15.18,
+    "area": 12.19
+   },
+   {
+    "year": 1982,
+    "month": 2,
+    "extent": 15.97,
+    "area": 12.87
+   },
+   {
+    "year": 1982,
+    "month": 3,
+    "extent": 16.04,
+    "area": 13.07
+   },
+   {
+    "year": 1982,
+    "month": 4,
+    "extent": 15.47,
+    "area": 12.63
+   },
+   {
+    "year": 1982,
+    "month": 5,
+    "extent": 13.97,
+    "area": 11.17
+   },
+   {
+    "year": 1982,
+    "month": 6,
+    "extent": 12.48,
+    "area": 9.46
+   },
+   {
+    "year": 1982,
+    "month": 7,
+    "extent": 10.37,
+    "area": 6.87
+   },
+   {
+    "year": 1982,
+    "month": 8,
+    "extent": 8.14,
+    "area": 5
+   },
+   {
+    "year": 1982,
+    "month": 9,
+    "extent": 7.3,
+    "area": 4.43
+   },
+   {
+    "year": 1982,
+    "month": 10,
+    "extent": 9.42,
+    "area": 6.67
+   },
+   {
+    "year": 1982,
+    "month": 11,
+    "extent": 11.63,
+    "area": 9.06
+   },
+   {
+    "year": 1982,
+    "month": 12,
+    "extent": 13.64,
+    "area": 10.88
+   },
+   {
+    "year": 1983,
+    "month": 1,
+    "extent": 14.94,
+    "area": 12.01
+   },
+   {
+    "year": 1983,
+    "month": 2,
+    "extent": 16.01,
+    "area": 12.94
+   },
+   {
+    "year": 1983,
+    "month": 3,
+    "extent": 16.09,
+    "area": 12.93
+   },
+   {
+    "year": 1983,
+    "month": 4,
+    "extent": 15.17,
+    "area": 12.21
+   },
+   {
+    "year": 1983,
+    "month": 5,
+    "extent": 13.49,
+    "area": 10.87
+   },
+   {
+    "year": 1983,
+    "month": 6,
+    "extent": 12.3,
+    "area": 9.27
+   },
+   {
+    "year": 1983,
+    "month": 7,
+    "extent": 10.57,
+    "area": 6.86
+   },
+   {
+    "year": 1983,
+    "month": 8,
+    "extent": 8.19,
+    "area": 4.97
+   },
+   {
+    "year": 1983,
+    "month": 9,
+    "extent": 7.39,
+    "area": 4.7
+   },
+   {
+    "year": 1983,
+    "month": 10,
+    "extent": 9.33,
+    "area": 6.79
+   },
+   {
+    "year": 1983,
+    "month": 11,
+    "extent": 11.46,
+    "area": 8.99
+   },
+   {
+    "year": 1983,
+    "month": 12,
+    "extent": 13.3,
+    "area": 10.63
+   },
+   {
+    "year": 1984,
+    "month": 1,
+    "extent": 14.47,
+    "area": 11.68
+   },
+   {
+    "year": 1984,
+    "month": 2,
+    "extent": 15.3,
+    "area": 12.26
+   },
+   {
+    "year": 1984,
+    "month": 3,
+    "extent": 15.58,
+    "area": 12.55
+   },
+   {
+    "year": 1984,
+    "month": 4,
+    "extent": 15.01,
+    "area": 12.18
+   },
+   {
+    "year": 1984,
+    "month": 5,
+    "extent": 13.58,
+    "area": 10.88
+   },
+   {
+    "year": 1984,
+    "month": 6,
+    "extent": 12.15,
+    "area": 9.09
+   },
+   {
+    "year": 1984,
+    "month": 7,
+    "extent": 9.98,
+    "area": 6.3
+   },
+   {
+    "year": 1984,
+    "month": 8,
+    "extent": 7.77,
+    "area": 4.68
+   },
+   {
+    "year": 1984,
+    "month": 9,
+    "extent": 6.81,
+    "area": 4.11
+   },
+   {
+    "year": 1984,
+    "month": 10,
+    "extent": 8.56,
+    "area": 5.91
+   },
+   {
+    "year": 1984,
+    "month": 11,
+    "extent": 10.84,
+    "area": 8.24
+   },
+   {
+    "year": 1984,
+    "month": 12,
+    "extent": 12.99,
+    "area": 10.27
+   },
+   {
+    "year": 1985,
+    "month": 1,
+    "extent": 14.72,
+    "area": 11.69
+   },
+   {
+    "year": 1985,
+    "month": 2,
+    "extent": 15.47,
+    "area": 12.48
+   },
+   {
+    "year": 1985,
+    "month": 3,
+    "extent": 15.89,
+    "area": 12.75
+   },
+   {
+    "year": 1985,
+    "month": 4,
+    "extent": 15.36,
+    "area": 12.54
+   },
+   {
+    "year": 1985,
+    "month": 5,
+    "extent": 14.07,
+    "area": 11.25
+   },
+   {
+    "year": 1985,
+    "month": 6,
+    "extent": 12.22,
+    "area": 8.96
+   },
+   {
+    "year": 1985,
+    "month": 7,
+    "extent": 9.74,
+    "area": 5.99
+   },
+   {
+    "year": 1985,
+    "month": 8,
+    "extent": 7.4,
+    "area": 4.6
+   },
+   {
+    "year": 1985,
+    "month": 9,
+    "extent": 6.7,
+    "area": 4.23
+   },
+   {
+    "year": 1985,
+    "month": 10,
+    "extent": 8.55,
+    "area": 6.12
+   },
+   {
+    "year": 1985,
+    "month": 11,
+    "extent": 11.02,
+    "area": 8.42
+   },
+   {
+    "year": 1985,
+    "month": 12,
+    "extent": 13.05,
+    "area": 10.24
+   },
+   {
+    "year": 1986,
+    "month": 1,
+    "extent": 14.89,
+    "area": 11.88
+   },
+   {
+    "year": 1986,
+    "month": 2,
+    "extent": 15.78,
+    "area": 12.62
+   },
+   {
+    "year": 1986,
+    "month": 3,
+    "extent": 15.91,
+    "area": 12.72
+   },
+   {
+    "year": 1986,
+    "month": 4,
+    "extent": 15.06,
+    "area": 12.04
+   },
+   {
+    "year": 1986,
+    "month": 5,
+    "extent": 13.38,
+    "area": 10.7
+   },
+   {
+    "year": 1986,
+    "month": 6,
+    "extent": 11.98,
+    "area": 8.99
+   },
+   {
+    "year": 1986,
+    "month": 7,
+    "extent": 10.15,
+    "area": 6.62
+   },
+   {
+    "year": 1986,
+    "month": 8,
+    "extent": 7.98,
+    "area": 5.01
+   },
+   {
+    "year": 1986,
+    "month": 9,
+    "extent": 7.41,
+    "area": 4.72
+   },
+   {
+    "year": 1986,
+    "month": 10,
+    "extent": 9.48,
+    "area": 6.83
+   },
+   {
+    "year": 1986,
+    "month": 11,
+    "extent": 11.45,
+    "area": 8.87
+   },
+   {
+    "year": 1986,
+    "month": 12,
+    "extent": 13.22,
+    "area": 10.53
+   },
+   {
+    "year": 1987,
+    "month": 1,
+    "extent": 14.97,
+    "area": 11.9
+   },
+   {
+    "year": 1987,
+    "month": 2,
+    "extent": 16.05,
+    "area": 13.02
+   },
+   {
+    "year": 1987,
+    "month": 3,
+    "extent": 15.82,
+    "area": 12.83
+   },
+   {
+    "year": 1987,
+    "month": 4,
+    "extent": 15.21,
+    "area": 12.35
+   },
+   {
+    "year": 1987,
+    "month": 5,
+    "extent": 13.74,
+    "area": 10.97
+   },
+   {
+    "year": 1987,
+    "month": 6,
+    "extent": 12.49,
+    "area": 9.39
+   },
+   {
+    "year": 1987,
+    "month": 7,
+    "extent": 10.33,
+    "area": 6.55
+   },
+   {
+    "year": 1987,
+    "month": 9,
+    "extent": 7.28,
+    "area": 5.64
+   },
+   {
+    "year": 1987,
+    "month": 10,
+    "extent": 9.05,
+    "area": 7.49
+   },
+   {
+    "year": 1987,
+    "month": 11,
+    "extent": 11.22,
+    "area": 9.73
+   },
+   {
+    "year": 1988,
+    "month": 2,
+    "extent": 15.58,
+    "area": 13.57
+   },
+   {
+    "year": 1988,
+    "month": 3,
+    "extent": 15.96,
+    "area": 13.9
+   },
+   {
+    "year": 1988,
+    "month": 4,
+    "extent": 15.12,
+    "area": 13.18
+   },
+   {
+    "year": 1988,
+    "month": 5,
+    "extent": 13.56,
+    "area": 11.41
+   },
+   {
+    "year": 1988,
+    "month": 6,
+    "extent": 11.94,
+    "area": 9.68
+   },
+   {
+    "year": 1988,
+    "month": 7,
+    "extent": 9.81,
+    "area": 7.01
+   },
+   {
+    "year": 1988,
+    "month": 8,
+    "extent": 7.89,
+    "area": 5.42
+   },
+   {
+    "year": 1988,
+    "month": 9,
+    "extent": 7.37,
+    "area": 5.36
+   },
+   {
+    "year": 1988,
+    "month": 10,
+    "extent": 9.13,
+    "area": 7.52
+   },
+   {
+    "year": 1988,
+    "month": 11,
+    "extent": 11.33,
+    "area": 9.91
+   },
+   {
+    "year": 1988,
+    "month": 12,
+    "extent": 13.63,
+    "area": 11.99
+   },
+   {
+    "year": 1989,
+    "month": 1,
+    "extent": 14.95,
+    "area": 13.18
+   },
+   {
+    "year": 1989,
+    "month": 2,
+    "extent": 15.5,
+    "area": 13.36
+   },
+   {
+    "year": 1989,
+    "month": 3,
+    "extent": 15.42,
+    "area": 13.21
+   },
+   {
+    "year": 1989,
+    "month": 4,
+    "extent": 14.33,
+    "area": 12.36
+   },
+   {
+    "year": 1989,
+    "month": 5,
+    "extent": 13.04,
+    "area": 11.35
+   },
+   {
+    "year": 1989,
+    "month": 6,
+    "extent": 12.24,
+    "area": 9.95
+   },
+   {
+    "year": 1989,
+    "month": 7,
+    "extent": 10.13,
+    "area": 7.33
+   },
+   {
+    "year": 1989,
+    "month": 8,
+    "extent": 7.88,
+    "area": 5.56
+   },
+   {
+    "year": 1989,
+    "month": 9,
+    "extent": 7.01,
+    "area": 4.86
+   },
+   {
+    "year": 1989,
+    "month": 10,
+    "extent": 8.83,
+    "area": 6.96
+   },
+   {
+    "year": 1989,
+    "month": 11,
+    "extent": 11.12,
+    "area": 9.46
+   },
+   {
+    "year": 1989,
+    "month": 12,
+    "extent": 13.39,
+    "area": 11.61
+   },
+   {
+    "year": 1990,
+    "month": 1,
+    "extent": 14.78,
+    "area": 12.8
+   },
+   {
+    "year": 1990,
+    "month": 2,
+    "extent": 15.58,
+    "area": 13.42
+   },
+   {
+    "year": 1990,
+    "month": 3,
+    "extent": 15.87,
+    "area": 13.51
+   },
+   {
+    "year": 1990,
+    "month": 4,
+    "extent": 14.65,
+    "area": 12.28
+   },
+   {
+    "year": 1990,
+    "month": 5,
+    "extent": 13.23,
+    "area": 10.9
+   },
+   {
+    "year": 1990,
+    "month": 6,
+    "extent": 11.64,
+    "area": 9.2
+   },
+   {
+    "year": 1990,
+    "month": 7,
+    "extent": 9.25,
+    "area": 6.52
+   },
+   {
+    "year": 1990,
+    "month": 8,
+    "extent": 6.8,
+    "area": 4.99
+   },
+   {
+    "year": 1990,
+    "month": 9,
+    "extent": 6.14,
+    "area": 4.55
+   },
+   {
+    "year": 1990,
+    "month": 10,
+    "extent": 8.48,
+    "area": 6.74
+   },
+   {
+    "year": 1990,
+    "month": 11,
+    "extent": 11.08,
+    "area": 9.64
+   },
+   {
+    "year": 1990,
+    "month": 12,
+    "extent": 13.11,
+    "area": 11.47
+   },
+   {
+    "year": 1991,
+    "month": 1,
+    "extent": 14.36,
+    "area": 12.57
+   },
+   {
+    "year": 1991,
+    "month": 2,
+    "extent": 15.25,
+    "area": 13.22
+   },
+   {
+    "year": 1991,
+    "month": 3,
+    "extent": 15.42,
+    "area": 13.42
+   },
+   {
+    "year": 1991,
+    "month": 4,
+    "extent": 14.86,
+    "area": 12.87
+   },
+   {
+    "year": 1991,
+    "month": 5,
+    "extent": 13.47,
+    "area": 11.5
+   },
+   {
+    "year": 1991,
+    "month": 6,
+    "extent": 12.11,
+    "area": 9.66
+   },
+   {
+    "year": 1991,
+    "month": 7,
+    "extent": 9.51,
+    "area": 6.76
+   },
+   {
+    "year": 1991,
+    "month": 8,
+    "extent": 7.42,
+    "area": 5.21
+   },
+   {
+    "year": 1991,
+    "month": 9,
+    "extent": 6.47,
+    "area": 4.51
+   },
+   {
+    "year": 1991,
+    "month": 10,
+    "extent": 8.54,
+    "area": 6.75
+   },
+   {
+    "year": 1991,
+    "month": 11,
+    "extent": 10.88,
+    "area": 9.25
+   },
+   {
+    "year": 1991,
+    "month": 12,
+    "extent": 12.95,
+    "area": 11.19
+   },
+   {
+    "year": 1992,
+    "month": 1,
+    "extent": 14.64,
+    "area": 12.61
+   },
+   {
+    "year": 1992,
+    "month": 2,
+    "extent": 15.46,
+    "area": 13.58
+   },
+   {
+    "year": 1992,
+    "month": 3,
+    "extent": 15.48,
+    "area": 13.48
+   },
+   {
+    "year": 1992,
+    "month": 4,
+    "extent": 14.68,
+    "area": 12.84
+   },
+   {
+    "year": 1992,
+    "month": 5,
+    "extent": 13.22,
+    "area": 11.43
+   },
+   {
+    "year": 1992,
+    "month": 6,
+    "extent": 12.15,
+    "area": 9.95
+   },
+   {
+    "year": 1992,
+    "month": 7,
+    "extent": 10.32,
+    "area": 7.22
+   },
+   {
+    "year": 1992,
+    "month": 8,
+    "extent": 7.93,
+    "area": 5.44
+   },
+   {
+    "year": 1992,
+    "month": 9,
+    "extent": 7.47,
+    "area": 5.43
+   },
+   {
+    "year": 1992,
+    "month": 10,
+    "extent": 9.32,
+    "area": 7.74
+   },
+   {
+    "year": 1992,
+    "month": 11,
+    "extent": 11.38,
+    "area": 9.75
+   },
+   {
+    "year": 1992,
+    "month": 12,
+    "extent": 13.41,
+    "area": 11.72
+   },
+   {
+    "year": 1993,
+    "month": 1,
+    "extent": 14.9,
+    "area": 12.93
+   },
+   {
+    "year": 1993,
+    "month": 2,
+    "extent": 15.69,
+    "area": 13.61
+   },
+   {
+    "year": 1993,
+    "month": 3,
+    "extent": 15.81,
+    "area": 13.77
+   },
+   {
+    "year": 1993,
+    "month": 4,
+    "extent": 15.08,
+    "area": 13.03
+   },
+   {
+    "year": 1993,
+    "month": 5,
+    "extent": 13.37,
+    "area": 11.42
+   },
+   {
+    "year": 1993,
+    "month": 6,
+    "extent": 11.87,
+    "area": 9.26
+   },
+   {
+    "year": 1993,
+    "month": 7,
+    "extent": 9.48,
+    "area": 6.28
+   },
+   {
+    "year": 1993,
+    "month": 8,
+    "extent": 7.33,
+    "area": 4.76
+   },
+   {
+    "year": 1993,
+    "month": 9,
+    "extent": 6.4,
+    "area": 4.58
+   },
+   {
+    "year": 1993,
+    "month": 10,
+    "extent": 8.79,
+    "area": 7.06
+   },
+   {
+    "year": 1993,
+    "month": 11,
+    "extent": 11.32,
+    "area": 9.54
+   },
+   {
+    "year": 1993,
+    "month": 12,
+    "extent": 13.32,
+    "area": 11.48
+   },
+   {
+    "year": 1994,
+    "month": 1,
+    "extent": 14.73,
+    "area": 12.88
+   },
+   {
+    "year": 1994,
+    "month": 2,
+    "extent": 15.56,
+    "area": 13.52
+   },
+   {
+    "year": 1994,
+    "month": 3,
+    "extent": 15.55,
+    "area": 13.55
+   },
+   {
+    "year": 1994,
+    "month": 4,
+    "extent": 14.89,
+    "area": 12.91
+   },
+   {
+    "year": 1994,
+    "month": 5,
+    "extent": 13.62,
+    "area": 11.66
+   },
+   {
+    "year": 1994,
+    "month": 6,
+    "extent": 12.02,
+    "area": 9.68
+   },
+   {
+    "year": 1994,
+    "month": 7,
+    "extent": 9.93,
+    "area": 6.92
+   },
+   {
+    "year": 1994,
+    "month": 8,
+    "extent": 7.64,
+    "area": 5.19
+   },
+   {
+    "year": 1994,
+    "month": 9,
+    "extent": 7.14,
+    "area": 5.13
+   },
+   {
+    "year": 1994,
+    "month": 10,
+    "extent": 8.92,
+    "area": 7.23
+   },
+   {
+    "year": 1994,
+    "month": 11,
+    "extent": 11.12,
+    "area": 9.71
+   },
+   {
+    "year": 1994,
+    "month": 12,
+    "extent": 13.27,
+    "area": 11.49
+   },
+   {
+    "year": 1995,
+    "month": 1,
+    "extent": 14.59,
+    "area": 12.79
+   },
+   {
+    "year": 1995,
+    "month": 2,
+    "extent": 15.23,
+    "area": 13.37
+   },
+   {
+    "year": 1995,
+    "month": 3,
+    "extent": 15.26,
+    "area": 13.34
+   },
+   {
+    "year": 1995,
+    "month": 4,
+    "extent": 14.45,
+    "area": 12.4
+   },
+   {
+    "year": 1995,
+    "month": 5,
+    "extent": 12.97,
+    "area": 10.9
+   },
+   {
+    "year": 1995,
+    "month": 6,
+    "extent": 11.44,
+    "area": 8.94
+   },
+   {
+    "year": 1995,
+    "month": 7,
+    "extent": 8.99,
+    "area": 6.16
+   },
+   {
+    "year": 1995,
+    "month": 8,
+    "extent": 6.74,
+    "area": 4.69
+   },
+   {
+    "year": 1995,
+    "month": 9,
+    "extent": 6.08,
+    "area": 4.43
+   },
+   {
+    "year": 1995,
+    "month": 10,
+    "extent": 7.83,
+    "area": 5.99
+   },
+   {
+    "year": 1995,
+    "month": 11,
+    "extent": 10.76,
+    "area": 9.03
+   },
+   {
+    "year": 1995,
+    "month": 12,
+    "extent": 12.92,
+    "area": 11.09
+   },
+   {
+    "year": 1996,
+    "month": 1,
+    "extent": 14.18,
+    "area": 12.15
+   },
+   {
+    "year": 1996,
+    "month": 2,
+    "extent": 15.15,
+    "area": 12.98
+   },
+   {
+    "year": 1996,
+    "month": 3,
+    "extent": 15.12,
+    "area": 12.9
+   },
+   {
+    "year": 1996,
+    "month": 4,
+    "extent": 14.22,
+    "area": 12.32
+   },
+   {
+    "year": 1996,
+    "month": 5,
+    "extent": 13.09,
+    "area": 11.28
+   },
+   {
+    "year": 1996,
+    "month": 6,
+    "extent": 12.08,
+    "area": 9.83
+   },
+   {
+    "year": 1996,
+    "month": 7,
+    "extent": 10.16,
+    "area": 7.44
+   },
+   {
+    "year": 1996,
+    "month": 8,
+    "extent": 8.18,
+    "area": 5.73
+   },
+   {
+    "year": 1996,
+    "month": 9,
+    "extent": 7.58,
+    "area": 5.62
+   },
+   {
+    "year": 1996,
+    "month": 10,
+    "extent": 9.16,
+    "area": 7.54
+   },
+   {
+    "year": 1996,
+    "month": 11,
+    "extent": 10.4,
+    "area": 8.77
+   },
+   {
+    "year": 1996,
+    "month": 12,
+    "extent": 12.86,
+    "area": 11.03
+   },
+   {
+    "year": 1997,
+    "month": 1,
+    "extent": 14.42,
+    "area": 12.39
+   },
+   {
+    "year": 1997,
+    "month": 2,
+    "extent": 15.44,
+    "area": 13.44
+   },
+   {
+    "year": 1997,
+    "month": 3,
+    "extent": 15.47,
+    "area": 13.3
+   },
+   {
+    "year": 1997,
+    "month": 4,
+    "extent": 14.56,
+    "area": 12.57
+   },
+   {
+    "year": 1997,
+    "month": 5,
+    "extent": 13.18,
+    "area": 11.24
+   },
+   {
+    "year": 1997,
+    "month": 6,
+    "extent": 11.74,
+    "area": 9.2
+   },
+   {
+    "year": 1997,
+    "month": 7,
+    "extent": 9.41,
+    "area": 6.5
+   },
+   {
+    "year": 1997,
+    "month": 8,
+    "extent": 7.29,
+    "area": 5.09
+   },
+   {
+    "year": 1997,
+    "month": 9,
+    "extent": 6.69,
+    "area": 4.89
+   },
+   {
+    "year": 1997,
+    "month": 10,
+    "extent": 8.34,
+    "area": 6.47
+   },
+   {
+    "year": 1997,
+    "month": 11,
+    "extent": 10.68,
+    "area": 9.07
+   },
+   {
+    "year": 1997,
+    "month": 12,
+    "extent": 13.08,
+    "area": 11.24
+   },
+   {
+    "year": 1998,
+    "month": 1,
+    "extent": 14.72,
+    "area": 12.81
+   },
+   {
+    "year": 1998,
+    "month": 2,
+    "extent": 15.75,
+    "area": 13.77
+   },
+   {
+    "year": 1998,
+    "month": 3,
+    "extent": 15.6,
+    "area": 13.57
+   },
+   {
+    "year": 1998,
+    "month": 4,
+    "extent": 14.89,
+    "area": 12.85
+   },
+   {
+    "year": 1998,
+    "month": 5,
+    "extent": 13.59,
+    "area": 11.4
+   },
+   {
+    "year": 1998,
+    "month": 6,
+    "extent": 11.71,
+    "area": 9.18
+   },
+   {
+    "year": 1998,
+    "month": 7,
+    "extent": 9.42,
+    "area": 6.45
+   },
+   {
+    "year": 1998,
+    "month": 8,
+    "extent": 7.51,
+    "area": 4.69
+   },
+   {
+    "year": 1998,
+    "month": 9,
+    "extent": 6.54,
+    "area": 4.3
+   },
+   {
+    "year": 1998,
+    "month": 10,
+    "extent": 8.45,
+    "area": 6.71
+   },
+   {
+    "year": 1998,
+    "month": 11,
+    "extent": 10.44,
+    "area": 8.88
+   },
+   {
+    "year": 1998,
+    "month": 12,
+    "extent": 12.76,
+    "area": 10.91
+   },
+   {
+    "year": 1999,
+    "month": 1,
+    "extent": 14.36,
+    "area": 12.6
+   },
+   {
+    "year": 1999,
+    "month": 2,
+    "extent": 15.31,
+    "area": 13.45
+   },
+   {
+    "year": 1999,
+    "month": 3,
+    "extent": 15.4,
+    "area": 13.54
+   },
+   {
+    "year": 1999,
+    "month": 4,
+    "extent": 15.08,
+    "area": 13.15
+   },
+   {
+    "year": 1999,
+    "month": 5,
+    "extent": 13.75,
+    "area": 11.66
+   },
+   {
+    "year": 1999,
+    "month": 6,
+    "extent": 11.78,
+    "area": 9.25
+   },
+   {
+    "year": 1999,
+    "month": 7,
+    "extent": 9.49,
+    "area": 6.55
+   },
+   {
+    "year": 1999,
+    "month": 8,
+    "extent": 7.23,
+    "area": 4.75
+   },
+   {
+    "year": 1999,
+    "month": 9,
+    "extent": 6.12,
+    "area": 4.29
+   },
+   {
+    "year": 1999,
+    "month": 10,
+    "extent": 8.6,
+    "area": 6.83
+   },
+   {
+    "year": 1999,
+    "month": 11,
+    "extent": 10.8,
+    "area": 9.26
+   },
+   {
+    "year": 1999,
+    "month": 12,
+    "extent": 12.64,
+    "area": 10.99
+   },
+   {
+    "year": 2000,
+    "month": 1,
+    "extent": 14.22,
+    "area": 12.3
+   },
+   {
+    "year": 2000,
+    "month": 2,
+    "extent": 15.14,
+    "area": 13.09
+   },
+   {
+    "year": 2000,
+    "month": 3,
+    "extent": 15.22,
+    "area": 13.17
+   },
+   {
+    "year": 2000,
+    "month": 4,
+    "extent": 14.56,
+    "area": 12.6
+   },
+   {
+    "year": 2000,
+    "month": 5,
+    "extent": 13.15,
+    "area": 11.24
+   },
+   {
+    "year": 2000,
+    "month": 6,
+    "extent": 11.67,
+    "area": 9.05
+   },
+   {
+    "year": 2000,
+    "month": 7,
+    "extent": 9.51,
+    "area": 6.39
+   },
+   {
+    "year": 2000,
+    "month": 8,
+    "extent": 7.17,
+    "area": 4.78
+   },
+   {
+    "year": 2000,
+    "month": 9,
+    "extent": 6.25,
+    "area": 4.35
+   },
+   {
+    "year": 2000,
+    "month": 10,
+    "extent": 8.38,
+    "area": 6.69
+   },
+   {
+    "year": 2000,
+    "month": 11,
+    "extent": 10.32,
+    "area": 8.87
+   },
+   {
+    "year": 2000,
+    "month": 12,
+    "extent": 12.64,
+    "area": 10.96
+   },
+   {
+    "year": 2001,
+    "month": 1,
+    "extent": 14.2,
+    "area": 12.35
+   },
+   {
+    "year": 2001,
+    "month": 2,
+    "extent": 15.21,
+    "area": 13.22
+   },
+   {
+    "year": 2001,
+    "month": 3,
+    "extent": 15.52,
+    "area": 13.64
+   },
+   {
+    "year": 2001,
+    "month": 4,
+    "extent": 14.86,
+    "area": 13.05
+   },
+   {
+    "year": 2001,
+    "month": 5,
+    "extent": 13.51,
+    "area": 11.38
+   },
+   {
+    "year": 2001,
+    "month": 6,
+    "extent": 11.46,
+    "area": 9.09
+   },
+   {
+    "year": 2001,
+    "month": 7,
+    "extent": 9.07,
+    "area": 6.29
+   },
+   {
+    "year": 2001,
+    "month": 8,
+    "extent": 7.46,
+    "area": 4.94
+   },
+   {
+    "year": 2001,
+    "month": 9,
+    "extent": 6.73,
+    "area": 4.59
+   },
+   {
+    "year": 2001,
+    "month": 10,
+    "extent": 8.3,
+    "area": 6.65
+   },
+   {
+    "year": 2001,
+    "month": 11,
+    "extent": 10.66,
+    "area": 9.08
+   },
+   {
+    "year": 2001,
+    "month": 12,
+    "extent": 12.49,
+    "area": 10.55
+   },
+   {
+    "year": 2002,
+    "month": 1,
+    "extent": 14.27,
+    "area": 12.26
+   },
+   {
+    "year": 2002,
+    "month": 2,
+    "extent": 15.34,
+    "area": 13.42
+   },
+   {
+    "year": 2002,
+    "month": 3,
+    "extent": 15.35,
+    "area": 13.42
+   },
+   {
+    "year": 2002,
+    "month": 4,
+    "extent": 14.3,
+    "area": 12.41
+   },
+   {
+    "year": 2002,
+    "month": 5,
+    "extent": 12.97,
+    "area": 11.16
+   },
+   {
+    "year": 2002,
+    "month": 6,
+    "extent": 11.58,
+    "area": 9.19
+   },
+   {
+    "year": 2002,
+    "month": 7,
+    "extent": 9.27,
+    "area": 6.44
+   },
+   {
+    "year": 2002,
+    "month": 8,
+    "extent": 6.6,
+    "area": 4.32
+   },
+   {
+    "year": 2002,
+    "month": 9,
+    "extent": 5.83,
+    "area": 4.03
+   },
+   {
+    "year": 2002,
+    "month": 10,
+    "extent": 8.16,
+    "area": 6.24
+   },
+   {
+    "year": 2002,
+    "month": 11,
+    "extent": 10.34,
+    "area": 8.75
+   },
+   {
+    "year": 2002,
+    "month": 12,
+    "extent": 12.61,
+    "area": 10.64
+   },
+   {
+    "year": 2003,
+    "month": 1,
+    "extent": 14.39,
+    "area": 12.29
+   },
+   {
+    "year": 2003,
+    "month": 2,
+    "extent": 15.19,
+    "area": 13.23
+   },
+   {
+    "year": 2003,
+    "month": 3,
+    "extent": 15.48,
+    "area": 13.42
+   },
+   {
+    "year": 2003,
+    "month": 4,
+    "extent": 14.51,
+    "area": 12.46
+   },
+   {
+    "year": 2003,
+    "month": 5,
+    "extent": 13.02,
+    "area": 10.89
+   },
+   {
+    "year": 2003,
+    "month": 6,
+    "extent": 11.6,
+    "area": 9.11
+   },
+   {
+    "year": 2003,
+    "month": 7,
+    "extent": 9.21,
+    "area": 6.15
+   },
+   {
+    "year": 2003,
+    "month": 8,
+    "extent": 6.94,
+    "area": 4.52
+   },
+   {
+    "year": 2003,
+    "month": 9,
+    "extent": 6.12,
+    "area": 4.05
+   },
+   {
+    "year": 2003,
+    "month": 10,
+    "extent": 7.85,
+    "area": 5.98
+   },
+   {
+    "year": 2003,
+    "month": 11,
+    "extent": 10.13,
+    "area": 8.57
+   },
+   {
+    "year": 2003,
+    "month": 12,
+    "extent": 12.59,
+    "area": 10.8
+   },
+   {
+    "year": 2004,
+    "month": 1,
+    "extent": 14.03,
+    "area": 12.26
+   },
+   {
+    "year": 2004,
+    "month": 2,
+    "extent": 14.91,
+    "area": 12.94
+   },
+   {
+    "year": 2004,
+    "month": 3,
+    "extent": 14.99,
+    "area": 12.99
+   },
+   {
+    "year": 2004,
+    "month": 4,
+    "extent": 13.99,
+    "area": 12.16
+   },
+   {
+    "year": 2004,
+    "month": 5,
+    "extent": 12.56,
+    "area": 10.92
+   },
+   {
+    "year": 2004,
+    "month": 6,
+    "extent": 11.45,
+    "area": 9.24
+   },
+   {
+    "year": 2004,
+    "month": 7,
+    "extent": 9.43,
+    "area": 6.51
+   },
+   {
+    "year": 2004,
+    "month": 8,
+    "extent": 6.85,
+    "area": 4.67
+   },
+   {
+    "year": 2004,
+    "month": 9,
+    "extent": 5.98,
+    "area": 4.39
+   },
+   {
+    "year": 2004,
+    "month": 10,
+    "extent": 7.93,
+    "area": 6.4
+   },
+   {
+    "year": 2004,
+    "month": 11,
+    "extent": 10.34,
+    "area": 8.95
+   },
+   {
+    "year": 2004,
+    "month": 12,
+    "extent": 12.55,
+    "area": 10.98
+   },
+   {
+    "year": 2005,
+    "month": 1,
+    "extent": 13.66,
+    "area": 11.92
+   },
+   {
+    "year": 2005,
+    "month": 2,
+    "extent": 14.37,
+    "area": 12.35
+   },
+   {
+    "year": 2005,
+    "month": 3,
+    "extent": 14.69,
+    "area": 12.74
+   },
+   {
+    "year": 2005,
+    "month": 4,
+    "extent": 14.09,
+    "area": 12.23
+   },
+   {
+    "year": 2005,
+    "month": 5,
+    "extent": 12.91,
+    "area": 10.88
+   },
+   {
+    "year": 2005,
+    "month": 6,
+    "extent": 11.16,
+    "area": 8.81
+   },
+   {
+    "year": 2005,
+    "month": 7,
+    "extent": 8.65,
+    "area": 5.9
+   },
+   {
+    "year": 2005,
+    "month": 8,
+    "extent": 6.3,
+    "area": 4.21
+   },
+   {
+    "year": 2005,
+    "month": 9,
+    "extent": 5.5,
+    "area": 4.07
+   },
+   {
+    "year": 2005,
+    "month": 10,
+    "extent": 7.35,
+    "area": 5.78
+   },
+   {
+    "year": 2005,
+    "month": 11,
+    "extent": 10.22,
+    "area": 8.8
+   },
+   {
+    "year": 2005,
+    "month": 12,
+    "extent": 12.23,
+    "area": 10.56
+   },
+   {
+    "year": 2006,
+    "month": 1,
+    "extent": 13.47,
+    "area": 11.65
+   },
+   {
+    "year": 2006,
+    "month": 2,
+    "extent": 14.32,
+    "area": 12.35
+   },
+   {
+    "year": 2006,
+    "month": 3,
+    "extent": 14.42,
+    "area": 12.52
+   },
+   {
+    "year": 2006,
+    "month": 4,
+    "extent": 13.91,
+    "area": 12.04
+   },
+   {
+    "year": 2006,
+    "month": 5,
+    "extent": 12.52,
+    "area": 10.45
+   },
+   {
+    "year": 2006,
+    "month": 6,
+    "extent": 10.92,
+    "area": 8.41
+   },
+   {
+    "year": 2006,
+    "month": 7,
+    "extent": 8.46,
+    "area": 5.79
+   },
+   {
+    "year": 2006,
+    "month": 8,
+    "extent": 6.5,
+    "area": 4.31
+   },
+   {
+    "year": 2006,
+    "month": 9,
+    "extent": 5.86,
+    "area": 4.01
+   },
+   {
+    "year": 2006,
+    "month": 10,
+    "extent": 7.54,
+    "area": 5.8
+   },
+   {
+    "year": 2006,
+    "month": 11,
+    "extent": 9.66,
+    "area": 8.13
+   },
+   {
+    "year": 2006,
+    "month": 12,
+    "extent": 11.95,
+    "area": 10.17
+   },
+   {
+    "year": 2007,
+    "month": 1,
+    "extent": 13.7,
+    "area": 11.86
+   },
+   {
+    "year": 2007,
+    "month": 2,
+    "extent": 14.51,
+    "area": 12.58
+   },
+   {
+    "year": 2007,
+    "month": 3,
+    "extent": 14.54,
+    "area": 12.56
+   },
+   {
+    "year": 2007,
+    "month": 4,
+    "extent": 13.85,
+    "area": 11.83
+   },
+   {
+    "year": 2007,
+    "month": 5,
+    "extent": 12.78,
+    "area": 10.77
+   },
+   {
+    "year": 2007,
+    "month": 6,
+    "extent": 11.22,
+    "area": 8.21
+   },
+   {
+    "year": 2007,
+    "month": 7,
+    "extent": 7.94,
+    "area": 5.13
+   },
+   {
+    "year": 2007,
+    "month": 8,
+    "extent": 5.34,
+    "area": 3.19
+   },
+   {
+    "year": 2007,
+    "month": 9,
+    "extent": 4.27,
+    "area": 2.82
+   },
+   {
+    "year": 2007,
+    "month": 10,
+    "extent": 6.04,
+    "area": 4.33
+   },
+   {
+    "year": 2007,
+    "month": 11,
+    "extent": 9.76,
+    "area": 8.06
+   },
+   {
+    "year": 2007,
+    "month": 12,
+    "extent": 12.03,
+    "area": 10.18
+   },
+   {
+    "year": 2008,
+    "month": 1,
+    "extent": 13.89,
+    "area": 12.3
+   },
+   {
+    "year": 2008,
+    "month": 2,
+    "extent": 14.95,
+    "area": 13.21
+   },
+   {
+    "year": 2008,
+    "month": 3,
+    "extent": 15.18,
+    "area": 13.53
+   },
+   {
+    "year": 2008,
+    "month": 4,
+    "extent": 14.35,
+    "area": 12.78
+   },
+   {
+    "year": 2008,
+    "month": 5,
+    "extent": 12.97,
+    "area": 11.25
+   },
+   {
+    "year": 2008,
+    "month": 6,
+    "extent": 11.21,
+    "area": 8.85
+   },
+   {
+    "year": 2008,
+    "month": 7,
+    "extent": 8.68,
+    "area": 6.06
+   },
+   {
+    "year": 2008,
+    "month": 8,
+    "extent": 5.91,
+    "area": 3.79
+   },
+   {
+    "year": 2008,
+    "month": 9,
+    "extent": 4.69,
+    "area": 3.26
+   },
+   {
+    "year": 2008,
+    "month": 10,
+    "extent": 7.35,
+    "area": 5.77
+   },
+   {
+    "year": 2008,
+    "month": 11,
+    "extent": 10.34,
+    "area": 9.05
+   },
+   {
+    "year": 2008,
+    "month": 12,
+    "extent": 12.36,
+    "area": 10.97
+   },
+   {
+    "year": 2009,
+    "month": 1,
+    "extent": 13.91,
+    "area": 12.32
+   },
+   {
+    "year": 2009,
+    "month": 2,
+    "extent": 14.81,
+    "area": 13.21
+   },
+   {
+    "year": 2009,
+    "month": 3,
+    "extent": 14.98,
+    "area": 13.43
+   },
+   {
+    "year": 2009,
+    "month": 4,
+    "extent": 14.5,
+    "area": 12.92
+   },
+   {
+    "year": 2009,
+    "month": 5,
+    "extent": 13.19,
+    "area": 11.48
+   },
+   {
+    "year": 2009,
+    "month": 6,
+    "extent": 11.32,
+    "area": 9.25
+   },
+   {
+    "year": 2009,
+    "month": 7,
+    "extent": 8.47,
+    "area": 6.12
+   },
+   {
+    "year": 2009,
+    "month": 8,
+    "extent": 6.14,
+    "area": 4.16
+   },
+   {
+    "year": 2009,
+    "month": 9,
+    "extent": 5.26,
+    "area": 3.76
+   },
+   {
+    "year": 2009,
+    "month": 10,
+    "extent": 6.92,
+    "area": 5.24
+   },
+   {
+    "year": 2009,
+    "month": 11,
+    "extent": 9.77,
+    "area": 8.36
+   },
+   {
+    "year": 2009,
+    "month": 12,
+    "extent": 12.2,
+    "area": 10.59
+   },
+   {
+    "year": 2010,
+    "month": 1,
+    "extent": 13.74,
+    "area": 12.04
+   },
+   {
+    "year": 2010,
+    "month": 2,
+    "extent": 14.58,
+    "area": 12.96
+   },
+   {
+    "year": 2010,
+    "month": 3,
+    "extent": 15.14,
+    "area": 13.53
+   },
+   {
+    "year": 2010,
+    "month": 4,
+    "extent": 14.66,
+    "area": 12.85
+   },
+   {
+    "year": 2010,
+    "month": 5,
+    "extent": 12.87,
+    "area": 10.88
+   },
+   {
+    "year": 2010,
+    "month": 6,
+    "extent": 10.59,
+    "area": 8.37
+   },
+   {
+    "year": 2010,
+    "month": 7,
+    "extent": 8.07,
+    "area": 5.57
+   },
+   {
+    "year": 2010,
+    "month": 8,
+    "extent": 5.87,
+    "area": 3.88
+   },
+   {
+    "year": 2010,
+    "month": 9,
+    "extent": 4.87,
+    "area": 3.34
+   },
+   {
+    "year": 2010,
+    "month": 10,
+    "extent": 6.98,
+    "area": 5.48
+   },
+   {
+    "year": 2010,
+    "month": 11,
+    "extent": 9.61,
+    "area": 8.43
+   },
+   {
+    "year": 2010,
+    "month": 12,
+    "extent": 11.83,
+    "area": 10.43
+   },
+   {
+    "year": 2011,
+    "month": 1,
+    "extent": 13.46,
+    "area": 11.83
+   },
+   {
+    "year": 2011,
+    "month": 2,
+    "extent": 14.36,
+    "area": 12.76
+   },
+   {
+    "year": 2011,
+    "month": 3,
+    "extent": 14.55,
+    "area": 12.83
+   },
+   {
+    "year": 2011,
+    "month": 4,
+    "extent": 14.11,
+    "area": 12.45
+   },
+   {
+    "year": 2011,
+    "month": 5,
+    "extent": 12.68,
+    "area": 10.74
+   },
+   {
+    "year": 2011,
+    "month": 6,
+    "extent": 10.75,
+    "area": 8.54
+   },
+   {
+    "year": 2011,
+    "month": 7,
+    "extent": 7.72,
+    "area": 5.4
+   },
+   {
+    "year": 2011,
+    "month": 8,
+    "extent": 5.5,
+    "area": 3.38
+   },
+   {
+    "year": 2011,
+    "month": 9,
+    "extent": 4.56,
+    "area": 3.21
+   },
+   {
+    "year": 2011,
+    "month": 10,
+    "extent": 6.46,
+    "area": 5.02
+   },
+   {
+    "year": 2011,
+    "month": 11,
+    "extent": 9.77,
+    "area": 8.52
+   },
+   {
+    "year": 2011,
+    "month": 12,
+    "extent": 12.15,
+    "area": 10.63
+   },
+   {
+    "year": 2012,
+    "month": 1,
+    "extent": 13.73,
+    "area": 12.21
+   },
+   {
+    "year": 2012,
+    "month": 2,
+    "extent": 14.55,
+    "area": 12.72
+   },
+   {
+    "year": 2012,
+    "month": 3,
+    "extent": 15.2,
+    "area": 13.41
+   },
+   {
+    "year": 2012,
+    "month": 4,
+    "extent": 14.63,
+    "area": 12.87
+   },
+   {
+    "year": 2012,
+    "month": 5,
+    "extent": 13.01,
+    "area": 11.05
+   },
+   {
+    "year": 2012,
+    "month": 6,
+    "extent": 10.67,
+    "area": 8.16
+   },
+   {
+    "year": 2012,
+    "month": 7,
+    "extent": 7.67,
+    "area": 5.09
+   },
+   {
+    "year": 2012,
+    "month": 8,
+    "extent": 4.72,
+    "area": 2.93
+   },
+   {
+    "year": 2012,
+    "month": 9,
+    "extent": 3.57,
+    "area": 2.41
+   },
+   {
+    "year": 2012,
+    "month": 10,
+    "extent": 5.89,
+    "area": 4.58
+   },
+   {
+    "year": 2012,
+    "month": 11,
+    "extent": 9.39,
+    "area": 8.06
+   },
+   {
+    "year": 2012,
+    "month": 12,
+    "extent": 12.01,
+    "area": 10.45
+   },
+   {
+    "year": 2013,
+    "month": 1,
+    "extent": 13.7,
+    "area": 12.02
+   },
+   {
+    "year": 2013,
+    "month": 2,
+    "extent": 14.72,
+    "area": 13.2
+   },
+   {
+    "year": 2013,
+    "month": 3,
+    "extent": 15.03,
+    "area": 13.45
+   },
+   {
+    "year": 2013,
+    "month": 4,
+    "extent": 14.3,
+    "area": 12.75
+   },
+   {
+    "year": 2013,
+    "month": 5,
+    "extent": 13,
+    "area": 11.25
+   },
+   {
+    "year": 2013,
+    "month": 6,
+    "extent": 11.36,
+    "area": 8.95
+   },
+   {
+    "year": 2013,
+    "month": 7,
+    "extent": 8.13,
+    "area": 5.81
+   },
+   {
+    "year": 2013,
+    "month": 8,
+    "extent": 6.01,
+    "area": 4.17
+   },
+   {
+    "year": 2013,
+    "month": 9,
+    "extent": 5.21,
+    "area": 3.78
+   },
+   {
+    "year": 2013,
+    "month": 10,
+    "extent": 7.45,
+    "area": 5.95
+   },
+   {
+    "year": 2013,
+    "month": 11,
+    "extent": 9.94,
+    "area": 8.66
+   },
+   {
+    "year": 2013,
+    "month": 12,
+    "extent": 12.18,
+    "area": 10.87
+   },
+   {
+    "year": 2014,
+    "month": 1,
+    "extent": 13.65,
+    "area": 12.1
+   },
+   {
+    "year": 2014,
+    "month": 2,
+    "extent": 14.42,
+    "area": 12.56
+   },
+   {
+    "year": 2014,
+    "month": 3,
+    "extent": 14.76,
+    "area": 12.95
+   },
+   {
+    "year": 2014,
+    "month": 4,
+    "extent": 14.09,
+    "area": 12.43
+   },
+   {
+    "year": 2014,
+    "month": 5,
+    "extent": 12.7,
+    "area": 11.05
+   },
+   {
+    "year": 2014,
+    "month": 6,
+    "extent": 11.03,
+    "area": 8.76
+   },
+   {
+    "year": 2014,
+    "month": 7,
+    "extent": 8.11,
+    "area": 5.96
+   },
+   {
+    "year": 2014,
+    "month": 8,
+    "extent": 6.08,
+    "area": 4.37
+   },
+   {
+    "year": 2014,
+    "month": 9,
+    "extent": 5.22,
+    "area": 3.74
+   },
+   {
+    "year": 2014,
+    "month": 10,
+    "extent": 7.23,
+    "area": 5.7
+   },
+   {
+    "year": 2014,
+    "month": 11,
+    "extent": 10.11,
+    "area": 8.75
+   },
+   {
+    "year": 2014,
+    "month": 12,
+    "extent": 12.35,
+    "area": 10.89
+   },
+   {
+    "year": 2015,
+    "month": 1,
+    "extent": 13.6,
+    "area": 12.17
+   },
+   {
+    "year": 2015,
+    "month": 2,
+    "extent": 14.4,
+    "area": 12.85
+   },
+   {
+    "year": 2015,
+    "month": 3,
+    "extent": 14.37,
+    "area": 12.78
+   },
+   {
+    "year": 2015,
+    "month": 4,
+    "extent": 13.89,
+    "area": 12.33
+   },
+   {
+    "year": 2015,
+    "month": 5,
+    "extent": 12.47,
+    "area": 10.9
+   },
+   {
+    "year": 2015,
+    "month": 6,
+    "extent": 10.88,
+    "area": 8.7
+   },
+   {
+    "year": 2015,
+    "month": 7,
+    "extent": 8.38,
+    "area": 5.66
+   },
+   {
+    "year": 2015,
+    "month": 8,
+    "extent": 5.6,
+    "area": 3.63
+   },
+   {
+    "year": 2015,
+    "month": 9,
+    "extent": 4.62,
+    "area": 3.42
+   },
+   {
+    "year": 2015,
+    "month": 10,
+    "extent": 6.97,
+    "area": 5.49
+   },
+   {
+    "year": 2015,
+    "month": 11,
+    "extent": 9.85,
+    "area": 8.48
+   },
+   {
+    "year": 2015,
+    "month": 12,
+    "extent": 12.04,
+    "area": 10.64
+   },
+   {
+    "year": 2016,
+    "month": 1,
+    "extent": 13.46,
+    "area": 11.8
+   },
+   {
+    "year": 2016,
+    "month": 2,
+    "extent": 14.2,
+    "area": 12.43
+   },
+   {
+    "year": 2016,
+    "month": 3,
+    "extent": 14.4,
+    "area": 12.61
+   },
+   {
+    "year": 2016,
+    "month": 4,
+    "extent": 13.68,
+    "area": 11.98
+   },
+   {
+    "year": 2016,
+    "month": 5,
+    "extent": 11.92,
+    "area": 10.25
+   },
+   {
+    "year": 2016,
+    "month": 6,
+    "extent": 10.41,
+    "area": 8.21
+   },
+   {
+    "year": 2016,
+    "month": 7,
+    "extent": 7.94,
+    "area": 5.37
+   },
+   {
+    "year": 2016,
+    "month": 8,
+    "extent": 5.37,
+    "area": 3.31
+   },
+   {
+    "year": 2016,
+    "month": 9,
+    "extent": 4.53,
+    "area": 2.91
+   },
+   {
+    "year": 2016,
+    "month": 10,
+    "extent": 6.08,
+    "area": 4.4
+   },
+   {
+    "year": 2016,
+    "month": 11,
+    "extent": 8.66,
+    "area": 7.01
+   },
+   {
+    "year": 2016,
+    "month": 12,
+    "extent": 11.46,
+    "area": 9.62
+   },
+   {
+    "year": 2017,
+    "month": 1,
+    "extent": 13.19,
+    "area": 11.37
+   },
+   {
+    "year": 2017,
+    "month": 2,
+    "extent": 14.12,
+    "area": 12.32
+   },
+   {
+    "year": 2017,
+    "month": 3,
+    "extent": 14.29,
+    "area": 12.61
+   },
+   {
+    "year": 2017,
+    "month": 4,
+    "extent": 13.75,
+    "area": 12.26
+   },
+   {
+    "year": 2017,
+    "month": 5,
+    "extent": 12.63,
+    "area": 11.01
+   },
+   {
+    "year": 2017,
+    "month": 6,
+    "extent": 10.76,
+    "area": 8.63
+   },
+   {
+    "year": 2017,
+    "month": 7,
+    "extent": 7.94,
+    "area": 5.65
+   },
+   {
+    "year": 2017,
+    "month": 8,
+    "extent": 5.48,
+    "area": 3.64
+   },
+   {
+    "year": 2017,
+    "month": 9,
+    "extent": 4.82,
+    "area": 3.35
+   },
+   {
+    "year": 2017,
+    "month": 10,
+    "extent": 6.77,
+    "area": 5.3
+   },
+   {
+    "year": 2017,
+    "month": 11,
+    "extent": 9.49,
+    "area": 8.08
+   },
+   {
+    "year": 2017,
+    "month": 12,
+    "extent": 11.74,
+    "area": 10.26
+   },
+   {
+    "year": 2018,
+    "month": 1,
+    "extent": 13.08,
+    "area": 11.7
+   },
+   {
+    "year": 2018,
+    "month": 2,
+    "extent": 13.97,
+    "area": 12.31
+   },
+   {
+    "year": 2018,
+    "month": 3,
+    "extent": 14.3,
+    "area": 12.69
+   },
+   {
+    "year": 2018,
+    "month": 4,
+    "extent": 13.7,
+    "area": 12.28
+   },
+   {
+    "year": 2018,
+    "month": 5,
+    "extent": 12.23,
+    "area": 10.81
+   },
+   {
+    "year": 2018,
+    "month": 6,
+    "extent": 10.78,
+    "area": 8.79
+   },
+   {
+    "year": 2018,
+    "month": 7,
+    "extent": 8.27,
+    "area": 5.76
+   },
+   {
+    "year": 2018,
+    "month": 8,
+    "extent": 5.61,
+    "area": 3.9
+   },
+   {
+    "year": 2018,
+    "month": 9,
+    "extent": 4.79,
+    "area": 3.35
+   },
+   {
+    "year": 2018,
+    "month": 10,
+    "extent": 6.13,
+    "area": 4.59
+   },
+   {
+    "year": 2018,
+    "month": 11,
+    "extent": 9.82,
+    "area": 8.43
+   },
+   {
+    "year": 2018,
+    "month": 12,
+    "extent": 11.86,
+    "area": 10.45
+   },
+   {
+    "year": 2019,
+    "month": 1,
+    "extent": 13.57,
+    "area": 12.14
+   },
+   {
+    "year": 2019,
+    "month": 2,
+    "extent": 14.39,
+    "area": 12.76
+   },
+   {
+    "year": 2019,
+    "month": 3,
+    "extent": 14.57,
+    "area": 12.89
+   },
+   {
+    "year": 2019,
+    "month": 4,
+    "extent": 13.43,
+    "area": 11.9
+   },
+   {
+    "year": 2019,
+    "month": 5,
+    "extent": 12.19,
+    "area": 10.5
+   },
+   {
+    "year": 2019,
+    "month": 6,
+    "extent": 10.59,
+    "area": 8.32
+   },
+   {
+    "year": 2019,
+    "month": 7,
+    "extent": 7.59,
+    "area": 5.13
+   },
+   {
+    "year": 2019,
+    "month": 8,
+    "extent": 5.03,
+    "area": 3.24
+   },
+   {
+    "year": 2019,
+    "month": 9,
+    "extent": 4.36,
+    "area": 3.17
+   },
+   {
+    "year": 2019,
+    "month": 10,
+    "extent": 5.73,
+    "area": 4.53
+   },
+   {
+    "year": 2019,
+    "month": 11,
+    "extent": 9.35,
+    "area": 7.98
+   },
+   {
+    "year": 2019,
+    "month": 12,
+    "extent": 11.9,
+    "area": 10.52
+   },
+   {
+    "year": 2020,
+    "month": 1,
+    "extent": 13.64,
+    "area": 12.15
+   },
+   {
+    "year": 2020,
+    "month": 2,
+    "extent": 14.64,
+    "area": 12.95
+   },
+   {
+    "year": 2020,
+    "month": 3,
+    "extent": 14.73,
+    "area": 13.03
+   },
+   {
+    "year": 2020,
+    "month": 4,
+    "extent": 13.62,
+    "area": 12.02
+   },
+   {
+    "year": 2020,
+    "month": 5,
+    "extent": 12.34,
+    "area": 10.51
+   },
+   {
+    "year": 2020,
+    "month": 6,
+    "extent": 10.59,
+    "area": 8.41
+   },
+   {
+    "year": 2020,
+    "month": 7,
+    "extent": 7.29,
+    "area": 5.07
+   },
+   {
+    "year": 2020,
+    "month": 8,
+    "extent": 5.07,
+    "area": 3.1
+   },
+   {
+    "year": 2020,
+    "month": 9,
+    "extent": 4,
+    "area": 2.83
+   },
+   {
+    "year": 2020,
+    "month": 10,
+    "extent": 5.33,
+    "area": 4.11
+   },
+   {
+    "year": 2020,
+    "month": 11,
+    "extent": 8.99,
+    "area": 7.53
+   },
+   {
+    "year": 2020,
+    "month": 12,
+    "extent": 11.73,
+    "area": 10.16
+   },
+   {
+    "year": 2021,
+    "month": 1,
+    "extent": 13.5,
+    "area": 11.75
+   },
+   {
+    "year": 2021,
+    "month": 2,
+    "extent": 14.39,
+    "area": 12.76
+   },
+   {
+    "year": 2021,
+    "month": 3,
+    "extent": 14.66,
+    "area": 12.99
+   },
+   {
+    "year": 2021,
+    "month": 4,
+    "extent": 13.79,
+    "area": 12.18
+   },
+   {
+    "year": 2021,
+    "month": 5,
+    "extent": 12.68,
+    "area": 10.86
+   },
+   {
+    "year": 2021,
+    "month": 6,
+    "extent": 10.77,
+    "area": 8.39
+   },
+   {
+    "year": 2021,
+    "month": 7,
+    "extent": 7.65,
+    "area": 5.53
+   },
+   {
+    "year": 2021,
+    "month": 8,
+    "extent": 5.71,
+    "area": 3.78
+   },
+   {
+    "year": 2021,
+    "month": 9,
+    "extent": 4.95,
+    "area": 3.47
+   },
+   {
+    "year": 2021,
+    "month": 10,
+    "extent": 6.82,
+    "area": 5.43
+   },
+   {
+    "year": 2021,
+    "month": 11,
+    "extent": 9.83,
+    "area": 8.57
+   },
+   {
+    "year": 2021,
+    "month": 12,
+    "extent": 12.15,
+    "area": 10.74
+   },
+   {
+    "year": 2022,
+    "month": 1,
+    "extent": 13.87,
+    "area": 12.26
+   },
+   {
+    "year": 2022,
+    "month": 2,
+    "extent": 14.61,
+    "area": 12.9
+   },
+   {
+    "year": 2022,
+    "month": 3,
+    "extent": 14.59,
+    "area": 12.8
+   },
+   {
+    "year": 2022,
+    "month": 4,
+    "extent": 13.99,
+    "area": 12.46
+   },
+   {
+    "year": 2022,
+    "month": 5,
+    "extent": 12.88,
+    "area": 11.1
+   },
+   {
+    "year": 2022,
+    "month": 6,
+    "extent": 10.88,
+    "area": 8.61
+   },
+   {
+    "year": 2022,
+    "month": 7,
+    "extent": 8.29,
+    "area": 5.89
+   },
+   {
+    "year": 2022,
+    "month": 8,
+    "extent": 5.95,
+    "area": 4.03
+   },
+   {
+    "year": 2022,
+    "month": 9,
+    "extent": 4.9,
+    "area": 3.47
+   },
+   {
+    "year": 2022,
+    "month": 10,
+    "extent": 6.66,
+    "area": 5.25
+   },
+   {
+    "year": 2022,
+    "month": 11,
+    "extent": 9.73,
+    "area": 8.52
+   },
+   {
+    "year": 2022,
+    "month": 12,
+    "extent": 11.89,
+    "area": 10.27
+   },
+   {
+    "year": 2023,
+    "month": 1,
+    "extent": 13.36,
+    "area": 11.88
+   },
+   {
+    "year": 2023,
+    "month": 2,
+    "extent": 14.19,
+    "area": 12.61
+   },
+   {
+    "year": 2023,
+    "month": 3,
+    "extent": 14.43,
+    "area": 12.91
+   },
+   {
+    "year": 2023,
+    "month": 4,
+    "extent": 13.92,
+    "area": 12.53
+   },
+   {
+    "year": 2023,
+    "month": 5,
+    "extent": 12.82,
+    "area": 11.05
+   },
+   {
+    "year": 2023,
+    "month": 6,
+    "extent": 10.99,
+    "area": 8.69
+   },
+   {
+    "year": 2023,
+    "month": 7,
+    "extent": 8.21,
+    "area": 5.54
+   },
+   {
+    "year": 2023,
+    "month": 8,
+    "extent": 5.51,
+    "area": 3.52
+   },
+   {
+    "year": 2023,
+    "month": 9,
+    "extent": 4.38,
+    "area": 2.83
+   },
+   {
+    "year": 2023,
+    "month": 10,
+    "extent": 6.41,
+    "area": 4.88
+   },
+   {
+    "year": 2023,
+    "month": 11,
+    "extent": 9.68,
+    "area": 8.3
+   },
+   {
+    "year": 2023,
+    "month": 12,
+    "extent": 11.98,
+    "area": 10.34
+   },
+   {
+    "year": 2024,
+    "month": 1,
+    "extent": 13.92,
+    "area": 12.24
+   },
+   {
+    "year": 2024,
+    "month": 2,
+    "extent": 14.61,
+    "area": 12.76
+   },
+   {
+    "year": 2024,
+    "month": 3,
+    "extent": 14.87,
+    "area": 13.19
+   },
+   {
+    "year": 2024,
+    "month": 4,
+    "extent": 14.04,
+    "area": 12.56
+   },
+   {
+    "year": 2024,
+    "month": 5,
+    "extent": 12.74,
+    "area": 11.07
+   },
+   {
+    "year": 2024,
+    "month": 6,
+    "extent": 10.85,
+    "area": 8.6
+   },
+   {
+    "year": 2024,
+    "month": 7,
+    "extent": 7.87,
+    "area": 5.16
+   },
+   {
+    "year": 2024,
+    "month": 8,
+    "extent": 5.13,
+    "area": 3.09
+   },
+   {
+    "year": 2024,
+    "month": 9,
+    "extent": 4.35,
+    "area": 2.91
+   },
+   {
+    "year": 2024,
+    "month": 10,
+    "extent": 5.93,
+    "area": 4.54
+   },
+   {
+    "year": 2024,
+    "month": 11,
+    "extent": 9.15,
+    "area": 7.74
+   },
+   {
+    "year": 2024,
+    "month": 12,
+    "extent": 11.41,
+    "area": 10.03
+   },
+   {
+    "year": 2025,
+    "month": 1,
+    "extent": 13.11,
+    "area": 11.49
+   },
+   {
+    "year": 2025,
+    "month": 2,
+    "extent": 13.75,
+    "area": 11.76
+   },
+   {
+    "year": 2025,
+    "month": 3,
+    "extent": 14.12,
+    "area": 12.19
+   },
+   {
+    "year": 2025,
+    "month": 4,
+    "extent": 13.83,
+    "area": 12.05
+   },
+   {
+    "year": 2025,
+    "month": 5,
+    "extent": 12.49,
+    "area": 10.28
+   },
+   {
+    "year": 2025,
+    "month": 6,
+    "extent": 10.4,
+    "area": 8.15
+   },
+   {
+    "year": 2025,
+    "month": 7,
+    "extent": 7.66,
+    "area": 5.17
+   },
+   {
+    "year": 2025,
+    "month": 8,
+    "extent": 5.39,
+    "area": 3.33
+   },
+   {
+    "year": 2025,
+    "month": 9,
+    "extent": 4.75,
+    "area": 3.08
+   },
+   {
+    "year": 2025,
+    "month": 10,
+    "extent": 6.32,
+    "area": 4.69
+   },
+   {
+    "year": 2025,
+    "month": 11,
+    "extent": 8.77,
+    "area": 7.36
+   },
+   {
+    "year": 2025,
+    "month": 12,
+    "extent": 11.22,
+    "area": 9.6
+   },
+   {
+    "year": 2026,
+    "month": 1,
+    "extent": 13.11,
+    "area": 11.39
+   },
+   {
+    "year": 2026,
+    "month": 2,
+    "extent": 14.1,
+    "area": 12.41
+   },
+   {
+    "year": 2026,
+    "month": 3,
+    "extent": 14.13,
+    "area": 12.43
+   },
+   {
+    "year": 2026,
+    "month": 4,
+    "extent": 13.57,
+    "area": 11.85
+   },
+   {
+    "year": 2026,
+    "month": 5,
+    "extent": 12.14,
+    "area": 10.33
+   },
+   {
+    "year": 2026,
+    "month": 6,
+    "extent": 10.42,
+    "area": 8.14
+   },
+   {
+    "year": 2026,
+    "month": 7,
+    "extent": 7.71,
+    "area": 5.41
+   },
+   {
+    "year": 2026,
+    "month": 8,
+    "extent": 5.56,
+    "area": 3.43
+   },
+   {
+    "year": 2026,
+    "month": 9,
+    "extent": 4.81,
+    "area": 3.12
+   }
+  ],
+  "south": [
+   {
+    "year": 1978,
+    "month": 11,
+    "extent": 15.9,
+    "area": 11.69
+   },
+   {
+    "year": 1978,
+    "month": 12,
+    "extent": 10.4,
+    "area": 6.97
+   },
+   {
+    "year": 1979,
+    "month": 1,
+    "extent": 5.4,
+    "area": 3.47
+   },
+   {
+    "year": 1979,
+    "month": 2,
+    "extent": 3.14,
+    "area": 2.11
+   },
+   {
+    "year": 1979,
+    "month": 3,
+    "extent": 4,
+    "area": 2.66
+   },
+   {
+    "year": 1979,
+    "month": 4,
+    "extent": 7.49,
+    "area": 5.45
+   },
+   {
+    "year": 1979,
+    "month": 5,
+    "extent": 10.83,
+    "area": 8.3
+   },
+   {
+    "year": 1979,
+    "month": 6,
+    "extent": 14.19,
+    "area": 11.22
+   },
+   {
+    "year": 1979,
+    "month": 7,
+    "extent": 16.52,
+    "area": 13.26
+   },
+   {
+    "year": 1979,
+    "month": 8,
+    "extent": 17.7,
+    "area": 13.79
+   },
+   {
+    "year": 1979,
+    "month": 9,
+    "extent": 18.2,
+    "area": 14.29
+   },
+   {
+    "year": 1979,
+    "month": 10,
+    "extent": 17.82,
+    "area": 13.72
+   },
+   {
+    "year": 1979,
+    "month": 11,
+    "extent": 15.34,
+    "area": 11.32
+   },
+   {
+    "year": 1979,
+    "month": 12,
+    "extent": 9.24,
+    "area": 6.24
+   },
+   {
+    "year": 1980,
+    "month": 1,
+    "extent": 4.56,
+    "area": 3.08
+   },
+   {
+    "year": 1980,
+    "month": 2,
+    "extent": 2.82,
+    "area": 1.85
+   },
+   {
+    "year": 1980,
+    "month": 3,
+    "extent": 3.29,
+    "area": 2.11
+   },
+   {
+    "year": 1980,
+    "month": 4,
+    "extent": 5.4,
+    "area": 3.68
+   },
+   {
+    "year": 1980,
+    "month": 5,
+    "extent": 8.86,
+    "area": 6.44
+   },
+   {
+    "year": 1980,
+    "month": 6,
+    "extent": 12.49,
+    "area": 9.58
+   },
+   {
+    "year": 1980,
+    "month": 7,
+    "extent": 15.56,
+    "area": 12.18
+   },
+   {
+    "year": 1980,
+    "month": 8,
+    "extent": 17.81,
+    "area": 13.96
+   },
+   {
+    "year": 1980,
+    "month": 9,
+    "extent": 18.82,
+    "area": 14.87
+   },
+   {
+    "year": 1980,
+    "month": 10,
+    "extent": 18.57,
+    "area": 14.57
+   },
+   {
+    "year": 1980,
+    "month": 11,
+    "extent": 16.13,
+    "area": 11.84
+   },
+   {
+    "year": 1980,
+    "month": 12,
+    "extent": 10.16,
+    "area": 6.56
+   },
+   {
+    "year": 1981,
+    "month": 1,
+    "extent": 4.41,
+    "area": 2.84
+   },
+   {
+    "year": 1981,
+    "month": 2,
+    "extent": 2.87,
+    "area": 1.74
+   },
+   {
+    "year": 1981,
+    "month": 3,
+    "extent": 3.39,
+    "area": 2.16
+   },
+   {
+    "year": 1981,
+    "month": 4,
+    "extent": 5.84,
+    "area": 4.07
+   },
+   {
+    "year": 1981,
+    "month": 5,
+    "extent": 9.35,
+    "area": 7.08
+   },
+   {
+    "year": 1981,
+    "month": 6,
+    "extent": 13.11,
+    "area": 10.16
+   },
+   {
+    "year": 1981,
+    "month": 7,
+    "extent": 16.04,
+    "area": 12.78
+   },
+   {
+    "year": 1981,
+    "month": 8,
+    "extent": 17.74,
+    "area": 14.16
+   },
+   {
+    "year": 1981,
+    "month": 9,
+    "extent": 18.6,
+    "area": 14.78
+   },
+   {
+    "year": 1981,
+    "month": 10,
+    "extent": 18.29,
+    "area": 14.43
+   },
+   {
+    "year": 1981,
+    "month": 11,
+    "extent": 16.11,
+    "area": 12.07
+   },
+   {
+    "year": 1981,
+    "month": 12,
+    "extent": 10.89,
+    "area": 7.02
+   },
+   {
+    "year": 1982,
+    "month": 1,
+    "extent": 5.26,
+    "area": 3.25
+   },
+   {
+    "year": 1982,
+    "month": 2,
+    "extent": 3.13,
+    "area": 1.86
+   },
+   {
+    "year": 1982,
+    "month": 3,
+    "extent": 4.29,
+    "area": 2.84
+   },
+   {
+    "year": 1982,
+    "month": 4,
+    "extent": 7.72,
+    "area": 5.79
+   },
+   {
+    "year": 1982,
+    "month": 5,
+    "extent": 10.76,
+    "area": 8.27
+   },
+   {
+    "year": 1982,
+    "month": 6,
+    "extent": 13.42,
+    "area": 10.5
+   },
+   {
+    "year": 1982,
+    "month": 7,
+    "extent": 15.87,
+    "area": 12.47
+   },
+   {
+    "year": 1982,
+    "month": 8,
+    "extent": 17.79,
+    "area": 14.28
+   },
+   {
+    "year": 1982,
+    "month": 9,
+    "extent": 18.35,
+    "area": 14.53
+   },
+   {
+    "year": 1982,
+    "month": 10,
+    "extent": 17.79,
+    "area": 13.74
+   },
+   {
+    "year": 1982,
+    "month": 11,
+    "extent": 15.54,
+    "area": 11.27
+   },
+   {
+    "year": 1982,
+    "month": 12,
+    "extent": 9.22,
+    "area": 6.31
+   },
+   {
+    "year": 1983,
+    "month": 1,
+    "extent": 4.77,
+    "area": 3.21
+   },
+   {
+    "year": 1983,
+    "month": 2,
+    "extent": 3.07,
+    "area": 1.91
+   },
+   {
+    "year": 1983,
+    "month": 3,
+    "extent": 4.02,
+    "area": 2.62
+   },
+   {
+    "year": 1983,
+    "month": 4,
+    "extent": 6.47,
+    "area": 4.7
+   },
+   {
+    "year": 1983,
+    "month": 5,
+    "extent": 9.53,
+    "area": 7.16
+   },
+   {
+    "year": 1983,
+    "month": 6,
+    "extent": 12.64,
+    "area": 9.77
+   },
+   {
+    "year": 1983,
+    "month": 7,
+    "extent": 15.47,
+    "area": 12.37
+   },
+   {
+    "year": 1983,
+    "month": 8,
+    "extent": 17.25,
+    "area": 13.84
+   },
+   {
+    "year": 1983,
+    "month": 9,
+    "extent": 18.59,
+    "area": 14.68
+   },
+   {
+    "year": 1983,
+    "month": 10,
+    "extent": 17.92,
+    "area": 13.92
+   },
+   {
+    "year": 1983,
+    "month": 11,
+    "extent": 16.01,
+    "area": 11.57
+   },
+   {
+    "year": 1983,
+    "month": 12,
+    "extent": 10.39,
+    "area": 6.71
+   },
+   {
+    "year": 1984,
+    "month": 1,
+    "extent": 4.78,
+    "area": 2.93
+   },
+   {
+    "year": 1984,
+    "month": 2,
+    "extent": 2.68,
+    "area": 1.75
+   },
+   {
+    "year": 1984,
+    "month": 3,
+    "extent": 3.61,
+    "area": 2.34
+   },
+   {
+    "year": 1984,
+    "month": 4,
+    "extent": 6.42,
+    "area": 4.53
+   },
+   {
+    "year": 1984,
+    "month": 5,
+    "extent": 9.75,
+    "area": 7.41
+   },
+   {
+    "year": 1984,
+    "month": 6,
+    "extent": 13.23,
+    "area": 10.64
+   },
+   {
+    "year": 1984,
+    "month": 7,
+    "extent": 16.4,
+    "area": 13.38
+   },
+   {
+    "year": 1984,
+    "month": 8,
+    "extent": 17.93,
+    "area": 14.23
+   },
+   {
+    "year": 1984,
+    "month": 9,
+    "extent": 18.17,
+    "area": 14.27
+   },
+   {
+    "year": 1984,
+    "month": 10,
+    "extent": 17.57,
+    "area": 13.73
+   },
+   {
+    "year": 1984,
+    "month": 11,
+    "extent": 16.13,
+    "area": 12.06
+   },
+   {
+    "year": 1984,
+    "month": 12,
+    "extent": 10.47,
+    "area": 6.96
+   },
+   {
+    "year": 1985,
+    "month": 1,
+    "extent": 4.46,
+    "area": 2.87
+   },
+   {
+    "year": 1985,
+    "month": 2,
+    "extent": 2.84,
+    "area": 1.83
+   },
+   {
+    "year": 1985,
+    "month": 3,
+    "extent": 3.72,
+    "area": 2.54
+   },
+   {
+    "year": 1985,
+    "month": 4,
+    "extent": 6.49,
+    "area": 4.74
+   },
+   {
+    "year": 1985,
+    "month": 5,
+    "extent": 10.15,
+    "area": 7.84
+   },
+   {
+    "year": 1985,
+    "month": 6,
+    "extent": 13.43,
+    "area": 10.51
+   },
+   {
+    "year": 1985,
+    "month": 7,
+    "extent": 15.72,
+    "area": 12.48
+   },
+   {
+    "year": 1985,
+    "month": 8,
+    "extent": 17.63,
+    "area": 14.24
+   },
+   {
+    "year": 1985,
+    "month": 9,
+    "extent": 18.7,
+    "area": 14.72
+   },
+   {
+    "year": 1985,
+    "month": 10,
+    "extent": 18.2,
+    "area": 14.37
+   },
+   {
+    "year": 1985,
+    "month": 11,
+    "extent": 16.14,
+    "area": 12.34
+   },
+   {
+    "year": 1985,
+    "month": 12,
+    "extent": 11.35,
+    "area": 7.46
+   },
+   {
+    "year": 1986,
+    "month": 1,
+    "extent": 5.42,
+    "area": 3.43
+   },
+   {
+    "year": 1986,
+    "month": 2,
+    "extent": 3.19,
+    "area": 2
+   },
+   {
+    "year": 1986,
+    "month": 3,
+    "extent": 3.7,
+    "area": 2.38
+   },
+   {
+    "year": 1986,
+    "month": 4,
+    "extent": 6.39,
+    "area": 4.56
+   },
+   {
+    "year": 1986,
+    "month": 5,
+    "extent": 9.3,
+    "area": 7.04
+   },
+   {
+    "year": 1986,
+    "month": 6,
+    "extent": 12.69,
+    "area": 9.72
+   },
+   {
+    "year": 1986,
+    "month": 7,
+    "extent": 15.32,
+    "area": 12.09
+   },
+   {
+    "year": 1986,
+    "month": 8,
+    "extent": 17,
+    "area": 13.46
+   },
+   {
+    "year": 1986,
+    "month": 9,
+    "extent": 17.68,
+    "area": 13.88
+   },
+   {
+    "year": 1986,
+    "month": 10,
+    "extent": 17.18,
+    "area": 13.32
+   },
+   {
+    "year": 1986,
+    "month": 11,
+    "extent": 15.01,
+    "area": 10.87
+   },
+   {
+    "year": 1986,
+    "month": 12,
+    "extent": 9.65,
+    "area": 6.49
+   },
+   {
+    "year": 1987,
+    "month": 1,
+    "extent": 5.13,
+    "area": 3.31
+   },
+   {
+    "year": 1987,
+    "month": 2,
+    "extent": 3.25,
+    "area": 2
+   },
+   {
+    "year": 1987,
+    "month": 3,
+    "extent": 4.11,
+    "area": 2.75
+   },
+   {
+    "year": 1987,
+    "month": 4,
+    "extent": 6.8,
+    "area": 5.04
+   },
+   {
+    "year": 1987,
+    "month": 5,
+    "extent": 9.69,
+    "area": 7.53
+   },
+   {
+    "year": 1987,
+    "month": 6,
+    "extent": 12.68,
+    "area": 9.91
+   },
+   {
+    "year": 1987,
+    "month": 7,
+    "extent": 15.75,
+    "area": 12.5
+   },
+   {
+    "year": 1987,
+    "month": 8,
+    "extent": 17.6,
+    "area": 14.02
+   },
+   {
+    "year": 1987,
+    "month": 9,
+    "extent": 18.25,
+    "area": 14.27
+   },
+   {
+    "year": 1987,
+    "month": 10,
+    "extent": 17.67,
+    "area": 13.71
+   },
+   {
+    "year": 1987,
+    "month": 11,
+    "extent": 15.58,
+    "area": 11.23
+   },
+   {
+    "year": 1988,
+    "month": 2,
+    "extent": 2.89,
+    "area": 1.9
+   },
+   {
+    "year": 1988,
+    "month": 3,
+    "extent": 3.97,
+    "area": 2.59
+   },
+   {
+    "year": 1988,
+    "month": 4,
+    "extent": 6.29,
+    "area": 4.44
+   },
+   {
+    "year": 1988,
+    "month": 5,
+    "extent": 9.6,
+    "area": 7.23
+   },
+   {
+    "year": 1988,
+    "month": 6,
+    "extent": 13.09,
+    "area": 10.28
+   },
+   {
+    "year": 1988,
+    "month": 7,
+    "extent": 15.75,
+    "area": 12.62
+   },
+   {
+    "year": 1988,
+    "month": 8,
+    "extent": 17.56,
+    "area": 13.98
+   },
+   {
+    "year": 1988,
+    "month": 9,
+    "extent": 18.31,
+    "area": 14.2
+   },
+   {
+    "year": 1988,
+    "month": 10,
+    "extent": 18.36,
+    "area": 14.41
+   },
+   {
+    "year": 1988,
+    "month": 11,
+    "extent": 16.15,
+    "area": 12.29
+   },
+   {
+    "year": 1988,
+    "month": 12,
+    "extent": 11.06,
+    "area": 7.4
+   },
+   {
+    "year": 1989,
+    "month": 1,
+    "extent": 4.74,
+    "area": 3.17
+   },
+   {
+    "year": 1989,
+    "month": 2,
+    "extent": 2.98,
+    "area": 2.03
+   },
+   {
+    "year": 1989,
+    "month": 3,
+    "extent": 3.93,
+    "area": 2.59
+   },
+   {
+    "year": 1989,
+    "month": 4,
+    "extent": 6.31,
+    "area": 4.5
+   },
+   {
+    "year": 1989,
+    "month": 5,
+    "extent": 10.3,
+    "area": 8
+   },
+   {
+    "year": 1989,
+    "month": 6,
+    "extent": 13.58,
+    "area": 10.81
+   },
+   {
+    "year": 1989,
+    "month": 7,
+    "extent": 15.71,
+    "area": 12.58
+   },
+   {
+    "year": 1989,
+    "month": 8,
+    "extent": 17.47,
+    "area": 14.03
+   },
+   {
+    "year": 1989,
+    "month": 9,
+    "extent": 18.12,
+    "area": 14.48
+   },
+   {
+    "year": 1989,
+    "month": 10,
+    "extent": 17.86,
+    "area": 13.85
+   },
+   {
+    "year": 1989,
+    "month": 11,
+    "extent": 15.73,
+    "area": 11.42
+   },
+   {
+    "year": 1989,
+    "month": 12,
+    "extent": 9.84,
+    "area": 6.7
+   },
+   {
+    "year": 1990,
+    "month": 1,
+    "extent": 4.87,
+    "area": 3.39
+   },
+   {
+    "year": 1990,
+    "month": 2,
+    "extent": 3.04,
+    "area": 2.21
+   },
+   {
+    "year": 1990,
+    "month": 3,
+    "extent": 3.97,
+    "area": 2.79
+   },
+   {
+    "year": 1990,
+    "month": 4,
+    "extent": 7,
+    "area": 5.18
+   },
+   {
+    "year": 1990,
+    "month": 5,
+    "extent": 9.72,
+    "area": 7.46
+   },
+   {
+    "year": 1990,
+    "month": 6,
+    "extent": 13.08,
+    "area": 10.35
+   },
+   {
+    "year": 1990,
+    "month": 7,
+    "extent": 15.57,
+    "area": 12.27
+   },
+   {
+    "year": 1990,
+    "month": 8,
+    "extent": 17.57,
+    "area": 14.03
+   },
+   {
+    "year": 1990,
+    "month": 9,
+    "extent": 18.19,
+    "area": 14.39
+   },
+   {
+    "year": 1990,
+    "month": 10,
+    "extent": 17.95,
+    "area": 13.8
+   },
+   {
+    "year": 1990,
+    "month": 11,
+    "extent": 15.47,
+    "area": 11.35
+   },
+   {
+    "year": 1990,
+    "month": 12,
+    "extent": 9.95,
+    "area": 6.73
+   },
+   {
+    "year": 1991,
+    "month": 1,
+    "extent": 5.34,
+    "area": 3.52
+   },
+   {
+    "year": 1991,
+    "month": 2,
+    "extent": 3.16,
+    "area": 2.09
+   },
+   {
+    "year": 1991,
+    "month": 3,
+    "extent": 3.81,
+    "area": 2.65
+   },
+   {
+    "year": 1991,
+    "month": 4,
+    "extent": 7.05,
+    "area": 5.18
+   },
+   {
+    "year": 1991,
+    "month": 5,
+    "extent": 10.28,
+    "area": 7.86
+   },
+   {
+    "year": 1991,
+    "month": 6,
+    "extent": 13.07,
+    "area": 9.99
+   },
+   {
+    "year": 1991,
+    "month": 7,
+    "extent": 15.55,
+    "area": 12.22
+   },
+   {
+    "year": 1991,
+    "month": 8,
+    "extent": 17.72,
+    "area": 14.05
+   },
+   {
+    "year": 1991,
+    "month": 9,
+    "extent": 18.31,
+    "area": 14.47
+   },
+   {
+    "year": 1991,
+    "month": 10,
+    "extent": 17.92,
+    "area": 13.8
+   },
+   {
+    "year": 1991,
+    "month": 11,
+    "extent": 15.58,
+    "area": 11.46
+   },
+   {
+    "year": 1991,
+    "month": 12,
+    "extent": 10.19,
+    "area": 6.8
+   },
+   {
+    "year": 1992,
+    "month": 1,
+    "extent": 4.75,
+    "area": 3.24
+   },
+   {
+    "year": 1992,
+    "month": 2,
+    "extent": 2.84,
+    "area": 1.86
+   },
+   {
+    "year": 1992,
+    "month": 3,
+    "extent": 3.57,
+    "area": 2.47
+   },
+   {
+    "year": 1992,
+    "month": 4,
+    "extent": 6.79,
+    "area": 5
+   },
+   {
+    "year": 1992,
+    "month": 5,
+    "extent": 9.92,
+    "area": 7.62
+   },
+   {
+    "year": 1992,
+    "month": 6,
+    "extent": 12.81,
+    "area": 10
+   },
+   {
+    "year": 1992,
+    "month": 7,
+    "extent": 15.89,
+    "area": 12.58
+   },
+   {
+    "year": 1992,
+    "month": 8,
+    "extent": 17.73,
+    "area": 14.17
+   },
+   {
+    "year": 1992,
+    "month": 9,
+    "extent": 18.15,
+    "area": 14.13
+   },
+   {
+    "year": 1992,
+    "month": 10,
+    "extent": 17.93,
+    "area": 13.85
+   },
+   {
+    "year": 1992,
+    "month": 11,
+    "extent": 15.9,
+    "area": 11.2
+   },
+   {
+    "year": 1992,
+    "month": 12,
+    "extent": 10.21,
+    "area": 6.18
+   },
+   {
+    "year": 1993,
+    "month": 1,
+    "extent": 4.41,
+    "area": 2.55
+   },
+   {
+    "year": 1993,
+    "month": 2,
+    "extent": 2.48,
+    "area": 1.37
+   },
+   {
+    "year": 1993,
+    "month": 3,
+    "extent": 3.67,
+    "area": 2.24
+   },
+   {
+    "year": 1993,
+    "month": 4,
+    "extent": 6.65,
+    "area": 4.9
+   },
+   {
+    "year": 1993,
+    "month": 5,
+    "extent": 10.1,
+    "area": 7.89
+   },
+   {
+    "year": 1993,
+    "month": 6,
+    "extent": 13.15,
+    "area": 10.37
+   },
+   {
+    "year": 1993,
+    "month": 7,
+    "extent": 15.85,
+    "area": 12.72
+   },
+   {
+    "year": 1993,
+    "month": 8,
+    "extent": 17.49,
+    "area": 13.93
+   },
+   {
+    "year": 1993,
+    "month": 9,
+    "extent": 18.54,
+    "area": 14.7
+   },
+   {
+    "year": 1993,
+    "month": 10,
+    "extent": 18.13,
+    "area": 14.17
+   },
+   {
+    "year": 1993,
+    "month": 11,
+    "extent": 16.04,
+    "area": 11.83
+   },
+   {
+    "year": 1993,
+    "month": 12,
+    "extent": 9.93,
+    "area": 6.67
+   },
+   {
+    "year": 1994,
+    "month": 1,
+    "extent": 4.97,
+    "area": 3.37
+   },
+   {
+    "year": 1994,
+    "month": 2,
+    "extent": 3.2,
+    "area": 2.22
+   },
+   {
+    "year": 1994,
+    "month": 3,
+    "extent": 4.55,
+    "area": 3.2
+   },
+   {
+    "year": 1994,
+    "month": 4,
+    "extent": 7.22,
+    "area": 5.45
+   },
+   {
+    "year": 1994,
+    "month": 5,
+    "extent": 10.41,
+    "area": 8.21
+   },
+   {
+    "year": 1994,
+    "month": 6,
+    "extent": 13.56,
+    "area": 10.73
+   },
+   {
+    "year": 1994,
+    "month": 7,
+    "extent": 16.3,
+    "area": 13.12
+   },
+   {
+    "year": 1994,
+    "month": 8,
+    "extent": 17.84,
+    "area": 14.49
+   },
+   {
+    "year": 1994,
+    "month": 9,
+    "extent": 18.61,
+    "area": 14.61
+   },
+   {
+    "year": 1994,
+    "month": 10,
+    "extent": 18.09,
+    "area": 14.07
+   },
+   {
+    "year": 1994,
+    "month": 11,
+    "extent": 15.88,
+    "area": 11.78
+   },
+   {
+    "year": 1994,
+    "month": 12,
+    "extent": 10.1,
+    "area": 7.11
+   },
+   {
+    "year": 1995,
+    "month": 1,
+    "extent": 5.64,
+    "area": 3.73
+   },
+   {
+    "year": 1995,
+    "month": 2,
+    "extent": 3.56,
+    "area": 2.19
+   },
+   {
+    "year": 1995,
+    "month": 3,
+    "extent": 4.63,
+    "area": 3.01
+   },
+   {
+    "year": 1995,
+    "month": 4,
+    "extent": 7.27,
+    "area": 5.4
+   },
+   {
+    "year": 1995,
+    "month": 5,
+    "extent": 10.42,
+    "area": 8.19
+   },
+   {
+    "year": 1995,
+    "month": 6,
+    "extent": 13.29,
+    "area": 10.46
+   },
+   {
+    "year": 1995,
+    "month": 7,
+    "extent": 15.74,
+    "area": 12.53
+   },
+   {
+    "year": 1995,
+    "month": 8,
+    "extent": 17.78,
+    "area": 14.2
+   },
+   {
+    "year": 1995,
+    "month": 9,
+    "extent": 18.37,
+    "area": 14.46
+   },
+   {
+    "year": 1995,
+    "month": 10,
+    "extent": 18.03,
+    "area": 13.57
+   },
+   {
+    "year": 1995,
+    "month": 11,
+    "extent": 15.63,
+    "area": 11.49
+   },
+   {
+    "year": 1995,
+    "month": 12,
+    "extent": 10.62,
+    "area": 7.19
+   },
+   {
+    "year": 1996,
+    "month": 1,
+    "extent": 5.87,
+    "area": 3.55
+   },
+   {
+    "year": 1996,
+    "month": 2,
+    "extent": 2.98,
+    "area": 1.77
+   },
+   {
+    "year": 1996,
+    "month": 3,
+    "extent": 4.18,
+    "area": 2.65
+   },
+   {
+    "year": 1996,
+    "month": 4,
+    "extent": 7.28,
+    "area": 5.37
+   },
+   {
+    "year": 1996,
+    "month": 5,
+    "extent": 10.92,
+    "area": 8.65
+   },
+   {
+    "year": 1996,
+    "month": 6,
+    "extent": 13.87,
+    "area": 11.09
+   },
+   {
+    "year": 1996,
+    "month": 7,
+    "extent": 16.12,
+    "area": 12.89
+   },
+   {
+    "year": 1996,
+    "month": 8,
+    "extent": 17.74,
+    "area": 13.9
+   },
+   {
+    "year": 1996,
+    "month": 9,
+    "extent": 18.63,
+    "area": 14.54
+   },
+   {
+    "year": 1996,
+    "month": 10,
+    "extent": 17.96,
+    "area": 13.94
+   },
+   {
+    "year": 1996,
+    "month": 11,
+    "extent": 15.72,
+    "area": 11.24
+   },
+   {
+    "year": 1996,
+    "month": 12,
+    "extent": 9.65,
+    "area": 6.24
+   },
+   {
+    "year": 1997,
+    "month": 1,
+    "extent": 4.2,
+    "area": 2.77
+   },
+   {
+    "year": 1997,
+    "month": 2,
+    "extent": 2.49,
+    "area": 1.72
+   },
+   {
+    "year": 1997,
+    "month": 3,
+    "extent": 3.46,
+    "area": 2.3
+   },
+   {
+    "year": 1997,
+    "month": 4,
+    "extent": 6.49,
+    "area": 4.84
+   },
+   {
+    "year": 1997,
+    "month": 5,
+    "extent": 10.12,
+    "area": 7.91
+   },
+   {
+    "year": 1997,
+    "month": 6,
+    "extent": 13.12,
+    "area": 10.22
+   },
+   {
+    "year": 1997,
+    "month": 7,
+    "extent": 15.92,
+    "area": 12.75
+   },
+   {
+    "year": 1997,
+    "month": 8,
+    "extent": 17.68,
+    "area": 14.09
+   },
+   {
+    "year": 1997,
+    "month": 9,
+    "extent": 18.6,
+    "area": 14.59
+   },
+   {
+    "year": 1997,
+    "month": 10,
+    "extent": 17.99,
+    "area": 14.12
+   },
+   {
+    "year": 1997,
+    "month": 11,
+    "extent": 15.73,
+    "area": 11.59
+   },
+   {
+    "year": 1997,
+    "month": 12,
+    "extent": 10.29,
+    "area": 6.99
+   },
+   {
+    "year": 1998,
+    "month": 1,
+    "extent": 4.46,
+    "area": 3.04
+   },
+   {
+    "year": 1998,
+    "month": 2,
+    "extent": 2.99,
+    "area": 1.87
+   },
+   {
+    "year": 1998,
+    "month": 3,
+    "extent": 4.11,
+    "area": 2.71
+   },
+   {
+    "year": 1998,
+    "month": 4,
+    "extent": 6.85,
+    "area": 5.12
+   },
+   {
+    "year": 1998,
+    "month": 5,
+    "extent": 10.33,
+    "area": 7.91
+   },
+   {
+    "year": 1998,
+    "month": 6,
+    "extent": 13.31,
+    "area": 10.34
+   },
+   {
+    "year": 1998,
+    "month": 7,
+    "extent": 15.96,
+    "area": 12.66
+   },
+   {
+    "year": 1998,
+    "month": 8,
+    "extent": 17.88,
+    "area": 14.06
+   },
+   {
+    "year": 1998,
+    "month": 9,
+    "extent": 18.9,
+    "area": 14.84
+   },
+   {
+    "year": 1998,
+    "month": 10,
+    "extent": 18.66,
+    "area": 14.54
+   },
+   {
+    "year": 1998,
+    "month": 11,
+    "extent": 16.3,
+    "area": 11.88
+   },
+   {
+    "year": 1998,
+    "month": 12,
+    "extent": 10.52,
+    "area": 6.8
+   },
+   {
+    "year": 1999,
+    "month": 1,
+    "extent": 4.82,
+    "area": 3.11
+   },
+   {
+    "year": 1999,
+    "month": 2,
+    "extent": 2.97,
+    "area": 1.77
+   },
+   {
+    "year": 1999,
+    "month": 3,
+    "extent": 3.98,
+    "area": 2.58
+   },
+   {
+    "year": 1999,
+    "month": 4,
+    "extent": 6.89,
+    "area": 5.13
+   },
+   {
+    "year": 1999,
+    "month": 5,
+    "extent": 10.27,
+    "area": 8.07
+   },
+   {
+    "year": 1999,
+    "month": 6,
+    "extent": 13.65,
+    "area": 10.83
+   },
+   {
+    "year": 1999,
+    "month": 7,
+    "extent": 16.28,
+    "area": 13.06
+   },
+   {
+    "year": 1999,
+    "month": 8,
+    "extent": 17.96,
+    "area": 14.24
+   },
+   {
+    "year": 1999,
+    "month": 9,
+    "extent": 18.7,
+    "area": 14.62
+   },
+   {
+    "year": 1999,
+    "month": 10,
+    "extent": 18.35,
+    "area": 14.23
+   },
+   {
+    "year": 1999,
+    "month": 11,
+    "extent": 15.96,
+    "area": 11.51
+   },
+   {
+    "year": 1999,
+    "month": 12,
+    "extent": 10.72,
+    "area": 6.8
+   },
+   {
+    "year": 2000,
+    "month": 1,
+    "extent": 4.75,
+    "area": 2.92
+   },
+   {
+    "year": 2000,
+    "month": 2,
+    "extent": 2.91,
+    "area": 1.72
+   },
+   {
+    "year": 2000,
+    "month": 3,
+    "extent": 4.09,
+    "area": 2.67
+   },
+   {
+    "year": 2000,
+    "month": 4,
+    "extent": 7.13,
+    "area": 5.31
+   },
+   {
+    "year": 2000,
+    "month": 5,
+    "extent": 10.92,
+    "area": 8.56
+   },
+   {
+    "year": 2000,
+    "month": 6,
+    "extent": 13.89,
+    "area": 11.04
+   },
+   {
+    "year": 2000,
+    "month": 7,
+    "extent": 16.1,
+    "area": 12.99
+   },
+   {
+    "year": 2000,
+    "month": 8,
+    "extent": 18.21,
+    "area": 14.64
+   },
+   {
+    "year": 2000,
+    "month": 9,
+    "extent": 18.89,
+    "area": 15.07
+   },
+   {
+    "year": 2000,
+    "month": 10,
+    "extent": 18.13,
+    "area": 14.26
+   },
+   {
+    "year": 2000,
+    "month": 11,
+    "extent": 15.76,
+    "area": 11.81
+   },
+   {
+    "year": 2000,
+    "month": 12,
+    "extent": 9.91,
+    "area": 6.95
+   },
+   {
+    "year": 2001,
+    "month": 1,
+    "extent": 5.23,
+    "area": 3.64
+   },
+   {
+    "year": 2001,
+    "month": 2,
+    "extent": 3.65,
+    "area": 2.44
+   },
+   {
+    "year": 2001,
+    "month": 3,
+    "extent": 4.73,
+    "area": 3.36
+   },
+   {
+    "year": 2001,
+    "month": 4,
+    "extent": 7.04,
+    "area": 5.3
+   },
+   {
+    "year": 2001,
+    "month": 5,
+    "extent": 10.33,
+    "area": 8
+   },
+   {
+    "year": 2001,
+    "month": 6,
+    "extent": 13.42,
+    "area": 10.56
+   },
+   {
+    "year": 2001,
+    "month": 7,
+    "extent": 15.85,
+    "area": 12.58
+   },
+   {
+    "year": 2001,
+    "month": 8,
+    "extent": 17.42,
+    "area": 13.75
+   },
+   {
+    "year": 2001,
+    "month": 9,
+    "extent": 18.17,
+    "area": 14.36
+   },
+   {
+    "year": 2001,
+    "month": 10,
+    "extent": 17.73,
+    "area": 13.34
+   },
+   {
+    "year": 2001,
+    "month": 11,
+    "extent": 15.61,
+    "area": 11
+   },
+   {
+    "year": 2001,
+    "month": 12,
+    "extent": 10.35,
+    "area": 6.36
+   },
+   {
+    "year": 2002,
+    "month": 1,
+    "extent": 4.74,
+    "area": 2.95
+   },
+   {
+    "year": 2002,
+    "month": 2,
+    "extent": 2.96,
+    "area": 1.82
+   },
+   {
+    "year": 2002,
+    "month": 3,
+    "extent": 3.75,
+    "area": 2.36
+   },
+   {
+    "year": 2002,
+    "month": 4,
+    "extent": 6.33,
+    "area": 4.59
+   },
+   {
+    "year": 2002,
+    "month": 5,
+    "extent": 9.51,
+    "area": 7.18
+   },
+   {
+    "year": 2002,
+    "month": 6,
+    "extent": 12.38,
+    "area": 9.7
+   },
+   {
+    "year": 2002,
+    "month": 7,
+    "extent": 15.41,
+    "area": 12.52
+   },
+   {
+    "year": 2002,
+    "month": 8,
+    "extent": 17.07,
+    "area": 13.74
+   },
+   {
+    "year": 2002,
+    "month": 9,
+    "extent": 17.89,
+    "area": 14.1
+   },
+   {
+    "year": 2002,
+    "month": 10,
+    "extent": 17.87,
+    "area": 13.82
+   },
+   {
+    "year": 2002,
+    "month": 11,
+    "extent": 15.41,
+    "area": 11.67
+   },
+   {
+    "year": 2002,
+    "month": 12,
+    "extent": 10.79,
+    "area": 7.61
+   },
+   {
+    "year": 2003,
+    "month": 1,
+    "extent": 5.77,
+    "area": 4.11
+   },
+   {
+    "year": 2003,
+    "month": 2,
+    "extent": 3.79,
+    "area": 2.66
+   },
+   {
+    "year": 2003,
+    "month": 3,
+    "extent": 4.44,
+    "area": 3.24
+   },
+   {
+    "year": 2003,
+    "month": 4,
+    "extent": 7.21,
+    "area": 5.56
+   },
+   {
+    "year": 2003,
+    "month": 5,
+    "extent": 10.74,
+    "area": 8.45
+   },
+   {
+    "year": 2003,
+    "month": 6,
+    "extent": 13.99,
+    "area": 11.16
+   },
+   {
+    "year": 2003,
+    "month": 7,
+    "extent": 16.4,
+    "area": 13.17
+   },
+   {
+    "year": 2003,
+    "month": 8,
+    "extent": 17.58,
+    "area": 13.77
+   },
+   {
+    "year": 2003,
+    "month": 9,
+    "extent": 18.3,
+    "area": 14.14
+   },
+   {
+    "year": 2003,
+    "month": 10,
+    "extent": 18.2,
+    "area": 13.87
+   },
+   {
+    "year": 2003,
+    "month": 11,
+    "extent": 16.11,
+    "area": 11.47
+   },
+   {
+    "year": 2003,
+    "month": 12,
+    "extent": 10.56,
+    "area": 7.2
+   },
+   {
+    "year": 2004,
+    "month": 1,
+    "extent": 5.59,
+    "area": 3.8
+   },
+   {
+    "year": 2004,
+    "month": 2,
+    "extent": 3.58,
+    "area": 2.36
+   },
+   {
+    "year": 2004,
+    "month": 3,
+    "extent": 4.53,
+    "area": 3.16
+   },
+   {
+    "year": 2004,
+    "month": 4,
+    "extent": 7.28,
+    "area": 5.39
+   },
+   {
+    "year": 2004,
+    "month": 5,
+    "extent": 10.47,
+    "area": 8.19
+   },
+   {
+    "year": 2004,
+    "month": 6,
+    "extent": 13.78,
+    "area": 10.89
+   },
+   {
+    "year": 2004,
+    "month": 7,
+    "extent": 16.33,
+    "area": 13.16
+   },
+   {
+    "year": 2004,
+    "month": 8,
+    "extent": 18.01,
+    "area": 14.23
+   },
+   {
+    "year": 2004,
+    "month": 9,
+    "extent": 18.92,
+    "area": 14.59
+   },
+   {
+    "year": 2004,
+    "month": 10,
+    "extent": 18.46,
+    "area": 14.12
+   },
+   {
+    "year": 2004,
+    "month": 11,
+    "extent": 16.08,
+    "area": 11.75
+   },
+   {
+    "year": 2004,
+    "month": 12,
+    "extent": 10.23,
+    "area": 6.93
+   },
+   {
+    "year": 2005,
+    "month": 1,
+    "extent": 4.75,
+    "area": 3.18
+   },
+   {
+    "year": 2005,
+    "month": 2,
+    "extent": 2.97,
+    "area": 1.97
+   },
+   {
+    "year": 2005,
+    "month": 3,
+    "extent": 4.08,
+    "area": 2.73
+   },
+   {
+    "year": 2005,
+    "month": 4,
+    "extent": 7.03,
+    "area": 5.19
+   },
+   {
+    "year": 2005,
+    "month": 5,
+    "extent": 10.29,
+    "area": 7.96
+   },
+   {
+    "year": 2005,
+    "month": 6,
+    "extent": 13.29,
+    "area": 10.31
+   },
+   {
+    "year": 2005,
+    "month": 7,
+    "extent": 16.16,
+    "area": 12.72
+   },
+   {
+    "year": 2005,
+    "month": 8,
+    "extent": 17.92,
+    "area": 13.95
+   },
+   {
+    "year": 2005,
+    "month": 9,
+    "extent": 18.8,
+    "area": 14.85
+   },
+   {
+    "year": 2005,
+    "month": 10,
+    "extent": 18.48,
+    "area": 14.04
+   },
+   {
+    "year": 2005,
+    "month": 11,
+    "extent": 16.32,
+    "area": 11.8
+   },
+   {
+    "year": 2005,
+    "month": 12,
+    "extent": 9.68,
+    "area": 6.33
+   },
+   {
+    "year": 2006,
+    "month": 1,
+    "extent": 4.16,
+    "area": 2.81
+   },
+   {
+    "year": 2006,
+    "month": 2,
+    "extent": 2.65,
+    "area": 1.76
+   },
+   {
+    "year": 2006,
+    "month": 3,
+    "extent": 3.21,
+    "area": 2.01
+   },
+   {
+    "year": 2006,
+    "month": 4,
+    "extent": 6.01,
+    "area": 4.28
+   },
+   {
+    "year": 2006,
+    "month": 5,
+    "extent": 9.46,
+    "area": 7.2
+   },
+   {
+    "year": 2006,
+    "month": 6,
+    "extent": 13.34,
+    "area": 10.58
+   },
+   {
+    "year": 2006,
+    "month": 7,
+    "extent": 16.11,
+    "area": 12.88
+   },
+   {
+    "year": 2006,
+    "month": 8,
+    "extent": 18.1,
+    "area": 14.54
+   },
+   {
+    "year": 2006,
+    "month": 9,
+    "extent": 19.09,
+    "area": 15.18
+   },
+   {
+    "year": 2006,
+    "month": 10,
+    "extent": 18.73,
+    "area": 14.68
+   },
+   {
+    "year": 2006,
+    "month": 11,
+    "extent": 16.23,
+    "area": 11.61
+   },
+   {
+    "year": 2006,
+    "month": 12,
+    "extent": 9.85,
+    "area": 6.48
+   },
+   {
+    "year": 2007,
+    "month": 1,
+    "extent": 4.67,
+    "area": 3
+   },
+   {
+    "year": 2007,
+    "month": 2,
+    "extent": 2.9,
+    "area": 1.94
+   },
+   {
+    "year": 2007,
+    "month": 3,
+    "extent": 3.83,
+    "area": 2.54
+   },
+   {
+    "year": 2007,
+    "month": 4,
+    "extent": 6.42,
+    "area": 4.7
+   },
+   {
+    "year": 2007,
+    "month": 5,
+    "extent": 9.65,
+    "area": 7.54
+   },
+   {
+    "year": 2007,
+    "month": 6,
+    "extent": 13.29,
+    "area": 10.48
+   },
+   {
+    "year": 2007,
+    "month": 7,
+    "extent": 15.96,
+    "area": 12.61
+   },
+   {
+    "year": 2007,
+    "month": 8,
+    "extent": 17.68,
+    "area": 14.03
+   },
+   {
+    "year": 2007,
+    "month": 9,
+    "extent": 18.86,
+    "area": 15.39
+   },
+   {
+    "year": 2007,
+    "month": 10,
+    "extent": 18.51,
+    "area": 14.59
+   },
+   {
+    "year": 2007,
+    "month": 11,
+    "extent": 15.89,
+    "area": 12.16
+   },
+   {
+    "year": 2007,
+    "month": 12,
+    "extent": 11.98,
+    "area": 8.38
+   },
+   {
+    "year": 2008,
+    "month": 1,
+    "extent": 6.41,
+    "area": 4.07
+   },
+   {
+    "year": 2008,
+    "month": 2,
+    "extent": 3.89,
+    "area": 2.4
+   },
+   {
+    "year": 2008,
+    "month": 3,
+    "extent": 5.28,
+    "area": 3.68
+   },
+   {
+    "year": 2008,
+    "month": 4,
+    "extent": 8.24,
+    "area": 6.23
+   },
+   {
+    "year": 2008,
+    "month": 5,
+    "extent": 11.05,
+    "area": 8.6
+   },
+   {
+    "year": 2008,
+    "month": 6,
+    "extent": 14.06,
+    "area": 11.4
+   },
+   {
+    "year": 2008,
+    "month": 7,
+    "extent": 16.09,
+    "area": 12.95
+   },
+   {
+    "year": 2008,
+    "month": 8,
+    "extent": 17.64,
+    "area": 14.13
+   },
+   {
+    "year": 2008,
+    "month": 9,
+    "extent": 18.15,
+    "area": 14.39
+   },
+   {
+    "year": 2008,
+    "month": 10,
+    "extent": 17.99,
+    "area": 14.12
+   },
+   {
+    "year": 2008,
+    "month": 11,
+    "extent": 16.25,
+    "area": 12.01
+   },
+   {
+    "year": 2008,
+    "month": 12,
+    "extent": 11.51,
+    "area": 7.39
+   },
+   {
+    "year": 2009,
+    "month": 1,
+    "extent": 5.71,
+    "area": 3.5
+   },
+   {
+    "year": 2009,
+    "month": 2,
+    "extent": 2.99,
+    "area": 1.97
+   },
+   {
+    "year": 2009,
+    "month": 3,
+    "extent": 4.44,
+    "area": 3.02
+   },
+   {
+    "year": 2009,
+    "month": 4,
+    "extent": 7.8,
+    "area": 5.96
+   },
+   {
+    "year": 2009,
+    "month": 5,
+    "extent": 10.93,
+    "area": 8.46
+   },
+   {
+    "year": 2009,
+    "month": 6,
+    "extent": 13.91,
+    "area": 11.09
+   },
+   {
+    "year": 2009,
+    "month": 7,
+    "extent": 16.26,
+    "area": 13.09
+   },
+   {
+    "year": 2009,
+    "month": 8,
+    "extent": 18.1,
+    "area": 14.45
+   },
+   {
+    "year": 2009,
+    "month": 9,
+    "extent": 18.96,
+    "area": 15.08
+   },
+   {
+    "year": 2009,
+    "month": 10,
+    "extent": 18.3,
+    "area": 14.35
+   },
+   {
+    "year": 2009,
+    "month": 11,
+    "extent": 15.85,
+    "area": 11.8
+   },
+   {
+    "year": 2009,
+    "month": 12,
+    "extent": 10.74,
+    "area": 7.09
+   },
+   {
+    "year": 2010,
+    "month": 1,
+    "extent": 4.96,
+    "area": 3.33
+   },
+   {
+    "year": 2010,
+    "month": 2,
+    "extent": 3.11,
+    "area": 2.11
+   },
+   {
+    "year": 2010,
+    "month": 3,
+    "extent": 3.85,
+    "area": 2.66
+   },
+   {
+    "year": 2010,
+    "month": 4,
+    "extent": 6.72,
+    "area": 5
+   },
+   {
+    "year": 2010,
+    "month": 5,
+    "extent": 10.64,
+    "area": 8.33
+   },
+   {
+    "year": 2010,
+    "month": 6,
+    "extent": 14.41,
+    "area": 11.65
+   },
+   {
+    "year": 2010,
+    "month": 7,
+    "extent": 16.92,
+    "area": 13.74
+   },
+   {
+    "year": 2010,
+    "month": 8,
+    "extent": 18.61,
+    "area": 14.95
+   },
+   {
+    "year": 2010,
+    "month": 9,
+    "extent": 18.8,
+    "area": 14.43
+   },
+   {
+    "year": 2010,
+    "month": 10,
+    "extent": 18.65,
+    "area": 14.41
+   },
+   {
+    "year": 2010,
+    "month": 11,
+    "extent": 16.75,
+    "area": 11.92
+   },
+   {
+    "year": 2010,
+    "month": 12,
+    "extent": 11.27,
+    "area": 6.94
+   },
+   {
+    "year": 2011,
+    "month": 1,
+    "extent": 4.51,
+    "area": 3.05
+   },
+   {
+    "year": 2011,
+    "month": 2,
+    "extent": 2.52,
+    "area": 1.86
+   },
+   {
+    "year": 2011,
+    "month": 3,
+    "extent": 3.37,
+    "area": 2.26
+   },
+   {
+    "year": 2011,
+    "month": 4,
+    "extent": 6.1,
+    "area": 4.39
+   },
+   {
+    "year": 2011,
+    "month": 5,
+    "extent": 10.09,
+    "area": 7.85
+   },
+   {
+    "year": 2011,
+    "month": 6,
+    "extent": 13.33,
+    "area": 10.54
+   },
+   {
+    "year": 2011,
+    "month": 7,
+    "extent": 15.75,
+    "area": 12.34
+   },
+   {
+    "year": 2011,
+    "month": 8,
+    "extent": 17.81,
+    "area": 14.04
+   },
+   {
+    "year": 2011,
+    "month": 9,
+    "extent": 18.74,
+    "area": 14.57
+   },
+   {
+    "year": 2011,
+    "month": 10,
+    "extent": 18.22,
+    "area": 14.23
+   },
+   {
+    "year": 2011,
+    "month": 11,
+    "extent": 15.76,
+    "area": 11.77
+   },
+   {
+    "year": 2011,
+    "month": 12,
+    "extent": 11.2,
+    "area": 7.4
+   },
+   {
+    "year": 2012,
+    "month": 1,
+    "extent": 5.65,
+    "area": 3.71
+   },
+   {
+    "year": 2012,
+    "month": 2,
+    "extent": 3.55,
+    "area": 2.19
+   },
+   {
+    "year": 2012,
+    "month": 3,
+    "extent": 4.55,
+    "area": 2.91
+   },
+   {
+    "year": 2012,
+    "month": 4,
+    "extent": 7.31,
+    "area": 5.55
+   },
+   {
+    "year": 2012,
+    "month": 5,
+    "extent": 10.46,
+    "area": 8.15
+   },
+   {
+    "year": 2012,
+    "month": 6,
+    "extent": 13.55,
+    "area": 10.79
+   },
+   {
+    "year": 2012,
+    "month": 7,
+    "extent": 16.3,
+    "area": 13.31
+   },
+   {
+    "year": 2012,
+    "month": 8,
+    "extent": 18.1,
+    "area": 14.56
+   },
+   {
+    "year": 2012,
+    "month": 9,
+    "extent": 19.21,
+    "area": 15.41
+   },
+   {
+    "year": 2012,
+    "month": 10,
+    "extent": 18.59,
+    "area": 14.45
+   },
+   {
+    "year": 2012,
+    "month": 11,
+    "extent": 16.11,
+    "area": 12.07
+   },
+   {
+    "year": 2012,
+    "month": 12,
+    "extent": 10.39,
+    "area": 7.38
+   },
+   {
+    "year": 2013,
+    "month": 1,
+    "extent": 5.54,
+    "area": 3.94
+   },
+   {
+    "year": 2013,
+    "month": 2,
+    "extent": 3.84,
+    "area": 2.58
+   },
+   {
+    "year": 2013,
+    "month": 3,
+    "extent": 5.02,
+    "area": 3.49
+   },
+   {
+    "year": 2013,
+    "month": 4,
+    "extent": 7.62,
+    "area": 5.75
+   },
+   {
+    "year": 2013,
+    "month": 5,
+    "extent": 10.92,
+    "area": 8.49
+   },
+   {
+    "year": 2013,
+    "month": 6,
+    "extent": 14.15,
+    "area": 11.27
+   },
+   {
+    "year": 2013,
+    "month": 7,
+    "extent": 16.81,
+    "area": 13.73
+   },
+   {
+    "year": 2013,
+    "month": 8,
+    "extent": 18.66,
+    "area": 15.13
+   },
+   {
+    "year": 2013,
+    "month": 9,
+    "extent": 19.39,
+    "area": 15.28
+   },
+   {
+    "year": 2013,
+    "month": 10,
+    "extent": 19.02,
+    "area": 15.13
+   },
+   {
+    "year": 2013,
+    "month": 11,
+    "extent": 16.87,
+    "area": 12.77
+   },
+   {
+    "year": 2013,
+    "month": 12,
+    "extent": 11.85,
+    "area": 8.34
+   },
+   {
+    "year": 2014,
+    "month": 1,
+    "extent": 6.33,
+    "area": 4.38
+   },
+   {
+    "year": 2014,
+    "month": 2,
+    "extent": 3.84,
+    "area": 2.65
+   },
+   {
+    "year": 2014,
+    "month": 3,
+    "extent": 4.9,
+    "area": 3.32
+   },
+   {
+    "year": 2014,
+    "month": 4,
+    "extent": 8.34,
+    "area": 6.41
+   },
+   {
+    "year": 2014,
+    "month": 5,
+    "extent": 11.52,
+    "area": 9.03
+   },
+   {
+    "year": 2014,
+    "month": 6,
+    "extent": 14.69,
+    "area": 12.06
+   },
+   {
+    "year": 2014,
+    "month": 7,
+    "extent": 17.11,
+    "area": 13.95
+   },
+   {
+    "year": 2014,
+    "month": 8,
+    "extent": 18.91,
+    "area": 15.1
+   },
+   {
+    "year": 2014,
+    "month": 9,
+    "extent": 19.76,
+    "area": 15.75
+   },
+   {
+    "year": 2014,
+    "month": 10,
+    "extent": 19,
+    "area": 14.83
+   },
+   {
+    "year": 2014,
+    "month": 11,
+    "extent": 16.39,
+    "area": 12.26
+   },
+   {
+    "year": 2014,
+    "month": 12,
+    "extent": 11.93,
+    "area": 8.21
+   },
+   {
+    "year": 2015,
+    "month": 1,
+    "extent": 6.85,
+    "area": 4.34
+   },
+   {
+    "year": 2015,
+    "month": 2,
+    "extent": 3.8,
+    "area": 2.54
+   },
+   {
+    "year": 2015,
+    "month": 3,
+    "extent": 4.96,
+    "area": 3.45
+   },
+   {
+    "year": 2015,
+    "month": 4,
+    "extent": 8.37,
+    "area": 6.37
+   },
+   {
+    "year": 2015,
+    "month": 5,
+    "extent": 11.72,
+    "area": 9.21
+   },
+   {
+    "year": 2015,
+    "month": 6,
+    "extent": 14.47,
+    "area": 11.48
+   },
+   {
+    "year": 2015,
+    "month": 7,
+    "extent": 16.78,
+    "area": 13.45
+   },
+   {
+    "year": 2015,
+    "month": 8,
+    "extent": 17.75,
+    "area": 14.02
+   },
+   {
+    "year": 2015,
+    "month": 9,
+    "extent": 18.44,
+    "area": 14.45
+   },
+   {
+    "year": 2015,
+    "month": 10,
+    "extent": 18.41,
+    "area": 14.36
+   },
+   {
+    "year": 2015,
+    "month": 11,
+    "extent": 16.18,
+    "area": 11.9
+   },
+   {
+    "year": 2015,
+    "month": 12,
+    "extent": 10.66,
+    "area": 7.09
+   },
+   {
+    "year": 2016,
+    "month": 1,
+    "extent": 4.69,
+    "area": 3.03
+   },
+   {
+    "year": 2016,
+    "month": 2,
+    "extent": 2.79,
+    "area": 1.86
+   },
+   {
+    "year": 2016,
+    "month": 3,
+    "extent": 4.07,
+    "area": 2.77
+   },
+   {
+    "year": 2016,
+    "month": 4,
+    "extent": 7.22,
+    "area": 5.38
+   },
+   {
+    "year": 2016,
+    "month": 5,
+    "extent": 10.1,
+    "area": 7.91
+   },
+   {
+    "year": 2016,
+    "month": 6,
+    "extent": 13.24,
+    "area": 10.61
+   },
+   {
+    "year": 2016,
+    "month": 7,
+    "extent": 16.02,
+    "area": 12.55
+   },
+   {
+    "year": 2016,
+    "month": 8,
+    "extent": 17.89,
+    "area": 13.98
+   },
+   {
+    "year": 2016,
+    "month": 9,
+    "extent": 18.15,
+    "area": 13.86
+   },
+   {
+    "year": 2016,
+    "month": 10,
+    "extent": 17.46,
+    "area": 12.94
+   },
+   {
+    "year": 2016,
+    "month": 11,
+    "extent": 14.22,
+    "area": 9.84
+   },
+   {
+    "year": 2016,
+    "month": 12,
+    "extent": 8.28,
+    "area": 5.51
+   },
+   {
+    "year": 2017,
+    "month": 1,
+    "extent": 3.78,
+    "area": 2.56
+   },
+   {
+    "year": 2017,
+    "month": 2,
+    "extent": 2.29,
+    "area": 1.64
+   },
+   {
+    "year": 2017,
+    "month": 3,
+    "extent": 2.7,
+    "area": 1.83
+   },
+   {
+    "year": 2017,
+    "month": 4,
+    "extent": 5.44,
+    "area": 3.93
+   },
+   {
+    "year": 2017,
+    "month": 5,
+    "extent": 9.01,
+    "area": 6.83
+   },
+   {
+    "year": 2017,
+    "month": 6,
+    "extent": 12.41,
+    "area": 9.8
+   },
+   {
+    "year": 2017,
+    "month": 7,
+    "extent": 15.3,
+    "area": 12.28
+   },
+   {
+    "year": 2017,
+    "month": 8,
+    "extent": 17.22,
+    "area": 13.62
+   },
+   {
+    "year": 2017,
+    "month": 9,
+    "extent": 17.91,
+    "area": 13.92
+   },
+   {
+    "year": 2017,
+    "month": 10,
+    "extent": 17.78,
+    "area": 13.45
+   },
+   {
+    "year": 2017,
+    "month": 11,
+    "extent": 15.11,
+    "area": 10.91
+   },
+   {
+    "year": 2017,
+    "month": 12,
+    "extent": 9.48,
+    "area": 6.23
+   },
+   {
+    "year": 2018,
+    "month": 1,
+    "extent": 4.21,
+    "area": 2.69
+   },
+   {
+    "year": 2018,
+    "month": 2,
+    "extent": 2.33,
+    "area": 1.63
+   },
+   {
+    "year": 2018,
+    "month": 3,
+    "extent": 3.54,
+    "area": 2.31
+   },
+   {
+    "year": 2018,
+    "month": 4,
+    "extent": 6.03,
+    "area": 4.15
+   },
+   {
+    "year": 2018,
+    "month": 5,
+    "extent": 9.32,
+    "area": 7.15
+   },
+   {
+    "year": 2018,
+    "month": 6,
+    "extent": 12.89,
+    "area": 10.23
+   },
+   {
+    "year": 2018,
+    "month": 7,
+    "extent": 15.7,
+    "area": 12.49
+   },
+   {
+    "year": 2018,
+    "month": 8,
+    "extent": 17.42,
+    "area": 14.01
+   },
+   {
+    "year": 2018,
+    "month": 9,
+    "extent": 17.96,
+    "area": 14.2
+   },
+   {
+    "year": 2018,
+    "month": 10,
+    "extent": 17.73,
+    "area": 13.99
+   },
+   {
+    "year": 2018,
+    "month": 11,
+    "extent": 15.1,
+    "area": 10.75
+   },
+   {
+    "year": 2018,
+    "month": 12,
+    "extent": 9.19,
+    "area": 5.59
+   },
+   {
+    "year": 2019,
+    "month": 1,
+    "extent": 3.87,
+    "area": 2.66
+   },
+   {
+    "year": 2019,
+    "month": 2,
+    "extent": 2.65,
+    "area": 1.81
+   },
+   {
+    "year": 2019,
+    "month": 3,
+    "extent": 3.17,
+    "area": 2.1
+   },
+   {
+    "year": 2019,
+    "month": 4,
+    "extent": 5.72,
+    "area": 4.18
+   },
+   {
+    "year": 2019,
+    "month": 5,
+    "extent": 8.85,
+    "area": 6.84
+   },
+   {
+    "year": 2019,
+    "month": 6,
+    "extent": 12.25,
+    "area": 9.75
+   },
+   {
+    "year": 2019,
+    "month": 7,
+    "extent": 15.3,
+    "area": 12.33
+   },
+   {
+    "year": 2019,
+    "month": 8,
+    "extent": 17.48,
+    "area": 13.99
+   },
+   {
+    "year": 2019,
+    "month": 9,
+    "extent": 18.33,
+    "area": 14.6
+   },
+   {
+    "year": 2019,
+    "month": 10,
+    "extent": 17.94,
+    "area": 13.9
+   },
+   {
+    "year": 2019,
+    "month": 11,
+    "extent": 14.99,
+    "area": 11.19
+   },
+   {
+    "year": 2019,
+    "month": 12,
+    "extent": 9.41,
+    "area": 6.59
+   },
+   {
+    "year": 2020,
+    "month": 1,
+    "extent": 4.6,
+    "area": 3.09
+   },
+   {
+    "year": 2020,
+    "month": 2,
+    "extent": 2.92,
+    "area": 1.83
+   },
+   {
+    "year": 2020,
+    "month": 3,
+    "extent": 4,
+    "area": 2.59
+   },
+   {
+    "year": 2020,
+    "month": 4,
+    "extent": 6.66,
+    "area": 4.81
+   },
+   {
+    "year": 2020,
+    "month": 5,
+    "extent": 9.87,
+    "area": 7.61
+   },
+   {
+    "year": 2020,
+    "month": 6,
+    "extent": 13.27,
+    "area": 10.59
+   },
+   {
+    "year": 2020,
+    "month": 7,
+    "extent": 15.72,
+    "area": 12.58
+   },
+   {
+    "year": 2020,
+    "month": 8,
+    "extent": 17.76,
+    "area": 14.42
+   },
+   {
+    "year": 2020,
+    "month": 9,
+    "extent": 18.84,
+    "area": 15.09
+   },
+   {
+    "year": 2020,
+    "month": 10,
+    "extent": 18.49,
+    "area": 14.6
+   },
+   {
+    "year": 2020,
+    "month": 11,
+    "extent": 16.23,
+    "area": 11.88
+   },
+   {
+    "year": 2020,
+    "month": 12,
+    "extent": 10.57,
+    "area": 6.61
+   },
+   {
+    "year": 2021,
+    "month": 1,
+    "extent": 4.78,
+    "area": 2.94
+   },
+   {
+    "year": 2021,
+    "month": 2,
+    "extent": 2.89,
+    "area": 1.72
+   },
+   {
+    "year": 2021,
+    "month": 3,
+    "extent": 4.48,
+    "area": 2.82
+   },
+   {
+    "year": 2021,
+    "month": 4,
+    "extent": 7.13,
+    "area": 5.29
+   },
+   {
+    "year": 2021,
+    "month": 5,
+    "extent": 10.4,
+    "area": 8.21
+   },
+   {
+    "year": 2021,
+    "month": 6,
+    "extent": 13.54,
+    "area": 11.05
+   },
+   {
+    "year": 2021,
+    "month": 7,
+    "extent": 16.45,
+    "area": 13.36
+   },
+   {
+    "year": 2021,
+    "month": 8,
+    "extent": 18.19,
+    "area": 14.63
+   },
+   {
+    "year": 2021,
+    "month": 9,
+    "extent": 18.51,
+    "area": 14.42
+   },
+   {
+    "year": 2021,
+    "month": 10,
+    "extent": 17.69,
+    "area": 13.39
+   },
+   {
+    "year": 2021,
+    "month": 11,
+    "extent": 15.04,
+    "area": 10.45
+   },
+   {
+    "year": 2021,
+    "month": 12,
+    "extent": 9.24,
+    "area": 5.48
+   },
+   {
+    "year": 2022,
+    "month": 1,
+    "extent": 3.94,
+    "area": 2.44
+   },
+   {
+    "year": 2022,
+    "month": 2,
+    "extent": 2.21,
+    "area": 1.38
+   },
+   {
+    "year": 2022,
+    "month": 3,
+    "extent": 2.86,
+    "area": 1.86
+   },
+   {
+    "year": 2022,
+    "month": 4,
+    "extent": 5.95,
+    "area": 4.25
+   },
+   {
+    "year": 2022,
+    "month": 5,
+    "extent": 9.42,
+    "area": 7.29
+   },
+   {
+    "year": 2022,
+    "month": 6,
+    "extent": 12.22,
+    "area": 9.56
+   },
+   {
+    "year": 2022,
+    "month": 7,
+    "extent": 14.99,
+    "area": 11.91
+   },
+   {
+    "year": 2022,
+    "month": 8,
+    "extent": 17.05,
+    "area": 13.67
+   },
+   {
+    "year": 2022,
+    "month": 9,
+    "extent": 18.06,
+    "area": 14.07
+   },
+   {
+    "year": 2022,
+    "month": 10,
+    "extent": 17.47,
+    "area": 13.34
+   },
+   {
+    "year": 2022,
+    "month": 11,
+    "extent": 15.16,
+    "area": 10.84
+   },
+   {
+    "year": 2022,
+    "month": 12,
+    "extent": 8.84,
+    "area": 5.23
+   },
+   {
+    "year": 2023,
+    "month": 1,
+    "extent": 3.3,
+    "area": 2
+   },
+   {
+    "year": 2023,
+    "month": 2,
+    "extent": 1.98,
+    "area": 1.19
+   },
+   {
+    "year": 2023,
+    "month": 3,
+    "extent": 2.84,
+    "area": 1.79
+   },
+   {
+    "year": 2023,
+    "month": 4,
+    "extent": 5.54,
+    "area": 4
+   },
+   {
+    "year": 2023,
+    "month": 5,
+    "extent": 8.45,
+    "area": 6.51
+   },
+   {
+    "year": 2023,
+    "month": 6,
+    "extent": 11.11,
+    "area": 8.58
+   },
+   {
+    "year": 2023,
+    "month": 7,
+    "extent": 13.57,
+    "area": 10.64
+   },
+   {
+    "year": 2023,
+    "month": 8,
+    "extent": 15.57,
+    "area": 12.23
+   },
+   {
+    "year": 2023,
+    "month": 9,
+    "extent": 16.89,
+    "area": 13.01
+   },
+   {
+    "year": 2023,
+    "month": 10,
+    "extent": 16.28,
+    "area": 12.54
+   },
+   {
+    "year": 2023,
+    "month": 11,
+    "extent": 14.38,
+    "area": 10.42
+   },
+   {
+    "year": 2023,
+    "month": 12,
+    "extent": 8.76,
+    "area": 5.93
+   },
+   {
+    "year": 2024,
+    "month": 1,
+    "extent": 4.05,
+    "area": 2.63
+   },
+   {
+    "year": 2024,
+    "month": 2,
+    "extent": 2.19,
+    "area": 1.54
+   },
+   {
+    "year": 2024,
+    "month": 3,
+    "extent": 3.22,
+    "area": 2.15
+   },
+   {
+    "year": 2024,
+    "month": 4,
+    "extent": 6.25,
+    "area": 4.61
+   },
+   {
+    "year": 2024,
+    "month": 6,
+    "extent": 11.85,
+    "area": 9.15
+   },
+   {
+    "year": 2024,
+    "month": 7,
+    "extent": 14.2,
+    "area": 11.2
+   },
+   {
+    "year": 2024,
+    "month": 8,
+    "extent": 16.41,
+    "area": 13
+   },
+   {
+    "year": 2024,
+    "month": 9,
+    "extent": 17.15,
+    "area": 13.32
+   },
+   {
+    "year": 2024,
+    "month": 10,
+    "extent": 16.65,
+    "area": 12.73
+   },
+   {
+    "year": 2024,
+    "month": 11,
+    "extent": 14.31,
+    "area": 10.51
+   },
+   {
+    "year": 2024,
+    "month": 12,
+    "extent": 9.59,
+    "area": 6.61
+   },
+   {
+    "year": 2025,
+    "month": 1,
+    "extent": 4.69,
+    "area": 2.84
+   },
+   {
+    "year": 2025,
+    "month": 2,
+    "extent": 2.22,
+    "area": 1.37
+   },
+   {
+    "year": 2025,
+    "month": 3,
+    "extent": 3,
+    "area": 1.93
+   },
+   {
+    "year": 2025,
+    "month": 4,
+    "extent": 6.17,
+    "area": 4.42
+   },
+   {
+    "year": 2025,
+    "month": 5,
+    "extent": 9.27,
+    "area": 7.14
+   },
+   {
+    "year": 2025,
+    "month": 6,
+    "extent": 12.11,
+    "area": 9.47
+   },
+   {
+    "year": 2025,
+    "month": 7,
+    "extent": 14.66,
+    "area": 11.69
+   },
+   {
+    "year": 2025,
+    "month": 8,
+    "extent": 16.5,
+    "area": 13.06
+   },
+   {
+    "year": 2025,
+    "month": 9,
+    "extent": 17.64,
+    "area": 13.54
+   },
+   {
+    "year": 2025,
+    "month": 10,
+    "extent": 16.96,
+    "area": 12.7
+   },
+   {
+    "year": 2025,
+    "month": 11,
+    "extent": 14.58,
+    "area": 10.64
+   },
+   {
+    "year": 2025,
+    "month": 12,
+    "extent": 9.22,
+    "area": 6.26
+   },
+   {
+    "year": 2026,
+    "month": 1,
+    "extent": 4.49,
+    "area": 3.01
+   },
+   {
+    "year": 2026,
+    "month": 2,
+    "extent": 2.91,
+    "area": 1.86
+   },
+   {
+    "year": 2026,
+    "month": 3,
+    "extent": 3.57,
+    "area": 2.18
+   },
+   {
+    "year": 2026,
+    "month": 4,
+    "extent": 6.18,
+    "area": 4.48
+   },
+   {
+    "year": 2026,
+    "month": 5,
+    "extent": 9.34,
+    "area": 7.16
+   },
+   {
+    "year": 2026,
+    "month": 6,
+    "extent": 12.33,
+    "area": 9.76
+   },
+   {
+    "year": 2026,
+    "month": 7,
+    "extent": 15.01,
+    "area": 11.81
+   },
+   {
+    "year": 2026,
+    "month": 8,
+    "extent": 16.46,
+    "area": 12.64
+   },
+   {
+    "year": 2026,
+    "month": 9,
+    "extent": 17.32,
+    "area": 13.38
+   }
+  ]
+ },
+ "openAlex": [
+  {
+   "source": "openalex",
+   "openalexId": "W2996572161",
+   "doi": "10.1038/s41561-019-0510-8",
+   "title": "Deep glacial troughs and stabilizing ridges unveiled beneath the margins of the Antarctic ice sheet",
+   "year": 2019,
+   "journal": "Nature Geoscience",
+   "authors": [
+    "Mathieu Morlighem",
+    "Eric J. Rignot",
+    "Tobias Binder",
+    "Donald D. Blankenship",
+    "Reinhard Drews",
+    "Graeme Eagles",
+    "Olaf Eisen",
+    "Fausto Ferraccioli",
+    "Rene Forsberg",
+    "Peter T. Fretwell",
+    "Vikram Goel",
+    "Jamin S. Greenbaum",
+    "G. Hilmar Gudmundsson",
+    "Jingxue Guo",
+    "Veit Helm",
+    "Coen Hofstede",
+    "Ian M. Howat",
+    "Angelika Humbert",
+    "Wilfried Jokat",
+    "Nanna B. Karlsson",
+    "Won Sang Lee",
+    "Kenichi Matsuoka",
+    "Romain Millan",
+    "J. Mouginot",
+    "John Paden",
+    "Frank Pattyn",
+    "Jason L. Roberts",
+    "Sebastian Harry Reid Rosier",
+    "Antonia Stefanie Ruppel",
+    "Helene L. Seroussi",
+    "Emma C. Smith",
+    "Daniel Steinhage",
+    "Bо Sun",
+    "M. R. van den Broeke",
+    "Tas D. van Ommen",
+    "Jan Melchior van Wessem",
+    "Duncan Alexander Young"
+   ],
+   "ncporAuthors": [
+    "Vikram Goel"
+   ],
+   "oaUrl": "http://hdl.handle.net/2013/ULB-DIPOT:oai:dipot.ulb.ac.be:2013/298662",
+   "license": "other-oa",
+   "citedBy": 1052,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2916433613",
+   "doi": "10.1029/2018gl081517",
+   "title": "The Dominant Role of Extreme Precipitation Events in Antarctic Snowfall Variability",
+   "year": 2019,
+   "journal": "Geophysical Research Letters",
+   "authors": [
+    "John C. Turner",
+    "Tony Phillips",
+    "Meloth Thamban",
+    "Waliur Rahaman",
+    "Gareth J. Marshall",
+    "Jonathan Wille",
+    "Vincent Favier",
+    "V. Holly L. Winton",
+    "Elizabeth Ruth Thomas",
+    "Zaomin Wang",
+    "M. R. van den Broeke",
+    "J. Scott Hosking",
+    "Tom Lachlan‐Cope"
+   ],
+   "ncporAuthors": [
+    "Meloth Thamban",
+    "Waliur Rahaman"
+   ],
+   "oaUrl": "https://agupubs.onlinelibrary.wiley.com/doi/pdfdirect/10.1029/2018GL081517",
+   "license": "cc-by",
+   "citedBy": 243,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2767846971",
+   "doi": "10.1038/s41598-017-15473-8",
+   "title": "Surge-type and surge-modified glaciers in the Karakoram",
+   "year": 2017,
+   "journal": "Scientific Reports",
+   "authors": [
+    "Rakesh Bhambri",
+    "K. Hewitt",
+    "Prashant Kawishwar",
+    "Bhanu Pratap"
+   ],
+   "ncporAuthors": [
+    "Bhanu Pratap"
+   ],
+   "oaUrl": "https://www.nature.com/articles/s41598-017-15473-8.pdf",
+   "license": "cc-by",
+   "citedBy": 236,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2077116856",
+   "doi": "10.5194/tc-7-569-2013",
+   "title": "Balanced conditions or slight mass gain of glaciers in the Lahaul and Spiti region (northern India, Himalaya) during the nineties preceded recent mass loss",
+   "year": 2013,
+   "journal": "The cryosphere",
+   "authors": [
+    "Christian Vincent",
+    "AL. Ramanathan",
+    "Patrick Wagnon",
+    "Dwarika Prashad Dobhal",
+    "Anurag Linda",
+    "Étienne Berthier",
+    "Parmanand Sharma",
+    "Yves Arnaud",
+    "Mohd Farooq Azam",
+    "P. G. Jose",
+    "J. Gardelle"
+   ],
+   "ncporAuthors": [
+    "Parmanand Sharma"
+   ],
+   "oaUrl": "https://tc.copernicus.org/articles/7/569/2013/tc-7-569-2013.pdf",
+   "license": "cc-by",
+   "citedBy": 165,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2943648642",
+   "doi": "10.3389/fmars.2019.00254",
+   "title": "Tidewater Glaciers and Bedrock Characteristics Control the Phytoplankton Growth Environment in a Fjord in the Arctic",
+   "year": 2019,
+   "journal": "Frontiers in Marine Science",
+   "authors": [
+    "Laura Halbach",
+    "Mikko Vihtakari",
+    "Pedro Duarte",
+    "Alistair Everett",
+    "Mats A. Granskog",
+    "Haakon Hop",
+    "Hanna M. Kauko",
+    "Svein Kristiansen",
+    "Per Inge Myhre",
+    "Alexey K. Pavlov",
+    "Ankit Pramanik",
+    "Agnieszka Tatarek",
+    "Tomas Torsvik",
+    "Józef Maria Wiktor",
+    "Anette Wold",
+    "Angela Wulff",
+    "Harald B. Steen",
+    "Philipp Assmy"
+   ],
+   "ncporAuthors": [
+    "Ankit Pramanik"
+   ],
+   "oaUrl": "https://www.frontiersin.org/articles/10.3389/fmars.2019.00254/pdf",
+   "license": "cc-by",
+   "citedBy": 138,
+   "topic": "Marine and coastal ecosystems"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2911846934",
+   "doi": "10.1038/s41598-018-38094-1",
+   "title": "Microbes Producing L-Asparaginase free of Glutaminase and Urease isolated from Extreme Locations of Antarctic Soil and Moss",
+   "year": 2019,
+   "journal": "Scientific Reports",
+   "authors": [
+    "Anup Ashok",
+    "Kruthi Doriya",
+    "Jyothi Vithal Rao",
+    "Asif Qureshi",
+    "Anoop Kumar Tiwari",
+    "Devarai Santhosh Kumar"
+   ],
+   "ncporAuthors": [
+    "Anoop Kumar Tiwari"
+   ],
+   "oaUrl": "https://www.nature.com/articles/s41598-018-38094-1.pdf",
+   "license": "cc-by",
+   "citedBy": 108,
+   "topic": "Enzyme Production and Characterization"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2486545455",
+   "doi": "10.1016/j.micres.2016.07.004",
+   "title": "Microbial communities associated with Antarctic snow pack and their biogeochemical implications",
+   "year": 2016,
+   "journal": "Microbiological Research",
+   "authors": [
+    "Runa Antony",
+    "Aritri Sanyal",
+    "Neelam G. Kapse",
+    "Prashant K. Dhakephalkar",
+    "Meloth Thamban",
+    "Shanta Nair"
+   ],
+   "ncporAuthors": [
+    "Runa Antony",
+    "Aritri Sanyal",
+    "Meloth Thamban"
+   ],
+   "oaUrl": "https://doi.org/10.1016/j.micres.2016.07.004",
+   "license": null,
+   "citedBy": 99,
+   "topic": "Polar Research and Ecology"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W1648168351",
+   "doi": "10.4236/ars.2015.43016",
+   "title": "A Review on Extraction of Lakes from Remotely Sensed Optical Satellite Data with a Special Focus on Cryospheric Lakes",
+   "year": 2015,
+   "journal": "Advances in Remote Sensing",
+   "authors": [
+    "Shridhar Digambar Jawak",
+    "Kamana Kulkarni",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "ncporAuthors": [
+    "Shridhar Digambar Jawak",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "oaUrl": "http://www.scirp.org/journal/PaperDownload.aspx?paperID=58240",
+   "license": "cc-by",
+   "citedBy": 93,
+   "topic": "Remote-Sensing Image Classification"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2146359882",
+   "doi": "10.1175/jcli-d-14-00390.1",
+   "title": "The Influence of the Indian Ocean Dipole on Antarctic Sea Ice*",
+   "year": 2015,
+   "journal": "Journal of Climate",
+   "authors": [
+    "M. Nuncio",
+    "Xiaojun Yuan"
+   ],
+   "ncporAuthors": [
+    "M. Nuncio"
+   ],
+   "oaUrl": "https://journals.ametsoc.org/downloadpdf/journals/clim/28/7/jcli-d-14-00390.1.pdf",
+   "license": null,
+   "citedBy": 90,
+   "topic": "Arctic and Antarctic ice dynamics"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2103655287",
+   "doi": "10.1016/j.earscirev.2010.10.006",
+   "title": "Post-glacial regional climate variability along the East Antarctic coastal margin—Evidence from shallow marine and coastal terrestrial records",
+   "year": 2010,
+   "journal": "Earth-Science Reviews",
+   "authors": [
+    "Elie Verleyen",
+    "Dominic A. Hodgson",
+    "Koen Sabbe",
+    "Holger Cremer",
+    "Steven D. Emslie",
+    "John A. E. Gibson",
+    "Brenda L. Hall",
+    "Satoshi Imura",
+    "Sakae Kudoh",
+    "Gareth J. Marshall",
+    "Andrew McMinn",
+    "Martin Melles",
+    "Louise Newman",
+    "Donna Roberts",
+    "Steve J. Roberts",
+    "Shiv Mohan Singh",
+    "Mieke Sterken",
+    "Ines Tavernier",
+    "Sergey Romanovich Verkulich",
+    "Evelien Van de Vyver",
+    "Wim Van Nieuwenhuyze",
+    "Bernd Wagner",
+    "Wim Vyverman"
+   ],
+   "ncporAuthors": [
+    "Shiv Mohan Singh"
+   ],
+   "oaUrl": "https://figshare.com/articles/journal_contribution/Post-glacial_regional_climate_variability_along_the_East_Antarctic_coastal_margin-Evidence_from_shallow_marine_and_coastal_terrestrial_records/22882502",
+   "license": "cc-by",
+   "citedBy": 85,
+   "topic": "Geology and Paleoclimatology Research"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3046040839",
+   "doi": "10.1016/j.heliyon.2020.e04355",
+   "title": "Global warming leading to alarming recession of the Arctic sea-ice cover: Insights from remote sensing observations and model reanalysis",
+   "year": 2020,
+   "journal": "Heliyon",
+   "authors": [
+    "Avinash Kumar",
+    "Juhi Yadav",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Avinash Kumar",
+    "Juhi Yadav",
+    "Rahul Mohan"
+   ],
+   "oaUrl": "http://www.cell.com/article/S2405844020311993/pdf",
+   "license": "cc-by-nc-nd",
+   "citedBy": 82,
+   "topic": "Arctic and Antarctic ice dynamics"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2738127891",
+   "doi": "10.1016/j.epsl.2017.07.019",
+   "title": "Understanding Himalayan erosion and the significance of the Nicobar Fan",
+   "year": 2017,
+   "journal": "Earth and Planetary Science Letters",
+   "authors": [
+    "Lisa Clare McNeill",
+    "Brandon Dugan",
+    "Jan Backman",
+    "K.T. Pickering",
+    "H.F.A. Pouderoux",
+    "T. Henstock",
+    "Katerina Petronotis",
+    "Andrew Carter",
+    "Farid Chemale",
+    "Kitty Lou Milliken",
+    "Steffen Kutterolf",
+    "H. Mukoyoshi",
+    "Wen‐Huang Chen",
+    "S. Kachovich",
+    "F.L. Mitchison",
+    "S. Bourlange",
+    "T.A. Colson",
+    "M.C.G. Frederik",
+    "Gilles Guèrin",
+    "M. Hamahashi",
+    "Brian M. House",
+    "A. Hüpers",
+    "T.N. Jeppson",
+    "A.R. Kenigsberg",
+    "M. Kuranaga",
+    "Nisha Nair",
+    "S. Owari",
+    "Yehua Shan",
+    "Insun Song",
+    "Marta E. Torres",
+    "Paola Vannucchi",
+    "Peter J. Vrolijk",
+    "Tao Yang",
+    "Xixi Zhao",
+    "Ellen Thomas"
+   ],
+   "ncporAuthors": [
+    "Nisha Nair"
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S0012821X17303977/pdf",
+   "license": "cc-by",
+   "citedBy": 82,
+   "topic": "Geological formations and processes"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W4299285339",
+   "doi": "10.1038/s41467-022-33494-4",
+   "title": "Ancient marine sediment DNA reveals diatom transition in Antarctica",
+   "year": 2022,
+   "journal": "Nature Communications",
+   "authors": [
+    "Linda Armbrecht",
+    "Michael E Weber",
+    "Maureen E. Raymo",
+    "Victoria L. Peck",
+    "Trevor Williams",
+    "Jonathan Warnock",
+    "Yuji Katō",
+    "Iván Hernández‐Almeida",
+    "Frida S. Hoem",
+    "Brendan T. Reilly",
+    "Sidney R. Hemming",
+    "Ian Bailey",
+    "Yasmina M. Martos",
+    "Marcus Gutjahr",
+    "Vincent Percuoco",
+    "Claire S. Allen",
+    "Stefanie Brachfeld",
+    "F.G. Cardillo",
+    "Zhiheng Du",
+    "Gérson Fauth",
+    "Christopher J. Fogwill",
+    "Marga García",
+    "Anna Glüder",
+    "Michelle Guitard",
+    "Ji‐Hwan Hwang",
+    "Mutsumi Iizuka",
+    "Bridget Kenlee",
+    "Suzanne Bridget O'Connell",
+    "Lara F. Pérez",
+    "Thomas A. Ronge",
+    "Osamu Seki",
+    "Lisa Tauxe",
+    "Shubham Tripathi",
+    "Xufeng Zheng"
+   ],
+   "ncporAuthors": [
+    "Shubham Tripathi"
+   ],
+   "oaUrl": "https://www.nature.com/articles/s41467-022-33494-4.pdf",
+   "license": "cc-by",
+   "citedBy": 81,
+   "topic": "Environmental DNA in Biodiversity Studies"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2002233445",
+   "doi": "10.1016/j.resmic.2010.09.020",
+   "title": "Vertical distribution of bacteria in a lake sediment from Antarctica by culture-independent and culture-dependent approaches",
+   "year": 2010,
+   "journal": "Research in Microbiology",
+   "authors": [
+    "Sisinthy Shivaji",
+    "Kiran Kumari",
+    "Kankipati Hara Kishore",
+    "Pavan Kumar Pindi",
+    "Pasupuleti Sreenivasa Rao",
+    "T. N. R. Srinivas",
+    "Rajesh Asthana",
+    "Rasik Ravindra"
+   ],
+   "ncporAuthors": [
+    "Rasik Ravindra"
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S0923250810002330/pdf",
+   "license": null,
+   "citedBy": 80,
+   "topic": "Polar Research and Ecology"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2014748574",
+   "doi": "10.1016/j.resmic.2009.08.008",
+   "title": "Bacterial diversity and bioprospecting for cold-active enzymes from culturable bacteria associated with sediment from a melt water stream of Midtre Lo v ´ enbreen glacier, an Arctic glacier",
+   "year": 2009,
+   "journal": "Research in Microbiology",
+   "authors": [
+    "P. Vishnu Vardhan Reddy",
+    "Singireesu Soma Shiva Nageswara Rao",
+    "Mambatta Shankaranarayanan Pratibha",
+    "Sailaja Buddhi",
+    "B. Kavya",
+    "Ravoori Ruth Manorama",
+    "Shiv Mohan Singh",
+    "T. N. R. Srinivas",
+    "Sisinthy Shivaji"
+   ],
+   "ncporAuthors": [
+    "Shiv Mohan Singh"
+   ],
+   "oaUrl": "https://doi.org/10.1016/j.resmic.2009.08.008",
+   "license": null,
+   "citedBy": 77,
+   "topic": "Polar Research and Ecology"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W1559822779",
+   "doi": "10.4236/ars.2015.43015",
+   "title": "A Comprehensive Review on Pixel Oriented and Object Oriented Methods for Information Extraction from Remotely Sensed Satellite Images with a Special Emphasis on Cryospheric Applications",
+   "year": 2015,
+   "journal": "Advances in Remote Sensing",
+   "authors": [
+    "Shridhar Digambar Jawak",
+    "Prapti Devliyal",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "ncporAuthors": [
+    "Shridhar Digambar Jawak",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "oaUrl": "http://www.scirp.org/journal/PaperDownload.aspx?paperID=58238",
+   "license": "cc-by",
+   "citedBy": 75,
+   "topic": "Remote-Sensing Image Classification"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2790006749",
+   "doi": "10.1016/j.micres.2018.01.004",
+   "title": "Microbial communities and their potential for degradation of dissolved organic carbon in cryoconite hole environments of Himalaya and Antarctica",
+   "year": 2018,
+   "journal": "Microbiological Research",
+   "authors": [
+    "Aritri Sanyal",
+    "Runa Antony",
+    "Gautami Samui",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Aritri Sanyal",
+    "Runa Antony",
+    "Gautami Samui",
+    "Meloth Thamban"
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S094450131731008X/pdf",
+   "license": null,
+   "citedBy": 74,
+   "topic": "Polar Research and Ecology"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3111750156",
+   "doi": "10.1038/s41586-020-03094-7",
+   "title": "Antarctic icebergs reorganize ocean circulation during Pleistocene glacials",
+   "year": 2021,
+   "journal": "Nature",
+   "authors": [
+    "Expedition 361 Science Party",
+    "Aidan Starr",
+    "I.R. Hall",
+    "Stephen Barker",
+    "Thomas Rackow",
+    "Xu Zhang",
+    "Sidney R. Hemming",
+    "J.J.L. van der Lubbe",
+    "Gregor Knorr",
+    "Melissa A. Berke",
+    "Grant Robert Bigg",
+    "A. Cartagena‐Sierra",
+    "F.J. Jiménez-Espejo",
+    "Xun Gong",
+    "J. Grüetzner",
+    "N. Lathika",
+    "Leah J. LeVay",
+    "Rebecca S. Robinson",
+    "Martin Ziegler"
+   ],
+   "ncporAuthors": [
+    "J. Grüetzner",
+    "N. Lathika"
+   ],
+   "oaUrl": "https://www.nature.com/articles/s41586-020-03094-7.pdf",
+   "license": null,
+   "citedBy": 67,
+   "topic": "Geology and Paleoclimatology Research"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2298115996",
+   "doi": "10.1016/j.gsf.2015.12.009",
+   "title": "The Himalayan cryosphere: A critical assessment and evaluation of glacial melt fraction in the Bhagirathi basin",
+   "year": 2016,
+   "journal": "Geoscience Frontiers",
+   "authors": [
+    "Abul Amir Khan",
+    "N. C. Pant",
+    "Anindaya Sarkar",
+    "Sampat Kumar Tandon",
+    "Meloth Thamban",
+    "Kanthanathan Mahalinganathan"
+   ],
+   "ncporAuthors": [
+    "Meloth Thamban",
+    "Kanthanathan Mahalinganathan"
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S1674987116000062/pdf",
+   "license": "cc-by-nc-nd",
+   "citedBy": 67,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W4200373077",
+   "doi": "10.1038/s41586-021-04148-0",
+   "title": "A large West Antarctic Ice Sheet explains early Neogene sea-level amplitude",
+   "year": 2021,
+   "journal": "Nature",
+   "authors": [
+    "James Marschalek",
+    "Luca Zurli",
+    "Franco Maria Talarico",
+    "Tina van de Flierdt",
+    "Pieter Vermeesch",
+    "Andrew Carter",
+    "François Beny",
+    "Viviane Bout‐Roumazeilles",
+    "Francesca Sangiorgi",
+    "Sidney R. Hemming",
+    "Lara F. Pérez",
+    "Florence Colleoni",
+    "Joseph G. Prebble",
+    "Tim E. van Peer",
+    "Matteo Perotti",
+    "Amelia Shevenell",
+    "Imogen M. Browne",
+    "Denise K. Kulhanek",
+    "Richard Levy",
+    "David M. Harwood",
+    "Nicholas B. Sullivan",
+    "Stephen R. Meyers",
+    "Elizabeth M. Griffith",
+    "Claus‐Dieter Hillenbrand",
+    "Edward G. W. Gasson",
+    "Martín J. Siegert",
+    "Benjamin A. Keisling",
+    "Kathy J. Licht",
+    "Gerhard Kühn",
+    "Justin P. Dodd",
+    "C. Boshuis",
+    "Laura De Santis",
+    "Robert M. McKay",
+    "IODP Expedition 374",
+    "Jeanine L. Ash",
+    "François Beny",
+    "Imogen M. Browne",
+    "Giuseppe Cortese",
+    "Laura De Santis",
+    "Justin P. Dodd",
+    "Oliver Esper",
+    "Jenny A. Gales",
+    "David M. Harwood",
+    "Saki Ishino",
+    "Benjamin A. Keisling",
+    "Sookwan Kim",
+    "Sung-Han Kim",
+    "Denise K. Kulhanek",
+    "Jan Sverre Laberg",
+    "R. Mark Leckie",
+    "Robert M. McKay",
+    "Juliane Müller",
+    "Molly O. Patterson",
+    "Brian W. Romans",
+    "Oscar E. Romero",
+    "Francesca Sangiorgi",
+    "Osamu Seki",
+    "Amelia Shevenell",
+    "Shiv Mohan Singh",
+    "Isabela M. Cordeiro de Sousa",
+    "Saiko T. Sugisaki",
+    "Tina van de Flierdt",
+    "Tim E. van Peer",
+    "Whenshen Xiao",
+    "Zhifang Xiong"
+   ],
+   "ncporAuthors": [
+    "Amelia Shevenell"
+   ],
+   "oaUrl": "https://scholarworks.indianapolis.iu.edu/bitstreams/a9e8365e-e1bf-4e33-8df0-b74b23c15f1f/download",
+   "license": null,
+   "citedBy": 66,
+   "topic": "Geology and Paleoclimatology Research"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2061884518",
+   "doi": "10.1016/j.polar.2012.12.002",
+   "title": "A spectral index ratio-based Antarctic land-cover mapping using hyperspatial 8-band WorldView-2 imagery",
+   "year": 2013,
+   "journal": "Polar Science",
+   "authors": [
+    "Shridhar Digambar Jawak",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "ncporAuthors": [
+    "Shridhar Digambar Jawak",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S1873965212000564/pdf",
+   "license": null,
+   "citedBy": 66,
+   "topic": "Remote-Sensing Image Classification"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W4384526249",
+   "doi": "10.5194/essd-15-2695-2023",
+   "title": "Antarctic Bedmap data: Findable, Accessible, Interoperable, and Reusable (FAIR) sharing of 60 years of ice bed, surface, and thickness data",
+   "year": 2023,
+   "journal": "Earth system science data",
+   "authors": [
+    "Alice C. Fremand",
+    "Peter T. Fretwell",
+    "Julien A. Bodart",
+    "Hamish D. Pritchard",
+    "Alan Aitken",
+    "Jonathan Louis Bamber",
+    "Robin E. Bell",
+    "C. Bianchi",
+    "Robert George Bingham",
+    "Donald D. Blankenship",
+    "Gino Casassa R.",
+    "G. A. Catania",
+    "Knut Christianson",
+    "Howard B. Conway",
+    "Hugh F. J. Corr",
+    "Xiangbin Cui",
+    "Detlef Damaske",
+    "Volkmar Damm",
+    "Reinhard Drews",
+    "Graeme Eagles",
+    "Olaf Eisen",
+    "Hannes Eisermann",
+    "Fausto Ferraccioli",
+    "Elena Field",
+    "Rene Forsberg",
+    "Steven Franke",
+    "Shuji Fujita",
+    "Yonggyu Gim",
+    "Vikram Goel",
+    "Siva Prasad Gogineni",
+    "Jamin S. Greenbaum",
+    "Benjamin H. Hills",
+    "Richard C. A. Hindmarsh",
+    "Andrew O. Hoffman",
+    "Per Holmlund",
+    "Nicholas Holschuh",
+    "J. W. Holt",
+    "Annika N. Horlings",
+    "Angelika Humbert",
+    "R. W. Jacobel",
+    "Daniela Jansen",
+    "Adrian Jenkins",
+    "Wilfried Jokat",
+    "Tom A. Jordan",
+    "Edward C. King",
+    "Jack Kohler",
+    "William Krabill",
+    "Mette Kusk Gillespie",
+    "Kirsty Langley",
+    "Joohan Lee",
+    "German L. Leitchenkov",
+    "C. Leuschen",
+    "Bruce P. Luyendyk",
+    "Joseph A. MacGregor",
+    "Emma Johanne MacKie",
+    "Kenichi Matsuoka",
+    "Mathieu Morlighem",
+    "J. Mouginot",
+    "Frank O. Nitsche",
+    "Yoshifumi Nogi",
+    "Ole Anders Nøst",
+    "John Paden",
+    "Frank Pattyn",
+    "Sergey V. Popov",
+    "Eric J. Rignot",
+    "David M. Rippin",
+    "Andrés Rivera",
+    "Jason L. Roberts",
+    "Neil Ross",
+    "Antonia Stefanie Ruppel",
+    "Dustin M. Schroeder",
+    "Martín J. Siegert",
+    "Andrew M. Smith",
+    "Daniel Steinhage",
+    "M. Studinger",
+    "Bo Sun",
+    "Ignazio Ezio Tabacco",
+    "K. J. Tinto",
+    "Stefano Urbini",
+    "David G. Vaughan",
+    "Brian C. Welch",
+    "Douglas S. Wilson",
+    "Duncan Alexander Young",
+    "A. Zirizzotti"
+   ],
+   "ncporAuthors": [
+    "Vikram Goel"
+   ],
+   "oaUrl": "https://essd.copernicus.org/articles/15/2695/2023/essd-15-2695-2023.pdf",
+   "license": "cc-by",
+   "citedBy": 65,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3207186577",
+   "doi": "10.1016/j.wasec.2021.100101",
+   "title": "State of Himalayan cryosphere and implications for water security",
+   "year": 2021,
+   "journal": "Water Security",
+   "authors": [
+    "Anil Vishnupant Kulkarni",
+    "Anil Vishnupant Kulkarni",
+    "Tejal Shirsat",
+    "A. V. Kulkarni",
+    "A. V. Kulkarni",
+    "Harendra Singh Negi",
+    "I. M. Bahuguna",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Harendra Singh Negi",
+    "Meloth Thamban"
+   ],
+   "oaUrl": "https://doi.org/10.1016/j.wasec.2021.100101",
+   "license": "cc-by-nc-nd",
+   "citedBy": 64,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2228494089",
+   "doi": "10.1016/j.polar.2015.12.005",
+   "title": "Sediment grain size and surface textural observations of quartz grains in late quaternary lacustrine sediments from Schirmacher Oasis, East Antarctica: Paleoenvironmental significance",
+   "year": 2015,
+   "journal": "Polar Science",
+   "authors": [
+    "Anish Kumar Warrier",
+    "Hemant Pednekar",
+    "Badanal Siddaiah Mahesh",
+    "Rahul Mohan",
+    "Sahina Gazi"
+   ],
+   "ncporAuthors": [
+    "Anish Kumar Warrier",
+    "Badanal Siddaiah Mahesh",
+    "Rahul Mohan",
+    "Sahina Gazi"
+   ],
+   "oaUrl": "https://doi.org/10.1016/j.polar.2015.12.005",
+   "license": null,
+   "citedBy": 64,
+   "topic": "Geology and Paleoclimatology Research"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3081798416",
+   "doi": "10.1016/j.scitotenv.2020.142046",
+   "title": "Spatio-temporal change and variability of Barents-Kara sea ice, in the Arctic: Ocean and atmospheric implications",
+   "year": 2020,
+   "journal": "The Science of The Total Environment",
+   "authors": [
+    "Avinash Kumar",
+    "Juhi Yadav",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Avinash Kumar",
+    "Juhi Yadav",
+    "Rahul Mohan"
+   ],
+   "oaUrl": "https://doi.org/10.1016/j.scitotenv.2020.142046",
+   "license": null,
+   "citedBy": 63,
+   "topic": "Arctic and Antarctic ice dynamics"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2000518157",
+   "doi": "10.1016/j.micres.2012.03.003",
+   "title": "Diversity and physiology of culturable bacteria associated with a coastal Antarctic ice core",
+   "year": 2012,
+   "journal": "Microbiological Research",
+   "authors": [
+    "Runa Antony",
+    "Kottekkatu Padinchati Krishnan",
+    "C. M. Laluraj",
+    "Meloth Thamban",
+    "Prashant K. Dhakephalkar",
+    "Anupama S. Engineer",
+    "Sisinthy Shivaji"
+   ],
+   "ncporAuthors": [
+    "Runa Antony",
+    "Kottekkatu Padinchati Krishnan",
+    "C. M. Laluraj",
+    "Meloth Thamban"
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S0944501312000353/pdf",
+   "license": null,
+   "citedBy": 62,
+   "topic": "Polar Research and Ecology"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2552358958",
+   "doi": "10.1038/srep36192",
+   "title": "Evidence of Anomalously Low δ13C of Marine Organic Matter in an Arctic Fjord",
+   "year": 2016,
+   "journal": "Scientific Reports",
+   "authors": [
+    "Vikash Kumar",
+    "Manish Tiwari",
+    "Siddhesh S. Nagoji",
+    "Shubham Tripathi"
+   ],
+   "ncporAuthors": [
+    "Vikash Kumar",
+    "Manish Tiwari",
+    "Siddhesh S. Nagoji",
+    "Shubham Tripathi"
+   ],
+   "oaUrl": "https://www.nature.com/articles/srep36192.pdf",
+   "license": "cc-by",
+   "citedBy": 61,
+   "topic": "Marine and coastal ecosystems"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3158009489",
+   "doi": "10.1016/j.polar.2021.100686",
+   "title": "Extracellular polymeric substances in Antarctic environments: A review of their ecological roles and impact on glacier biogeochemical cycles",
+   "year": 2021,
+   "journal": "Polar Science",
+   "authors": [
+    "Shipra Nagar",
+    "Runa Antony",
+    "Meloth Thamban"
+   ],
+   "ncporAuthors": [
+    "Shipra Nagar",
+    "Runa Antony",
+    "Meloth Thamban"
+   ],
+   "oaUrl": "https://doi.org/10.1016/j.polar.2021.100686",
+   "license": null,
+   "citedBy": 60,
+   "topic": "Polar Research and Ecology"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W4289639207",
+   "doi": "10.5194/cp-18-1729-2022",
+   "title": "Antarctic sea ice over the past 130 000 years – Part 1: a review of what proxy records tell us",
+   "year": 2022,
+   "journal": "Climate of the past",
+   "authors": [
+    "Xavier Crosta",
+    "Karen E. Kohfeld",
+    "Helen Bostock",
+    "Matthew Chadwick",
+    "Alice K. DuVivier",
+    "Oliver Esper",
+    "Johan Étourneau",
+    "Jacob Jones",
+    "Amy R. Leventer",
+    "Juliane Müller",
+    "Rachael H. Rhodes",
+    "Claire S. Allen",
+    "Pooja Ghadi",
+    "Nele Lamping",
+    "Carina B. Lange",
+    "Kelly‐Anne Lawler",
+    "David C Lund",
+    "Alice Marzocchi",
+    "Katrin J. Meißner",
+    "Laurie Menviel",
+    "Abhilash Nair",
+    "Molly O. Patterson",
+    "Jennifer Pike",
+    "Joseph G. Prebble",
+    "Christina R. Riesselman",
+    "Hen­rik Sa­datz­ki",
+    "Louise C. Sime",
+    "Sunil Kumar Shukla",
+    "Lena Mareike Thöle",
+    "Maria-Elena Vorrath",
+    "Wenshen Xiao",
+    "Jiao Yang"
+   ],
+   "ncporAuthors": [
+    "Abhilash Nair"
+   ],
+   "oaUrl": "https://cp.copernicus.org/articles/18/1729/2022/cp-18-1729-2022.pdf",
+   "license": "cc-by",
+   "citedBy": 58,
+   "topic": "Geology and Paleoclimatology Research"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3135895370",
+   "doi": "10.5194/amt-14-5415-2021",
+   "title": "Validation of Aeolus winds using ground-based radars in Antarctica and in northern Sweden",
+   "year": 2021,
+   "journal": "Atmospheric measurement techniques",
+   "authors": [
+    "Evgenia Belova",
+    "Sheila Kirkwood",
+    "Peter Voelger",
+    "Sourav Chatterjee",
+    "K. Satheesan",
+    "Susanna Hagelin",
+    "Magnus Lindskog",
+    "Heiner Körnich"
+   ],
+   "ncporAuthors": [
+    "Sourav Chatterjee"
+   ],
+   "oaUrl": "https://doi.org/10.5194/amt-14-5415-2021",
+   "license": "cc-by",
+   "citedBy": 55,
+   "topic": "Meteorological Phenomena and Simulations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W4322631572",
+   "doi": "10.1016/j.envpol.2023.121385",
+   "title": "Recent trends on microplastics abundance and risk assessment in coastal Antarctica: Regional meta-analysis",
+   "year": 2023,
+   "journal": "Environmental Pollution",
+   "authors": [
+    "K. Gurumoorthi",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "ncporAuthors": [
+    "K. Gurumoorthi",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "oaUrl": "https://doi.org/10.1016/j.envpol.2023.121385",
+   "license": null,
+   "citedBy": 54,
+   "topic": "Microplastics and Plastic Pollution"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W4224227444",
+   "doi": "10.1038/s41467-022-29642-5",
+   "title": "Antiphased dust deposition and productivity in the Antarctic Zone over 1.5 million years",
+   "year": 2022,
+   "journal": "Nature Communications",
+   "authors": [
+    "Michael E Weber",
+    "Ian Bailey",
+    "Sidney R. Hemming",
+    "Yasmina M. Martos",
+    "Brendan T. Reilly",
+    "Thomas A. Ronge",
+    "Stefanie Brachfeld",
+    "Trevor Williams",
+    "Maureen E. Raymo",
+    "Simon T. Belt",
+    "Lukas Smik",
+    "Hendrik Vogel",
+    "Victoria L. Peck",
+    "Linda Armbrecht",
+    "Alix Gayle Cage",
+    "F.G. Cardillo",
+    "Zhiheng Du",
+    "Gérson Fauth",
+    "Christopher J. Fogwill",
+    "Marga García",
+    "Marlo Garnsworthy",
+    "Anna Glüder",
+    "Michelle Guitard",
+    "Marcus Gutjahr",
+    "Iván Hernández‐Almeida",
+    "Frida S. Hoem",
+    "Ji‐Hwan Hwang",
+    "Mutsumi Iizuka",
+    "Yuji Katō",
+    "Bridget Kenlee",
+    "Suzanne Bridget O'Connell",
+    "Lara F. Pérez",
+    "Osamu Seki",
+    "Lee Stevens",
+    "Lisa Tauxe",
+    "Shubham Tripathi",
+    "Jonathan Warnock",
+    "Xufeng Zheng"
+   ],
+   "ncporAuthors": [
+    "Shubham Tripathi"
+   ],
+   "oaUrl": "https://www.nature.com/articles/s41467-022-29642-5.pdf",
+   "license": "cc-by",
+   "citedBy": 52,
+   "topic": "Geology and Paleoclimatology Research"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3174084456",
+   "doi": "10.1038/s41612-021-00191-w",
+   "title": "A possible relation between Arctic sea ice and late season Indian Summer Monsoon Rainfall extremes",
+   "year": 2021,
+   "journal": "npj Climate and Atmospheric Science",
+   "authors": [
+    "Sourav Chatterjee",
+    "Muthalagu Ravichandran",
+    "Nuncio Murukesh",
+    "Roshin Pappukutty Raj",
+    "Ola M. Johannessen"
+   ],
+   "ncporAuthors": [
+    "Sourav Chatterjee",
+    "Muthalagu Ravichandran",
+    "Nuncio Murukesh"
+   ],
+   "oaUrl": "https://www.nature.com/articles/s41612-021-00191-w.pdf",
+   "license": "cc-by",
+   "citedBy": 52,
+   "topic": "Climate variability and models"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W1975993321",
+   "doi": "10.1080/02626667.2013.802092",
+   "title": "Study of solute sources and evolution of hydrogeochemical processes of the Chhota Shigri Glacier meltwaters, Himachal Himalaya, India",
+   "year": 2013,
+   "journal": "Hydrological Sciences Journal",
+   "authors": [
+    "Parmanand Sharma",
+    "AL. Ramanathan",
+    "Jose Pottakkal"
+   ],
+   "ncporAuthors": [
+    "Parmanand Sharma"
+   ],
+   "oaUrl": "https://www.tandfonline.com/doi/pdf/10.1080/02626667.2013.802092?needAccess=true",
+   "license": null,
+   "citedBy": 52,
+   "topic": "Groundwater and Isotope Geochemistry"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W4321793925",
+   "doi": "10.1016/j.pocean.2023.102996",
+   "title": "Seasonal plankton dynamics in Kongsfjorden during two years of contrasting environmental conditions",
+   "year": 2023,
+   "journal": "Progress In Oceanography",
+   "authors": [
+    "Philipp Assmy",
+    "Ane Cecilie Kvernvik",
+    "Haakon Hop",
+    "Clara J. M. Hoppe",
+    "Melissa Chierici",
+    "Divya David Thresyamma",
+    "Pedro Duarte",
+    "Agneta Fransson",
+    "Laura M. García",
+    "Weronika Patuła",
+    "Sławomir Kwaśniewski",
+    "Marion Maturilli",
+    "Olga Pavlova",
+    "Agnieszka Tatarek",
+    "Józef Maria Wiktor",
+    "Anette Wold",
+    "Klara K. E. Wolf",
+    "Allison Bailey"
+   ],
+   "ncporAuthors": [
+    "Divya David Thresyamma"
+   ],
+   "oaUrl": "https://doi.org/10.1016/j.pocean.2023.102996",
+   "license": "cc-by",
+   "citedBy": 51,
+   "topic": "Marine and coastal ecosystems"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W4220682336",
+   "doi": "10.1038/s41612-022-00243-9",
+   "title": "Record low sea ice extent in the Weddell Sea, Antarctica in April/May 2019 driven by intense and explosive polar cyclones",
+   "year": 2022,
+   "journal": "npj Climate and Atmospheric Science",
+   "authors": [
+    "Babula Jena",
+    "C. C. Bajish",
+    "John C. Turner",
+    "Muthalagu Ravichandran",
+    "Narayana Pillai Anilkumar",
+    "S. Kshitija"
+   ],
+   "ncporAuthors": [
+    "Babula Jena",
+    "C. C. Bajish",
+    "Muthalagu Ravichandran",
+    "Narayana Pillai Anilkumar",
+    "S. Kshitija"
+   ],
+   "oaUrl": "https://www.nature.com/articles/s41612-022-00243-9.pdf",
+   "license": "cc-by",
+   "citedBy": 50,
+   "topic": "Arctic and Antarctic ice dynamics"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3089395667",
+   "doi": "10.1017/jog.2020.77",
+   "title": "Characteristics of ice rises and ice rumples in Dronning Maud Land and Enderby Land, Antarctica",
+   "year": 2020,
+   "journal": "Journal of Glaciology",
+   "authors": [
+    "Vikram Goel",
+    "Kenichi Matsuoka",
+    "César Deschamps‐Berger",
+    "Ian R.J. Lee",
+    "Jørgen Dall",
+    "Rene Forsberg"
+   ],
+   "ncporAuthors": [
+    "Vikram Goel"
+   ],
+   "oaUrl": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/D95EEE5A77DC693BAA53B482F65BE096/S0022143020000775a.pdf/div-class-title-characteristics-of-ice-rises-and-ice-rumples-in-dronning-maud-land-and-enderby-land-antarctica-div.pdf",
+   "license": "cc-by",
+   "citedBy": 50,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2899310432",
+   "doi": "10.1017/jog.2018.80",
+   "title": "Simulating climatic mass balance, seasonal snow development and associated freshwater runoff in the Kongsfjord basin, Svalbard (1980–2016)",
+   "year": 2018,
+   "journal": "Journal of Glaciology",
+   "authors": [
+    "Ankit Pramanik",
+    "WARD J. J. VAN PELT",
+    "Jack Kohler",
+    "Thomas V. Schuler"
+   ],
+   "ncporAuthors": [
+    "Ankit Pramanik"
+   ],
+   "oaUrl": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/5FC34768DEBD891DD72F2DC176893B09/S0022143018000801a.pdf/div-class-title-simulating-climatic-mass-balance-seasonal-snow-development-and-associated-freshwater-runoff-in-the-kongsfjord-basin-svalbard-1980-2016-div.pdf",
+   "license": "cc-by-nc-sa",
+   "citedBy": 50,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2195214460",
+   "doi": "10.1016/j.polar.2015.11.001",
+   "title": "Aerosol black carbon over Svalbard regions of Arctic",
+   "year": 2015,
+   "journal": "Polar Science",
+   "authors": [
+    "Mukunda Madhab Gogoi",
+    "S. Suresh Babu",
+    "K. Krishna Moorthy",
+    "Roseline C. Thakur",
+    "Jai Prakash Chaubey",
+    "Vijayakumar Sivadasan Nair"
+   ],
+   "ncporAuthors": [
+    "Roseline C. Thakur"
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S1873965215300189/pdf",
+   "license": null,
+   "citedBy": 49,
+   "topic": "Atmospheric chemistry and aerosols"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3158055921",
+   "doi": "10.1016/j.ecolind.2021.107704",
+   "title": "Bacterial diversity and community structure along the glacier foreland of Midtre Lovénbreen, Svalbard, Arctic",
+   "year": 2021,
+   "journal": "Ecological Indicators",
+   "authors": [
+    "Siddarthan Venkatachalam",
+    "Visali Kannan",
+    "Vadakke Neelamana K. Saritha",
+    "Dinesh Sanka Loganathachetti",
+    "Mahesh Mohan",
+    "Kottekkatu Padinchati Krishnan"
+   ],
+   "ncporAuthors": [
+    "Siddarthan Venkatachalam",
+    "Dinesh Sanka Loganathachetti",
+    "Kottekkatu Padinchati Krishnan"
+   ],
+   "oaUrl": "https://doi.org/10.1016/j.ecolind.2021.107704",
+   "license": "cc-by-nc-nd",
+   "citedBy": 46,
+   "topic": "Polar Research and Ecology"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2884428255",
+   "doi": "10.1029/2018gl079174",
+   "title": "Role of Greenland Sea Gyre Circulation on Atlantic Water Temperature Variability in the Fram Strait",
+   "year": 2018,
+   "journal": "Geophysical Research Letters",
+   "authors": [
+    "Sourav Chatterjee",
+    "Roshin Pappukutty Raj",
+    "Laurent Bertino",
+    "Øystein Skagseth",
+    "Muthalagu Ravichandran",
+    "Ola M. Johannessen"
+   ],
+   "ncporAuthors": [
+    "Sourav Chatterjee",
+    "Muthalagu Ravichandran"
+   ],
+   "oaUrl": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1029/2018GL079174",
+   "license": null,
+   "citedBy": 44,
+   "topic": "Arctic and Antarctic ice dynamics"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3004430802",
+   "doi": "10.5194/acp-20-12093-2020",
+   "title": "Estimation of reactive inorganic iodine fluxes in the Indian and Southern Ocean marine boundary layer",
+   "year": 2020,
+   "journal": "Atmospheric chemistry and physics",
+   "authors": [
+    "Swaleha Inamdar",
+    "Liselotte Tinel",
+    "Rosie J. Chance",
+    "Lucy Jane Carpenter",
+    "Prabhakaran Sabu",
+    "Racheal Chacko",
+    "S.C. Tripathy",
+    "Anvita U. Kerkar",
+    "Alok Krishna Sinha",
+    "Parli Venkateswaran Bhaskar",
+    "Amit Sarkar",
+    "Rajdeep Roy",
+    "Tomás Sherwen",
+    "Carlos Alberto Cuevas",
+    "Alfonso Saiz‐Lopez",
+    "Kirpa Ram",
+    "Anoop S. Mahajan"
+   ],
+   "ncporAuthors": [
+    "Prabhakaran Sabu",
+    "Racheal Chacko",
+    "S.C. Tripathy",
+    "Anvita U. Kerkar",
+    "Alok Krishna Sinha",
+    "Parli Venkateswaran Bhaskar",
+    "Amit Sarkar"
+   ],
+   "oaUrl": "https://acp.copernicus.org/articles/20/12093/2020/acp-20-12093-2020.pdf",
+   "license": "cc-by",
+   "citedBy": 43,
+   "topic": "Atmospheric chemistry and aerosols"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2015029041",
+   "doi": "10.1016/j.aqpro.2015.02.018",
+   "title": "A Rapid Extraction of Water Body Features from Antarctic Coastal Oasis Using Very High-Resolution Satellite Remote Sensing Data",
+   "year": 2015,
+   "journal": "Aquatic Procedia",
+   "authors": [
+    "Shridhar Digambar Jawak",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "ncporAuthors": [
+    "Shridhar Digambar Jawak",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S2214241X1500019X/pdf",
+   "license": "cc-by-nc-nd",
+   "citedBy": 43,
+   "topic": "Remote-Sensing Image Classification"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3005929578",
+   "doi": "10.1038/s41598-020-59375-8",
+   "title": "Full annual monitoring of Subantarctic Emiliania huxleyi populations reveals highly calcified morphotypes in high-CO2 winter conditions",
+   "year": 2020,
+   "journal": "Scientific Reports",
+   "authors": [
+    "Andrés Salvador Rigual-Hernández",
+    "Thomas W. Trull",
+    "José‐Abel Flores",
+    "Scott D. Nodder",
+    "Ruth Eriksen",
+    "Diana M. Davies",
+    "Gustaaf Marinus Hallegraeff",
+    "Francisco Javier Sierro",
+    "Shramik Patil",
+    "Aleix Cortina",
+    "Anne-Marie Ballegeer",
+    "Lisa C. Northcote",
+    "Fatima F Abrantes",
+    "Marta M Rufino"
+   ],
+   "ncporAuthors": [
+    "Shramik Patil"
+   ],
+   "oaUrl": "https://www.nature.com/articles/s41598-020-59375-8.pdf",
+   "license": "cc-by",
+   "citedBy": 41,
+   "topic": "Ocean Acidification Effects and Responses"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2944858272",
+   "doi": "10.5194/tc-13-2579-2019",
+   "title": "Spatial and temporal variations in basal melting at Nivlisen ice shelf, East Antarctica, derived from phase-sensitive radars",
+   "year": 2019,
+   "journal": "The cryosphere",
+   "authors": [
+    "Katrin Lindbäck",
+    "Geir Moholdt",
+    "Keith W. Nicholls",
+    "Tore Hattermann",
+    "Bhanu Pratap",
+    "Meloth Thamban",
+    "Kenichi Matsuoka"
+   ],
+   "ncporAuthors": [
+    "Bhanu Pratap",
+    "Meloth Thamban"
+   ],
+   "oaUrl": "https://tc.copernicus.org/articles/13/2579/2019/tc-13-2579-2019.pdf",
+   "license": "cc-by",
+   "citedBy": 41,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3172903441",
+   "doi": "10.1016/j.qsa.2021.100033",
+   "title": "Mass balance and morphological changes of Dokriani Glacier (1992–2013), Garhwal Himalaya, India",
+   "year": 2021,
+   "journal": "Quaternary Science Advances",
+   "authors": [
+    "Dwarika Prashad Dobhal",
+    "Bhanu Pratap",
+    "Rakesh Bhambri",
+    "Manish Mehta"
+   ],
+   "ncporAuthors": [
+    "Bhanu Pratap"
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S2666033421000125/pdf",
+   "license": "cc-by-nc-nd",
+   "citedBy": 40,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2556322268",
+   "doi": "10.1016/j.polar.2016.11.004",
+   "title": "Recent variability in the Atlantic water intrusion and water masses in Kongsfjorden, an Arctic fjord",
+   "year": 2016,
+   "journal": "Polar Science",
+   "authors": [
+    "Divya David Thresyamma",
+    "Krishnan K.P."
+   ],
+   "ncporAuthors": [
+    "Divya David Thresyamma",
+    "Krishnan K.P."
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S1873965216301190/pdf",
+   "license": null,
+   "citedBy": 40,
+   "topic": "Arctic and Antarctic ice dynamics"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2035890821",
+   "doi": "10.1016/j.resmic.2012.09.001",
+   "title": "Antarctic ice core samples: culturable bacterial diversity",
+   "year": 2012,
+   "journal": "Research in Microbiology",
+   "authors": [
+    "Sisinthy Shivaji",
+    "Zareena Begum",
+    "Singireesu Soma Shiva Nageswara Rao",
+    "Puram V. Vishnu Vardhan Reddy",
+    "Poorna Manasa",
+    "B. Sailaja",
+    "Mambatta S. Prathiba",
+    "Meloth Thamban",
+    "Kottekkatu Padinchati Krishnan",
+    "Shiv Mohan Singh",
+    "T. N. R. Srinivas"
+   ],
+   "ncporAuthors": [
+    "Meloth Thamban",
+    "Kottekkatu Padinchati Krishnan",
+    "Shiv Mohan Singh"
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S0923250812001283/pdf",
+   "license": null,
+   "citedBy": 40,
+   "topic": "Polar Research and Ecology"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2891149723",
+   "doi": "10.1038/s41598-018-31875-8",
+   "title": "Subglacial discharge plume behaviour revealed by CTD-instrumented ringed seals",
+   "year": 2018,
+   "journal": "Scientific Reports",
+   "authors": [
+    "Alistair Everett",
+    "Jack Kohler",
+    "Arild Sundfjord",
+    "Kit Maureen Kovacs",
+    "Tomas Torsvik",
+    "Ankit Pramanik",
+    "Lars Boehme",
+    "Christian Lydersen"
+   ],
+   "ncporAuthors": [
+    "Ankit Pramanik"
+   ],
+   "oaUrl": "https://www.nature.com/articles/s41598-018-31875-8.pdf",
+   "license": "cc-by",
+   "citedBy": 39,
+   "topic": "Cryospheric studies and observations"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2884759795",
+   "doi": "10.1016/j.quascirev.2018.07.007",
+   "title": "Subpolar North Atlantic sea surface temperature since 6 ka BP: Indications of anomalous ocean-atmosphere interactions at 4-2 ka BP",
+   "year": 2018,
+   "journal": "Quaternary Science Reviews",
+   "authors": [
+    "Lisa Claire Orme",
+    "Arto Miettinen",
+    "Dmitry Divine",
+    "Katrine Husum",
+    "Christof Pearce",
+    "Nicolas Van Nieuwenhove",
+    "Andreas Born",
+    "Rahul Mohan",
+    "Marit‐Solveig Seidenkrantz"
+   ],
+   "ncporAuthors": [
+    "Rahul Mohan"
+   ],
+   "oaUrl": "https://archimer.ifremer.fr/doc/00495/60693/",
+   "license": "other-oa",
+   "citedBy": 39,
+   "topic": "Geology and Paleoclimatology Research"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W1520497720",
+   "doi": "10.4236/ars.2015.42014",
+   "title": "A Review on Applications of Imaging Synthetic Aperture Radar with a Special Focus on Cryospheric Studies",
+   "year": 2015,
+   "journal": "Advances in Remote Sensing",
+   "authors": [
+    "Shridhar Digambar Jawak",
+    "Tushar G. Bidawe",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "ncporAuthors": [
+    "Shridhar Digambar Jawak",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "oaUrl": "http://www.scirp.org/journal/PaperDownload.aspx?paperID=57639",
+   "license": "cc-by",
+   "citedBy": 39,
+   "topic": "Synthetic Aperture Radar (SAR) Applications and Techniques"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3125793049",
+   "doi": "10.1088/1748-9326/abdc88",
+   "title": "Seasonal sea-ice variability and its trend in the Weddell Sea sector of West Antarctica",
+   "year": 2021,
+   "journal": "Environmental Research Letters",
+   "authors": [
+    "Avinash Kumar",
+    "Juhi Yadav",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Avinash Kumar",
+    "Juhi Yadav",
+    "Rahul Mohan"
+   ],
+   "oaUrl": "https://iopscience.iop.org/article/10.1088/1748-9326/abdc88/pdf",
+   "license": "cc-by",
+   "citedBy": 38,
+   "topic": "Arctic and Antarctic ice dynamics"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W3083767395",
+   "doi": "10.3390/rs12172837",
+   "title": "Arctic Sea Level Budget Assessment during the GRACE/Argo Time Period",
+   "year": 2020,
+   "journal": "Remote Sensing",
+   "authors": [
+    "Roshin Pappukutty Raj",
+    "Ole Andersen",
+    "Johnny A. Johannessen",
+    "Benjamin Daniel Gutknecht",
+    "Sourav Chatterjee",
+    "Stine Kildegaard Rose",
+    "Antonio Bonaduce",
+    "Martin Horwath",
+    "Heidi Ranndal",
+    "Kristin Richter",
+    "Hindumathi Palanisamy",
+    "Carsten Ludwigsen",
+    "Laurent Bertino",
+    "J. Ø. Nilsen",
+    "Per Knudsen",
+    "Anna E. Hogg",
+    "Anny Cazenave",
+    "Jérôme Benveniste"
+   ],
+   "ncporAuthors": [
+    "Sourav Chatterjee"
+   ],
+   "oaUrl": "https://www.mdpi.com/2072-4292/12/17/2837/pdf?version=1599139821",
+   "license": "cc-by",
+   "citedBy": 37,
+   "topic": "Geophysics and Gravity Measurements"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2805819854",
+   "doi": "10.1038/s41598-018-25522-5",
+   "title": "Stable isotopes in water vapor and rainwater over Indian sector of Southern Ocean and estimation of fraction of recycled moisture",
+   "year": 2018,
+   "journal": "Scientific Reports",
+   "authors": [
+    "P. Rahul",
+    "K. Prasanna",
+    "Prosenjit Ghosh",
+    "Narayana Pillai Anilkumar",
+    "Kei Yoshimura"
+   ],
+   "ncporAuthors": [
+    "Narayana Pillai Anilkumar"
+   ],
+   "oaUrl": "https://www.nature.com/articles/s41598-018-25522-5.pdf",
+   "license": "cc-by",
+   "citedBy": 37,
+   "topic": "Groundwater and Isotope Geochemistry"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W4309905291",
+   "doi": "10.1088/2515-7620/aca5f2",
+   "title": "Atmospheric precursors to the Antarctic sea ice record low in February 2022",
+   "year": 2022,
+   "journal": "Environmental Research Communications",
+   "authors": [
+    "Juhi Yadav",
+    "Avinash Kumar",
+    "Rahul Mohan"
+   ],
+   "ncporAuthors": [
+    "Juhi Yadav",
+    "Avinash Kumar",
+    "Rahul Mohan"
+   ],
+   "oaUrl": "https://iopscience.iop.org/article/10.1088/2515-7620/aca5f2/pdf",
+   "license": "cc-by",
+   "citedBy": 35,
+   "topic": "Arctic and Antarctic ice dynamics"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2094936275",
+   "doi": "10.1155/2013/254090",
+   "title": "Circadian Levels of Serum Melatonin and Cortisol in relation to Changes in Mood, Sleep, and Neurocognitive Performance, Spanning a Year of Residence in Antarctica",
+   "year": 2012,
+   "journal": "Neuroscience Journal",
+   "authors": [
+    "Madhumita Premkumar",
+    "tarulata sable",
+    "Dinesh Kumar Dhanwal",
+    "Richa Dewan"
+   ],
+   "ncporAuthors": [
+    "Madhumita Premkumar",
+    "tarulata sable"
+   ],
+   "oaUrl": "https://downloads.hindawi.com/archive/2013/254090.pdf",
+   "license": "cc-by",
+   "citedBy": 35,
+   "topic": "Circadian rhythm and melatonin"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2026010601",
+   "doi": "10.14430/arctic4164",
+   "title": "Filamentous Soil Fungi from Ny-Ålesund, Spitsbergen, and Screening for Extracellular Enzymes",
+   "year": 2012,
+   "journal": "ARCTIC",
+   "authors": [
+    "Shiv Mohan Singh",
+    "Sanjay Kumar Singh",
+    "Lal Sahab Yadav",
+    "Paras Nath Singh",
+    "Rasik Ravindra"
+   ],
+   "ncporAuthors": [
+    "Shiv Mohan Singh",
+    "Sanjay Kumar Singh",
+    "Rasik Ravindra"
+   ],
+   "oaUrl": "https://journalhosting.ucalgary.ca/index.php/arctic/article/download/67211/51121",
+   "license": null,
+   "citedBy": 34,
+   "topic": "Polar Research and Ecology"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2967728021",
+   "doi": "10.3390/rs11161909",
+   "title": "Semiautomated Detection and Mapping of Vegetation Distribution in the Antarctic Environment Using Spatial-Spectral Characteristics of WorldView-2 Imagery",
+   "year": 2019,
+   "journal": "Remote Sensing",
+   "authors": [
+    "Shridhar Digambar Jawak",
+    "Alvarinho Joaozinho Luis",
+    "Peter T. Fretwell",
+    "Peter Convey",
+    "Udhayaraj A. Durairajan"
+   ],
+   "ncporAuthors": [
+    "Shridhar Digambar Jawak",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "oaUrl": "https://doi.org/10.3390/rs11161909",
+   "license": "cc-by",
+   "citedBy": 33,
+   "topic": "Remote-Sensing Image Classification"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2070496544",
+   "doi": "10.4236/ijg.2013.47097",
+   "title": "Sea Ice Observations in Polar Regions: Evolution of Technologies in Remote Sensing",
+   "year": 2013,
+   "journal": "International Journal of Geosciences",
+   "authors": [
+    "Praveen Rao Teleti",
+    "Alvarinho Joaozinho Luis"
+   ],
+   "ncporAuthors": [
+    "Praveen Rao Teleti"
+   ],
+   "oaUrl": "https://content.scirp.org/pdf/ijg_2013090916462888.pdf",
+   "license": "cc-by",
+   "citedBy": 33,
+   "topic": "Arctic and Antarctic ice dynamics"
+  },
+  {
+   "source": "openalex",
+   "openalexId": "W2534758819",
+   "doi": "10.1016/j.bjm.2016.09.011",
+   "title": "Diversity of retrievable heterotrophic bacteria in Kongsfjorden, an Arctic fjord",
+   "year": 2016,
+   "journal": "Brazilian Journal of Microbiology",
+   "authors": [
+    "Rupesh Kumar Sinha",
+    "Kottekkatu Padinchati Krishnan",
+    "A. A. Mohamed Hatha",
+    "Mujeeb Rahiman",
+    "Divya David Thresyamma",
+    "Savita Kerkar"
+   ],
+   "ncporAuthors": [
+    "Rupesh Kumar Sinha",
+    "Kottekkatu Padinchati Krishnan",
+    "Divya David Thresyamma"
+   ],
+   "oaUrl": "https://www.sciencedirect.com/science/article/pii/S1517838216309406/pdf",
+   "license": "cc-by-nc-nd",
+   "citedBy": 32,
+   "topic": "Microbial Community Ecology and Physiology"
+  }
+ ],
+ "commons": [
+  {
+   "source": "commons",
+   "pageid": 12176958,
+   "title": "Bajaj-Polar-1",
+   "description": "From the personal collection of Col. JK Bajaj, SM, VSM, FRGS http://www.jkbajaj.com Converted from slides by Col. Bajaj.",
+   "author": "JK Bajaj",
+   "licence": "CC BY-SA 3.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+   "date": "2007",
+   "lat": null,
+   "lon": null,
+   "image": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Bajaj-Polar-1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "page": "https://commons.wikimedia.org/wiki/File:Bajaj-Polar-1.jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 55031201,
+   "title": "मैत्री, भारतीय स्टेशन अंटार्कटिक महाद्वीप",
+   "description": "Maitri, India's second scientific research station located in Antarctica.",
+   "author": "Prakash khatarkar",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2017-01-15",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/%E0%A4%AE%E0%A5%88%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80%2C_%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%AF_%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A5%87%E0%A4%B6%E0%A4%A8_%E0%A4%85%E0%A4%82%E0%A4%9F%E0%A4%BE%E0%A4%B0%E0%A5%8D%E0%A4%95%E0%A4%9F%E0%A4%BF%E0%A4%95_%E0%A4%AE%E0%A4%B9%E0%A4%BE%E0%A4%A6%E0%A5%8D%E0%A4%B5%E0%A5%80%E0%A4%AA.jpg/1280px-%E0%A4%AE%E0%A5%88%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80%2C_%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%AF_%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A5%87%E0%A4%B6%E0%A4%A8_%E0%A4%85%E0%A4%82%E0%A4%9F%E0%A4%BE%E0%A4%B0%E0%A5%8D%E0%A4%95%E0%A4%9F%E0%A4%BF%E0%A4%95_%E0%A4%AE%E0%A4%B9%E0%A4%BE%E0%A4%A6%E0%A5%8D%E0%A4%B5%E0%A5%80%E0%A4%AA.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:%E0%A4%AE%E0%A5%88%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80,_%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%AF_%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A5%87%E0%A4%B6%E0%A4%A8_%E0%A4%85%E0%A4%82%E0%A4%9F%E0%A4%BE%E0%A4%B0%E0%A5%8D%E0%A4%95%E0%A4%9F%E0%A4%BF%E0%A4%95_%E0%A4%AE%E0%A4%B9%E0%A4%BE%E0%A4%A6%E0%A5%8D%E0%A4%B5%E0%A5%80%E0%A4%AA.jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 71522083,
+   "title": "The Minister for Science & Technology and Ocean Development, Shri Kapil Sibal who became the first Indian Minister to visit the icy continent of Antarctica is seen here at the Maitri Station on on February 2, 2005",
+   "description": "The Minister for Science &amp; Technology and Ocean Development, Shri Kapil Sibal who became the first Indian Minister to visit the icy continent of Antarctica is seen here at the Maitri Station on on February 2, 2005.",
+   "author": "Ministry of Science and Technology",
+   "licence": "GODL-India",
+   "licenceUrl": "https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf",
+   "date": "2005-02-02",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/The_Minister_for_Science_%26_Technology_and_Ocean_Development%2C_Shri_Kapil_Sibal_who_became_the_first_Indian_Minister_to_visit_the_icy_continent_of_Antarctica_is_seen_here_at_the_Maitri_Station_on_on_February_2%2C_2005.jpg/1280px-thumbnail.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:The_Minister_for_Science_%26_Technology_and_Ocean_Development,_Shri_Kapil_Sibal_who_became_the_first_Indian_Minister_to_visit_the_icy_continent_of_Antarctica_is_seen_here_at_the_Maitri_Station_on_on_February_2,_2005.jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 71522152,
+   "title": "The Minister of State for Science & Technology, Ocean Development Shri Kapil Sibal speaking at the Indian Station Maitri, in Antarctica on February 2,2005",
+   "description": "The Minister of State for Science &amp; Technology, Ocean Development Shri Kapil Sibal speaking at the Indian Station Maitri, in Antarctica on February 2,2005.",
+   "author": "Ministry of Science and Technology",
+   "licence": "GODL-India",
+   "licenceUrl": "https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf",
+   "date": "2005-02-02",
+   "lat": null,
+   "lon": null,
+   "image": "https://upload.wikimedia.org/wikipedia/commons/4/45/The_Minister_of_State_for_Science_%26_Technology%2C_Ocean_Development_Shri_Kapil_Sibal_speaking_at_the_Indian_Station_Maitri%2C_in_Antarctica_on_February_2%2C2005.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "page": "https://commons.wikimedia.org/wiki/File:The_Minister_of_State_for_Science_%26_Technology,_Ocean_Development_Shri_Kapil_Sibal_speaking_at_the_Indian_Station_Maitri,_in_Antarctica_on_February_2,2005.jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 71522158,
+   "title": "The Minister of State for Science & Technology, Ocean Development Shri Kapil Sibal going round the Indian Station Maitri, in Antarctica on February 2,2005",
+   "description": "The Minister of State for Science &amp; Technology, Ocean Development Shri Kapil Sibal going round the Indian Station Maitri, in Antarctica on February 2,2005.",
+   "author": "Ministry of Science and Technology",
+   "licence": "GODL-India",
+   "licenceUrl": "https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf",
+   "date": "2005-02-02",
+   "lat": null,
+   "lon": null,
+   "image": "https://upload.wikimedia.org/wikipedia/commons/2/29/The_Minister_of_State_for_Science_%26_Technology%2C_Ocean_Development_Shri_Kapil_Sibal_going_round_the_Indian_Station_Maitri%2C_in_Antarctica_on_February_2%2C2005.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "page": "https://commons.wikimedia.org/wiki/File:The_Minister_of_State_for_Science_%26_Technology,_Ocean_Development_Shri_Kapil_Sibal_going_round_the_Indian_Station_Maitri,_in_Antarctica_on_February_2,2005.jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 71522164,
+   "title": "An ariel view of the Indian Station Maitri, Antarctica on February 2,2005",
+   "description": "An ariel view of the Indian Station Maitri, Antarctica on February 2,2005.",
+   "author": "Ministry of Science and Technology",
+   "licence": "GODL-India",
+   "licenceUrl": "https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf",
+   "date": null,
+   "lat": null,
+   "lon": null,
+   "image": "https://upload.wikimedia.org/wikipedia/commons/4/46/An_ariel_view_of_the_Indian_Station_Maitri%2C_Antarctica_on_February_2%2C2005.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "page": "https://commons.wikimedia.org/wiki/File:An_ariel_view_of_the_Indian_Station_Maitri,_Antarctica_on_February_2,2005.jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 71522171,
+   "title": "An aerial view of the Indian Station Maitri, Antarctica on February 2, 2005",
+   "description": "An aerial view of the Indian Station Maitri, Antarctica on February 2, 2005.",
+   "author": "Ministry of Science and Technology",
+   "licence": "GODL-India",
+   "licenceUrl": "https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf",
+   "date": "2005-02-02",
+   "lat": null,
+   "lon": null,
+   "image": "https://upload.wikimedia.org/wikipedia/commons/4/4d/An_aerial_view_of_the_Indian_Station_Maitri%2C_Antarctica_on_February_2%2C_2005.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "page": "https://commons.wikimedia.org/wiki/File:An_aerial_view_of_the_Indian_Station_Maitri,_Antarctica_on_February_2,_2005.jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 71522178,
+   "title": "The Minister of State for Science & Technology, Ocean Development Shri Kapil Sibal at Indian Station Maitri, in Antarctica on February 2,2005",
+   "description": "The Minister of State for Science &amp; Technology, Ocean Development Shri Kapil Sibal at Indian Station Maitri, in Antarctica on February 2,2005.",
+   "author": "Ministry of Science and Technology",
+   "licence": "GODL-India",
+   "licenceUrl": "https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf",
+   "date": null,
+   "lat": null,
+   "lon": null,
+   "image": "https://upload.wikimedia.org/wikipedia/commons/1/12/The_Minister_of_State_for_Science_%26_Technology%2C_Ocean_Development_Shri_Kapil_Sibal_at_Indian_Station_Maitri%2C_in_Antarctica_on_February_2%2C2005.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "page": "https://commons.wikimedia.org/wiki/File:The_Minister_of_State_for_Science_%26_Technology,_Ocean_Development_Shri_Kapil_Sibal_at_Indian_Station_Maitri,_in_Antarctica_on_February_2,2005.jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 71522180,
+   "title": "The Minister of State for Science & Technology, Ocean Development Shri Kapil Sibal at Indian Station Maitri, in Antarctica on February 2,2005 (1)",
+   "description": "The Minister of State for Science &amp; Technology, Ocean Development Shri Kapil Sibal at Indian Station Maitri, in Antarctica on February 2,2005.",
+   "author": "Ministry of Science and Technology",
+   "licence": "GODL-India",
+   "licenceUrl": "https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf",
+   "date": null,
+   "lat": null,
+   "lon": null,
+   "image": "https://upload.wikimedia.org/wikipedia/commons/8/87/The_Minister_of_State_for_Science_%26_Technology%2C_Ocean_Development_Shri_Kapil_Sibal_at_Indian_Station_Maitri%2C_in_Antarctica_on_February_2%2C2005_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "page": "https://commons.wikimedia.org/wiki/File:The_Minister_of_State_for_Science_%26_Technology,_Ocean_Development_Shri_Kapil_Sibal_at_Indian_Station_Maitri,_in_Antarctica_on_February_2,2005_(1).jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 71522182,
+   "title": "A helicopter carries the Indian Flag while passing over the Indian Station Maitri, in Antarctica on February 2,2005",
+   "description": "A helicopter carries the Indian Flag while passing over the Indian Station Maitri in Antarctica on February 2, 2005.",
+   "author": "Ministry of Science and Technology",
+   "licence": "GODL-India",
+   "licenceUrl": "https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf",
+   "date": "2005-02-02",
+   "lat": null,
+   "lon": null,
+   "image": "https://upload.wikimedia.org/wikipedia/commons/2/25/A_helicopter_carries_the_Indian_Flag_while_passing_over_the_Indian_Station_Maitri%2C_in_Antarctica_on_February_2%2C2005.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "page": "https://commons.wikimedia.org/wiki/File:A_helicopter_carries_the_Indian_Flag_while_passing_over_the_Indian_Station_Maitri,_in_Antarctica_on_February_2,2005.jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 71522195,
+   "title": "The Minister of State for Science & Technology, Ocean Development Shri Kapil Sibal pose at a helipad with the personnel of Indian Station Maitri, in Antarctica on February 2,2005",
+   "description": "The Minister of State for Science &amp; Technology, Ocean Development Shri Kapil Sibal pose at a helipad with the personnel of Indian Station Maitri, in Antarctica on February 2,2005.",
+   "author": "Ministry of Science and Technology",
+   "licence": "GODL-India",
+   "licenceUrl": "https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf",
+   "date": "2005-02-02",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8c/The_Minister_of_State_for_Science_%26_Technology%2C_Ocean_Development_Shri_Kapil_Sibal_pose_at_a_helipad_with_the_personnel_of_Indian_Station_Maitri%2C_in_Antarctica_on_February_2%2C2005.jpg/1280px-thumbnail.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:The_Minister_of_State_for_Science_%26_Technology,_Ocean_Development_Shri_Kapil_Sibal_pose_at_a_helipad_with_the_personnel_of_Indian_Station_Maitri,_in_Antarctica_on_February_2,2005.jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 71522206,
+   "title": "The Minister of State for Science & Technology, Ocean Development Shri Kapil Sibal at Indian Station Maitri, in Antarctica on February 2,2005 (2)",
+   "description": "The Minister of State for Science &amp; Technology, Ocean Development Shri Kapil Sibal at Indian Station Maitri, in Antarctica on February 2,2005.",
+   "author": "Ministry of Science and Technology",
+   "licence": "GODL-India",
+   "licenceUrl": "https://data.gov.in/sites/default/files/Gazette_Notification_OGDL.pdf",
+   "date": null,
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/The_Minister_of_State_for_Science_%26_Technology%2C_Ocean_Development_Shri_Kapil_Sibal_at_Indian_Station_Maitri%2C_in_Antarctica_on_February_2%2C2005_%282%29.jpg/1280px-The_Minister_of_State_for_Science_%26_Technology%2C_Ocean_Development_Shri_Kapil_Sibal_at_Indian_Station_Maitri%2C_in_Antarctica_on_February_2%2C2005_%282%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:The_Minister_of_State_for_Science_%26_Technology,_Ocean_Development_Shri_Kapil_Sibal_at_Indian_Station_Maitri,_in_Antarctica_on_February_2,2005_(2).jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 92363320,
+   "title": "Maitri Zaman",
+   "description": "Maitri under construction in 1988",
+   "author": "MOHAMMED SAMI UZ ZAMAN",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2020-07-18",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Maitri_Zaman.jpg/1280px-Maitri_Zaman.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Maitri_Zaman.jpg",
+   "category": "Maitri Station",
+   "station": "maitri"
+  },
+  {
+   "source": "commons",
+   "pageid": 114529675,
+   "title": "Felix Bast",
+   "description": "Professor Bast standing in front of Bharati Station during Indian Antarctic Mission 2016-17",
+   "author": "Algophile",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2017-09-27",
+   "lat": null,
+   "lon": null,
+   "image": "https://upload.wikimedia.org/wikipedia/commons/3/37/Felix_Bast.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "page": "https://commons.wikimedia.org/wiki/File:Felix_Bast.jpg",
+   "category": "Bharati Station",
+   "station": "bharati"
+  },
+  {
+   "source": "commons",
+   "pageid": 152669459,
+   "title": "Bharati permanent Antarctic research station",
+   "description": "Bharati is a permanent Antarctic research station commissioned by India. It is India's third Antarctic research facility",
+   "author": "Unknown authorUnknown author",
+   "licence": "Public domain",
+   "licenceUrl": null,
+   "date": null,
+   "lat": null,
+   "lon": null,
+   "image": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Bharati_permanent_Antarctic_research_station.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "page": "https://commons.wikimedia.org/wiki/File:Bharati_permanent_Antarctic_research_station.jpg",
+   "category": "Bharati Station",
+   "station": "bharati"
+  },
+  {
+   "source": "commons",
+   "pageid": 55031063,
+   "title": "दक्षिण गंगोत्री, अंटार्कटिका",
+   "description": "An aerial view of the Dakshin Gangotri, India's first scientific research station located in Antarctica.",
+   "author": "प्रकाश खातरकर, मध्यप्रदेश",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2017-01-15",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/%E0%A4%A6%E0%A4%95%E0%A5%8D%E0%A4%B7%E0%A4%BF%E0%A4%A3_%E0%A4%97%E0%A4%82%E0%A4%97%E0%A5%8B%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80%2C_%E0%A4%85%E0%A4%82%E0%A4%9F%E0%A4%BE%E0%A4%B0%E0%A5%8D%E0%A4%95%E0%A4%9F%E0%A4%BF%E0%A4%95%E0%A4%BE.jpg/1280px-%E0%A4%A6%E0%A4%95%E0%A5%8D%E0%A4%B7%E0%A4%BF%E0%A4%A3_%E0%A4%97%E0%A4%82%E0%A4%97%E0%A5%8B%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80%2C_%E0%A4%85%E0%A4%82%E0%A4%9F%E0%A4%BE%E0%A4%B0%E0%A5%8D%E0%A4%95%E0%A4%9F%E0%A4%BF%E0%A4%95%E0%A4%BE.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:%E0%A4%A6%E0%A4%95%E0%A5%8D%E0%A4%B7%E0%A4%BF%E0%A4%A3_%E0%A4%97%E0%A4%82%E0%A4%97%E0%A5%8B%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A5%80,_%E0%A4%85%E0%A4%82%E0%A4%9F%E0%A4%BE%E0%A4%B0%E0%A5%8D%E0%A4%95%E0%A4%9F%E0%A4%BF%E0%A4%95%E0%A4%BE.jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 85777563,
+   "title": "Thamban Meloth as part of the first Indian Scientific Expedition to South Pole",
+   "description": "Thampan Meloth as part of the first Indian scientific expedition to the South Pole",
+   "author": "Thamban Meloth",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2010-11-30",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Thamban_Meloth_as_part_of_the_first_Indian_Scientific_Expedition_to_South_Pole.jpg/1280px-Thamban_Meloth_as_part_of_the_first_Indian_Scientific_Expedition_to_South_Pole.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Thamban_Meloth_as_part_of_the_first_Indian_Scientific_Expedition_to_South_Pole.jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 91967344,
+   "title": "Zaman (1)",
+   "description": "Mohammed Ghous Uzzaman, a member of 7th Indian Antarctic Expedition at the library, Dakshin Gangotri (26 January 1988).",
+   "author": "MOHAMMED SAMI UZ ZAMAN",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "1988-01-26",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Zaman_%281%29.jpg/1280px-Zaman_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Zaman_(1).jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 91967851,
+   "title": "Zaman (2)",
+   "description": "Mohammed Ghous uzzaman (Left) and M. Vyghreswara Rao at Dakshin Gangotri (Right) (26 January 1988)",
+   "author": "MOHAMMED SAMI UZ ZAMAN",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2020-07-06",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Zaman_%282%29.jpg/1280px-Zaman_%282%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Zaman_(2).jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 92362172,
+   "title": "M.G.Zaman at Dakshin Gangotri.",
+   "description": "Mohammed Ghous uzzaman, a member of 7th Indian Antarctic Expedition Team at Dakshin Gangotri. (26 January 1988)",
+   "author": "MOHAMMED SAMI UZ ZAMAN",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2020-07-17",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/M.G.Zaman_at_Dakshin_Gangotri..jpg/1280px-M.G.Zaman_at_Dakshin_Gangotri..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:M.G.Zaman_at_Dakshin_Gangotri..jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 92362552,
+   "title": "M.G.Zaman (4) at Dakhsin Gangotri.",
+   "description": "Mohammed Ghous uzzaman, a member of 7th Indian Antarctic Expedition Team at Dakshin Gangotri. (26 January 1988)",
+   "author": "MOHAMMED SAMI UZ ZAMAN",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2020-07-18",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/M.G.Zaman_%284%29_at_Dakhsin_Gangotri..jpg/1280px-M.G.Zaman_%284%29_at_Dakhsin_Gangotri..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:M.G.Zaman_(4)_at_Dakhsin_Gangotri..jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 92364069,
+   "title": "Lake Indira Priyadarshini",
+   "description": "Mohammed Ghous uzzaman at Lake Indira Priyadarshini.",
+   "author": "MOHAMMED SAMI UZ ZAMAN",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2020-07-18",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Lake_Indira_Priyadarshini.jpg/1280px-Lake_Indira_Priyadarshini.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Lake_Indira_Priyadarshini.jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 92364142,
+   "title": "Indira Priyadarshini Zaman 1",
+   "description": "Mohammed Ghous uzzaman, a member of 7th Indian Antacrtic Expedition, at Lake Indira Priyadarshini.",
+   "author": "MOHAMMED SAMI UZ ZAMAN",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2020-07-18",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Indira_Priyadarshini_Zaman_1.jpg/1280px-Indira_Priyadarshini_Zaman_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Indira_Priyadarshini_Zaman_1.jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 133136999,
+   "title": "Dakshin Gangotri under construction",
+   "description": "The Dakshin Gangotri research station under construction. The living block is on the right and the service block on the left. They are interconnected by a corridor. The entire construction was completed in nine weeks. The photograph was donated by Colonel Pavan Nair (retired), who led the Dakshin Gangotri station's construction team while serving as a major in the Indian Army. Rohini Lakshané acquired the photograph from Colonel Nair and uploaded it to Wikimedia Commons.",
+   "author": "Pavan Nair",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "1984",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/Dakshin_Gangotri_under_construction.jpg/1280px-Dakshin_Gangotri_under_construction.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Dakshin_Gangotri_under_construction.jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 133137001,
+   "title": "Aerial view of the Dakshin Gangotri under construction",
+   "description": "An aerial view of Dakshin Gangotri research station under construction. Living tents for the construction party on the top left. The photograph was donated by Colonel Pavan Nair, who led the Dakshin Gangotri station's construction team while serving as a major in the Indian Army. Rohini Lakshané acquired the photograph from Colonel Nair and uploaded it to Wikimedia Commons.",
+   "author": "Pavan Nair",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "1984",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/Aerial_view_of_the_Dakshin_Gangotri_under_construction.jpg/1280px-Aerial_view_of_the_Dakshin_Gangotri_under_construction.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Aerial_view_of_the_Dakshin_Gangotri_under_construction.jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 133137006,
+   "title": "Dakshin Gangotri’s generator room",
+   "description": "Dakshin Gangotri’s generator room. There were three generators, one operational, one on standby and one on maintenance. The photograph was donated by Colonel Pavan Nair (retired), who led the Dakshin Gangotri station's construction team while serving as a major in the Indian Army. Rohini Lakshané acquired the photograph from Colonel Nair and uploaded it to Wikimedia Commons.",
+   "author": "Pavan Nair",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "1984",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/Dakshin_Gangotri%E2%80%99s_generator_room.jpg/1280px-Dakshin_Gangotri%E2%80%99s_generator_room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Dakshin_Gangotri%E2%80%99s_generator_room.jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 133137007,
+   "title": "Dakshin Gangotri station",
+   "description": "A view of Dakshin Gangotri research station after its construction was complete. The white dome is for satellite communication. The photograph was donated by Colonel Pavan Nair, who led the Dakshin Gangotri station's construction team while serving as a major in the Indian Army. Rohini Lakshané acquired the photograph from Colonel Nair and uploaded it to Wikimedia Commons.",
+   "author": "Pavan Nair",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "1984",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/Dakshin_Gangotri_station.jpg/1280px-Dakshin_Gangotri_station.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Dakshin_Gangotri_station.jpg",
+   "category": "Dakshin Gangotri",
+   "station": "dakshin-gangotri"
+  },
+  {
+   "source": "commons",
+   "pageid": 133135344,
+   "title": "Visit to the Soviet station Novolazarevskaya during the Second Indian Antarctic Expedition",
+   "description": "Maj Pavan Nair and Maj Jai Bahuguna visiting the Soviet station Novolazarevskaya in the Schirmacher Hills located about 70 km south of the Indian camp on the ice shelf during the Second Indian Antarctic Expedition, December 1982. The photograph was donated by Colonel Pavan Nair (retired), who led the Dakshin Gangotri station's construction team while serving as a major in the Indian Army. Rohini Lakshané acquired the photograph from Colonel Nair and uploaded it to Wikimedia Commons.",
+   "author": "Pavan Nair",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "1982",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Visit_to_the_Soviet_station_Novolazarevskaya_during_the_Second_Indian_Antarctic_Expedition.jpg/1280px-Visit_to_the_Soviet_station_Novolazarevskaya_during_the_Second_Indian_Antarctic_Expedition.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Visit_to_the_Soviet_station_Novolazarevskaya_during_the_Second_Indian_Antarctic_Expedition.jpg",
+   "category": "Indian expeditions to Antarctica",
+   "station": null
+  },
+  {
+   "source": "commons",
+   "pageid": 133136989,
+   "title": "Mi-8 helicopter landing on the deck of the Finnpolaris",
+   "description": "An Indian Air Force Mi-8 helicopter landing on the deck of the expedition ship Finnpolaris in Antarctica. The photograph was donated by Colonel Pavan Nair (retired), who led the Dakshin Gangotri station's construction team while serving as a major in the Indian Army. Rohini Lakshané acquired the photograph directly from Col Nair and uploaded it to Wikimedia Commons.",
+   "author": "Pavan Nair",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "1984",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Mi-8_helicopter_landing_on_the_deck_of_the_Finnpolaris.jpg/1280px-Mi-8_helicopter_landing_on_the_deck_of_the_Finnpolaris.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Mi-8_helicopter_landing_on_the_deck_of_the_Finnpolaris.jpg",
+   "category": "Indian expeditions to Antarctica",
+   "station": null
+  },
+  {
+   "source": "commons",
+   "pageid": 133136990,
+   "title": "Chetak helicopter ferrying fuel to the construction site of the Dakshin Gangotri",
+   "description": "An Indian Navy Chetak helicopter ferrying fuel drums from the expedition ship Finnpolaris to the construction site of Dakshin Gangotri, India's first Antarctic research station. The drums are suspended beneath the helicopter in a cargo sling. The ship's deck is visible in the foreground, with an Indian Air Force Mi-8 helicopter in the background. The photograph was donated by Colonel Pavan Nair (retired), who led the Dakshin Gangotri station's construction team while serving as a major in the Indian Army. Rohini Lakshané acquired the photograph from Colonel Nair and uploaded it to Wikimedia Co",
+   "author": "Pavan Nair",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "1984",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Chetak_helicopter_ferrying_fuel_to_the_construction_site_of_the_Dakshin_Gangotri.jpg/1280px-Chetak_helicopter_ferrying_fuel_to_the_construction_site_of_the_Dakshin_Gangotri.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Chetak_helicopter_ferrying_fuel_to_the_construction_site_of_the_Dakshin_Gangotri.jpg",
+   "category": "Indian expeditions to Antarctica",
+   "station": null
+  },
+  {
+   "source": "commons",
+   "pageid": 133136995,
+   "title": "Structure erected during India's Second Expedition to Antarctica",
+   "description": "A structure erected during India's second expedition to Antarctica in January 1983. Major Pavan Nair is on the left and Major Jai Bahuguna on the right. The photograph was donated by Colonel Pavan Nair, who led the Dakshin Gangotri station's construction team while serving as a major in the Indian Army. Rohini Lakshané acquired the photograph from Colonel Nair and uploaded it to Wikimedia Commons.",
+   "author": "Pavan Nair",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "1983",
+   "lat": null,
+   "lon": null,
+   "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f6/Structure_erected_during_India%27s_Second_Expedition_to_Antarctica.jpg/1280px-Structure_erected_during_India%27s_Second_Expedition_to_Antarctica.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "page": "https://commons.wikimedia.org/wiki/File:Structure_erected_during_India%27s_Second_Expedition_to_Antarctica.jpg",
+   "category": "Indian expeditions to Antarctica",
+   "station": null
+  },
+  {
+   "source": "commons",
+   "pageid": 133136996,
+   "title": "Deck of Finnpolaris during the Indian Antarctic expedition, 1983",
+   "description": "The ship Finnpolaris weighed 3,000 tonnes when the Indian expedition reached Antarctica. On its deck as seen in the photo, a snow vehicle is about to be unloaded by crane onto the sea ice. An Indian Navy Chetak helicopter is being readied for a reconnaissance mission. An Indian Air Force Mi-8 heavy-lift helicopter was used to ferry construction materials to the site. One of the two Mi-8s was lost in an accident with no casualties. This photo was taken late at night. The photograph was donated by Colonel Pavan Nair, who led the Dakshin Gangotri station's construction team while serving as a maj",
+   "author": "Pavan Nair",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "1983",
+   "lat": null,
+   "lon": null,
+   "image": "https://upload.wikimedia.org/wikipedia/commons/7/75/Deck_of_Finnpolaris_during_the_Indian_Antarctic_expedition%2C_1983.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+   "page": "https://commons.wikimedia.org/wiki/File:Deck_of_Finnpolaris_during_the_Indian_Antarctic_expedition,_1983.jpg",
+   "category": "Indian expeditions to Antarctica",
+   "station": null
   }
  ]
 }

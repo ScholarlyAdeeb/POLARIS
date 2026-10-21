@@ -44,8 +44,29 @@ New accounts created at `/login` start as contributors. Set `DEMO_ACCOUNTS=off` 
 
 ---
 
+## Ten-minute walkthrough
+
+| # | Do this | What it shows |
+|---|---|---|
+| 1 | Open the [live portal](https://polaris2-ecru.vercel.app) | Boot screen, then the home page with stations and live conditions |
+| 2 | **Explore**, search `ozone Maitri` | Full-text search over 1,000+ records with region, station, year and status filters |
+| 3 | Open any NCPOR expedition paper | Real metadata from NCPOR's DSpace, *Open registry* label, link to the paper |
+| 4 | In the record, press **Why connected?** on a link, then **Trace this finding to its source** | Plain-language reasons for each link; the chain back to dataset, expedition, station and its instruments |
+| 5 | Press **हिन्दी में पढ़ें**, then **Review history** | Hindi summary labelled as machine translation; every decision on the record with who and when |
+| 6 | **Ask**: "Which ship took the first Indian expedition to Antarctica?" | Answer with `[S1]` citations and a sentence-by-sentence fact check; then **Accuracy** for every published test answer |
+| 7 | Open the dataset *Arctic sea-ice extent … (NSIDC Sea Ice Index)* | Real satellite series since 1979, charted from the published CSVs |
+| 8 | Sign in as `user1` / `1234`, **My workspace**: upload a photo, set **File access: Restricted** | Suggested station, region and related records; the restricted file will be hidden from the public |
+| 9 | Generate posts: tick **Press release** and **Facebook**, choose **हिन्दी** for a second set | Drafts in six formats, each fact-checked against the record (Hindi against the Hindi summary) |
+| 10 | Sign out, sign in as `admin` / `0786`, **Admin** | The submission queue with access and Hindi controls; the server refuses approval of anything the reviewer drafted itself (two-person rule) |
+| 11 | Approve the record and the posts in **Outreach studio**, publish | The **Audit trail** panel records each step |
+| 12 | **Newsroom**: scan a post's QR code, or open **Verify** and paste an edited copy | *Genuine* vs *Altered*, plus the trace from the post back to its evidence |
+| 13 | **Learn**: answer the quiz, get 75% or more | A certificate with a code the server graded itself; check it on **Verify** |
+
+---
+
 ## Contents
 
+1. [Ten-minute walkthrough](#ten-minute-walkthrough)
 1. [What HIMAKSHA does](#what-himaksha-does)
 2. [From a researcher's upload to a published post](#from-a-researchers-upload-to-a-published-post)
 3. [Ask HIMAKSHA (RAG)](#ask-himaksha-rag)
@@ -69,15 +90,18 @@ New accounts created at `/login` start as contributors. Set `DEMO_ACCOUNTS=off` 
 | **Map** the material | Every record with a place appears on polar, Himalaya and world maps; station pages show records as hotspots on a 3D model | Station coordinates, uploaded GPS, Natural Earth coastlines, React Three Fiber |
 | **Link** related work | Suggested station, region and related records for each upload; a knowledge graph of stations, expeditions, datasets and publications | Nearest station, full-text matching, `item_links` relations (`documents`, `uses_data`, `collected_during`, …) |
 | **Find** it again | Full-text search with region, station, year, theme, type and data-status filters; questions answered with citations | PostgreSQL `tsvector` + GIN; pgvector RAG |
-| **Generate content** for websites and social media | Website article, X, LinkedIn and Instagram posts from any record | Template generator + sentence-level claim check |
+| **Generate content** for websites and social media | Website article, press release, X, LinkedIn, Instagram and Facebook posts from any record, in English or Hindi | Template generator + sentence-level claim check (Hindi posts checked against the record's Hindi summary) |
 | **For the respective users, per their uploaded work** | Posts and records are credited to the contributor and shown on their public profile and in the newsroom | Accounts, roles, contributor pages |
-| **Outreach and education** | Timeline of 45 expeditions, lesson packs and a quiz, live station weather, climate history since 1981 | Database-generated lessons; Open-Meteo forecast and ERA5 reanalysis |
+| **Outreach and education** | Timeline of 45 expeditions, lesson packs, a quiz with a verifiable certificate, live station weather, climate history since 1981, Arctic and Antarctic sea ice since 1979 | Database-generated lessons, server-graded certificates; Open-Meteo, ERA5, NSIDC Sea Ice Index |
+| **Hindi** | Every record gets a Hindi title and summary; the interface is in English, Hindi and Tamil | Meta NLLB-200 (600M) on the server, with a place-name glossary; labelled *machine translation* until a reviewer checks it |
+| **Sensitive material** | A record's file can be *restricted* (on request to NCPOR) or *embargoed* to a date while its catalogue entry stays public | `meta.access`, enforced on every record, search and download route (`server/access.ts`) |
 
 The archive on the live portal holds **943 approved records**, including **790 papers from NCPOR's own
 Scientific Reports of the Indian Expeditions to Antarctica** (1st to 30th expedition, harvested from NCPOR's
 DSpace repository over OAI-PMH, metadata only with a link to each paper), 80 NCPOR-affiliated journal
-articles (Crossref), PANGAEA datasets, ERA5 climate records per station, the expedition timeline and the demo
-records, across 6 stations (Bharati, Maitri, Dakshin Gangotri, Himadri, Himansh, ORV Sagar Kanya). The
+articles (Crossref), 60 open-access NCPOR articles with free full text (OpenAlex), PANGAEA datasets, the NSIDC
+Sea Ice Index for both poles, 32 photographs of Indian stations with their licences (Wikimedia Commons), ERA5
+climate records per station, the expedition timeline and the demo records, across 6 stations (Bharati, Maitri, Dakshin Gangotri, Himadri, Himansh, ORV Sagar Kanya). The
 interface is available in English, Hindi and Tamil.
 
 ---
@@ -176,7 +200,7 @@ Every record carries a **data status**, shown as a badge everywhere it appears:
 | Status | Meaning |
 |---|---|
 | `OFFICIAL` / `VERIFIED` | Confirmed by NCPOR or a reviewer |
-| `EXTERNAL` ("Open registry") | Real metadata from NCPOR's DSpace repository (expedition scientific reports), Crossref (NCPOR-affiliated articles) or PANGAEA (polar datasets); the paper or data stays with the publisher and the record links to it |
+| `EXTERNAL` ("Open registry") | Real metadata from NCPOR's DSpace repository (expedition scientific reports), Crossref and OpenAlex (NCPOR-affiliated articles), PANGAEA (polar datasets), NSIDC (sea ice) or Wikimedia Commons (photographs, with author and licence); the paper or data stays with the publisher and the record links to it |
 | `SAMPLE` | Demo record written for the prototype |
 | `SYNTHETIC` | Demo dataset; its download is a small generated extract labelled `SYNTHETIC SAMPLE EXTRACT` inside the file |
 | `UNVERIFIED` | Contributed, not yet confirmed |
@@ -188,6 +212,11 @@ Every record carries a **data status**, shown as a badge everywhere it appears:
 - **Review gates**: contributor records are private until approved; posts need a named human
   reviewer; Ask HIMAKSHA only reads approved records.
 - **Provenance**: who reviewed a record, when, and the decision are stored with it.
+- **Audit trail**: every submission, review decision, access change, draft and publication is written to an
+  append-only log. Approved records show their own history publicly; reviewers see the whole trail.
+- **Why connected / trace**: each link explains itself (relation, shared station, years, keywords, who linked
+  and who checked it), and any record or published post can be traced back to its data, expedition, station
+  and instruments.
 - **Two-person rule**: nobody approves their own submission or their own drafted post; the server refuses it.
 - **Verifiable posts**: every published post carries an 8-character code and a QR code. `/verify/<code>`
   says whether a copy is a *genuine* published post, an *altered* copy (paste the text to compare), *not
@@ -282,6 +311,8 @@ export, outreach and Ask HIMAKSHA work the same way for every kind of record.
 | Two-person rule | A reviewer cannot approve a record they own or a post they drafted | `server/guards.ts` |
 | Demo logins | The public demo reviewer reaches demo-owned content only; accounts, proposals, deletes and record edits are refused | `server/guards.ts` |
 | Post integrity | Published posts carry a code derived from their exact text; `/verify` detects altered copies | `server/verify.ts` |
+| Audit | Append-only log of submissions, decisions, access changes and publications, with the account that made them | `server/audit.ts` |
+| Restricted files | Restricted and embargoed files lose their links for the public and their downloads return 403; owners and reviewers keep access | `server/access.ts` |
 | Uploads | Allow-listed file types, 100 MB limit, generated file names, `dotfiles` denied | `server/uploads.ts` |
 | Input | Length and format checks on every field; station ids, URLs and coordinates validated | `server/http.ts`, `server/contrib.ts` |
 | Abuse | Per-client rate limits on sign-in, proposals and Ask HIMAKSHA, with the real client IP behind Vercel / Render proxies | `server/http.ts`, `server/app.ts` |
@@ -327,6 +358,8 @@ The index builds itself on startup. To use Hugging Face instead of local models,
 | `npm run rag:models` | Download the local RAG models into `data/models` |
 | `npm run import:open-data` | Refresh `server/data/open-data.json` from Crossref + PANGAEA |
 | `npm run import:ncpor` | Refresh the NCPOR expedition-report papers from NCPOR's DSpace (OAI-PMH, metadata only) |
+| `npm run import:extra` | Add the NSIDC Sea Ice Index, OpenAlex open-access articles and Wikimedia Commons photos to the snapshot |
+| `npm run translate` | Write a Hindi title and summary for every approved record that lacks one (NLLB-200 on this machine; about 10 s per record on a laptop CPU) |
 | `npm run vercel-build` | Build output for Vercel (static app + API function) |
 | `npm run android:apk` | Build the Android app |
 
@@ -373,6 +406,10 @@ Public:
 | `GET /api/search?q=` | Ranked full-text search with highlighted snippets |
 | `GET /api/facets` · `/api/atlas` · `/api/graph` · `/api/learn` | Filters, map points, knowledge graph, lessons and quiz |
 | `GET /api/content/published` | Newsroom posts |
+| `GET /api/archive/:id/history` | Review history of an approved record and its published posts |
+| `GET /api/archive/:id/trace` · `/api/links/explain?from=&to=` | Trace a record to its evidence · why two records are linked |
+| `GET /api/verify/:code` · `/api/certificates/:code` | Check a post or a certificate |
+| `POST /api/learn/certificate` | `{ name, seed, answers }`: the server re-grades the quiz and issues a certificate at 75% |
 | `GET /api/rag/status` | Ask HIMAKSHA backend, models and index size |
 | `POST /api/rag/ask` | `{ question, filters? }` → server-sent events: `sources`, `token`…, `done` (answer, citations, claim check) |
 
@@ -387,6 +424,8 @@ Signed in:
 | `GET /api/admin/submissions` · `POST /api/admin/archive/:id/review` | Review contributor submissions (reviewer) |
 | `POST /api/admin/outreach/draft` · `PATCH /api/admin/outreach/:id` | Draft, approve, publish posts (reviewer) |
 | `POST /api/admin/rag/reindex` | Index new records, or `{ "full": true }` to rebuild (reviewer) |
+| `PATCH /api/admin/archive/:id` `{ access }` · `{ meta: { hi } }` | Restrict / embargo a file · confirm the Hindi text (reviewer) |
+| `GET /api/admin/audit` | Audit trail (reviewer) |
 | `GET /api/admin/overview` · `/api/admin/users` | Status and accounts (admin) |
 
 ---
@@ -429,5 +468,6 @@ Model files (`data/models`), uploads, build output and `.env` are not in the rep
 | Free model usage | The hosted backend uses the Hugging Face free monthly allowance; beyond it, answers fall back to quoted sentences. |
 | Accounts | No email verification or password reset. |
 | Social networks | Posts are copied or opened in the network's share dialog; there is no direct posting. |
-| Translation | Interface in English, Hindi and Tamil; record content and posts stay in the language they were written in. Hindi and Tamil strings need review by native speakers. |
+| Translation | Interface in English, Hindi and Tamil. Record titles and summaries get a machine Hindi translation (NLLB-200), which needs a reviewer's check; full texts are not translated, and there is no Tamil record translation yet. The model runs on a server with local models, so on Vercel new approvals get Hindi after `npm run translate` is run. |
+| Restricted files | Restricted files uploaded to public Blob storage are hidden by the app, but anyone who already has the storage URL can still open it; a private store is needed for real sensitive data. |
 | Android app | Tested on an Android 15 emulator, not yet on a physical phone. |

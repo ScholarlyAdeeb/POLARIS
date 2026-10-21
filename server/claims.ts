@@ -47,7 +47,7 @@ const words = (s: string) =>
   s
     .toLowerCase()
     .replace(/\[s\d+\]/gi, ' ')
-    .split(/[^\p{L}\p{N}.]+/u)
+    .split(/[^\p{L}\p{M}\p{N}.]+/u) // \p{M}: Devanagari vowel signs belong to the word
     .map((w) => w.replace(/\.+$/, ''))
     .filter((w) => w.length >= 3 && !STOP.has(w));
 
@@ -62,14 +62,19 @@ export function splitSentences(text: string): string[] {
 }
 
 /** Links, hashtag lines and "explore it on HIMAKSHA" calls to action are navigation, not factual claims. */
-const NAVIGATION = /^(explore|view|read|watch|see|visit|learn more|find out more|link in bio|download)\b.*(https?:\/\/|polaris)/i;
-const stripNonClaims = (s: string) => s.replace(/https?:\/\/\S+/g, ' ').replace(/(^|\s)#[\p{L}\p{N}_]+/gu, ' ');
+const NAVIGATION = /^(explore|view|read|watch|see|visit|learn more|find out more|link in bio|download|full record)\b.*(https?:\/\/|himaksha|polaris)/i;
+/** Fixed text every press release carries (server/outreach.ts): the release line and the NCPOR boilerplate. */
+const BOILERPLATE = /^(PRESS RELEASE\b|The National Centre for Polar and Ocean Research \(NCPOR\), Goa, an autonomous institute|\(?मशीन अनुवाद|\[?HIMAKSHA पर पूरा रिकॉर्ड|लिंक बायो में)/;
+/** A press dateline ("**MAITRI STATION, 22 October 2026**:") is the release's own place and date, not a claim about the record. */
+const DATELINE = /^\**[\p{Lu} .'-]+, \d{1,2} \p{L}+ \d{4}\**:\s*/u;
+const stripNonClaims = (s: string) => s.replace(DATELINE, '').replace(/https?:\/\/\S+/g, ' ').replace(/(^|\s)#[\p{L}\p{N}_]+/gu, ' ');
 
 export function verifyClaims(text: string, sources: Source[]): Verification {
   const byRef = new Map(sources.map((s) => [s.ref.toUpperCase(), s]));
   const claims: ClaimCheck[] = splitSentences(text).map((sentence) => {
     const citations = [...new Set((sentence.match(/\[S\d+\]/gi) ?? []).map((c) => c.slice(1, -1).toUpperCase()))];
-    if (NAVIGATION.test(sentence.replace(/^[^\p{L}]+/u, ''))) return { sentence, status: 'no_claim', citations, overlap: 1, missingNumbers: [] };
+    const plain = sentence.replace(/^[^\p{L}]+/u, '');
+    if (NAVIGATION.test(plain) || BOILERPLATE.test(plain)) return { sentence, status: 'no_claim', citations, overlap: 1, missingNumbers: [] };
     const evidence = (citations.length ? citations.map((c) => byRef.get(c)).filter(Boolean) : sources) as Source[];
     const ev = evidence.map((s) => s.text).join(' ');
     const evWords = new Set(words(ev));

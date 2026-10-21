@@ -7,6 +7,7 @@ import { itemLocation, stationLocation } from './geo.ts';
 import { syntheticSeries } from './files.ts';
 import { readUploadText } from './uploads.ts';
 import { stationClimate } from './realdata.ts';
+import { seaIceSeries } from './openData.ts';
 
 // --- usage counters (no personal data: day + kind + key only) -------------------------
 
@@ -291,6 +292,16 @@ export function createExtrasRouter(db: Db) {
           rows: c.annual.map((a) => ({ x: String(a.year), values: [a.tempMean, a.tempMin, a.precip, a.windMax] })),
           truncated: false,
           source: c.source,
+          dataStatus: 'EXTERNAL',
+        });
+      }
+      if (item.meta.seaIce === 'north' || item.meta.seaIce === 'south') {
+        return res.json({
+          x: 'year',
+          columns: ['Minimum extent (million km²)', 'Maximum extent (million km²)', 'Mean extent (million km²)'],
+          rows: seaIceSeries(item.meta.seaIce),
+          truncated: false,
+          source: 'NSIDC Sea Ice Index v4 (G02135)',
           dataStatus: 'EXTERNAL',
         });
       }

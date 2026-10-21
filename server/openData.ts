@@ -37,6 +37,22 @@ export function ordinal(n: number): string {
   return `${n}${suffix}`;
 }
 
+const decode = (s: string) => s.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+
+/** A readable title for a Commons photo: the first sentence of its description, else the file name. */
+export function photoTitle(p: { title: string; description?: string }): string {
+  const desc = decode(String(p.description ?? '')).trim();
+  const owner = desc.match(/^from the (?:personal )?collection of ([^,.]+(?:\.\s?[A-Z]{1,2}\.?)?[^,.]*)/i);
+  if (owner) return `Antarctic expedition photograph from the collection of ${owner[1].trim()}`;
+  if (desc.length >= 25) {
+    // First sentence, unless it is cut short by an initial ("M. Rao"); then up to 140 characters.
+    let first = desc.split(/(?<=[.!?])\s/)[0].replace(/[.\s]+$/, '');
+    if (first.length < 40) first = desc;
+    return first.length <= 140 ? first : first.slice(0, 140).replace(/\s+\S*$/, '') + '…';
+  }
+  return decode(p.title);
+}
+
 const shortAuthors = (a: string[]) => (a.length > 6 ? `${a.slice(0, 6).join('; ')}; et al.` : a.join('; '));
 
 export async function loadOpenData(db: Db): Promise<number> {
@@ -153,6 +169,112 @@ export async function loadOpenData(db: Db): Promise<number> {
         },
       });
     }
+    // NSIDC Sea Ice Index: one dataset per hemisphere; the chart is built from the snapshot (seaIceSeries).
+    for (const hemi of ['north', 'south'] as const) {
+      const rows = snap.seaIce?.[hemi] ?? [];
+      if (!rows.length) continue;
+      const first = rows[0].year;
+      const last = rows[rows.length - 1].year;
+      const arctic = hemi === 'north';
+      items.push({
+        id: `NSIDC-SEAICE-${arctic ? 'N' : 'S'}`,
+        type: 'dataset',
+        title: `${arctic ? 'Arctic' : 'Antarctic'} sea-ice extent and area, monthly, ${first} to ${last} (NSIDC Sea Ice Index)`,
+        summary:
+          `Monthly sea-ice extent and area for the ${arctic ? 'Northern' : 'Southern'} Hemisphere from satellite passive-microwave data, ${first} to ${last}. ` +
+          `The chart shows each year's minimum, maximum and mean extent in million km².`,
+        domain: arctic ? 'ARCTIC' : 'SOUTHERN OCEAN',
+        stationId: null,
+        year: last,
+        tags: ['open data', 'sea ice', 'nsidc', 'climate', 'satellite'],
+        url: `https://noaadata.apps.nsidc.org/NOAA/G02135/${hemi}/monthly/data/`,
+        doi: '10.7265/a98x-0f50',
+        meta: {
+          seaIce: hemi,
+          registry: 'NSIDC',
+          publisher: 'National Snow and Ice Data Center (NSIDC), NOAA',
+          authors: 'Fetterer, F.; Knowles, K.; Meier, W. N.; Savoie, M.; Windnagel, A. K.; Stafford, T.',
+          format: 'CSV',
+          license: 'Public domain (U.S. Government work)',
+          temporalCoverage: `${first}-01/${last}`,
+          openData: true,
+        },
+        dataStatus: 'EXTERNAL',
+        provenance: {
+          source: snap.sources?.nsidc ?? 'NSIDC Sea Ice Index v4',
+          retrievedAt: snap.extraRetrievedAt,
+          licence: 'Public domain',
+          method: 'Monthly extent files N_MM / S_MM for every month; months without data (-9999) dropped',
+          note: 'Satellite-derived values as published by NSIDC.',
+        },
+      });
+    }
+    // OpenAlex: open-access articles by NCPOR authors, linking to the free full text.
+    for (const w of snap.openAlex ?? []) {
+      const id = `OPEN-OA-${w.openalexId}`;
+      const station = STATION_WORDS.find(([re]) => re.test(w.title))?.[1] ?? null;
+      const st = stations.find((s) => s.id === station);
+      items.push({
+        id,
+        type: 'publication',
+        title: w.title,
+        summary:
+          `Open-access article in ${w.journal || 'a journal'}${w.year ? ` (${w.year})` : ''}, cited ${w.citedBy} times. ` +
+          `NCPOR authors: ${shortAuthors(w.ncporAuthors ?? [])}.${w.topic ? ` Topic: ${w.topic}.` : ''}`,
+        domain: st?.domain || domainFor(`${w.title} ${w.topic ?? ''}`),
+        stationId: station,
+        year: w.year,
+        tags: ['open data', 'openalex', 'open access', ...(w.topic ? [w.topic.replace(/,/g, ' ')] : [])],
+        url: w.oaUrl || `https://doi.org/${w.doi}`,
+        doi: w.doi,
+        meta: { authors: shortAuthors(w.authors ?? []), journal: w.journal, license: w.license, citedBy: w.citedBy, openData: true, registry: 'OpenAlex', fullText: w.oaUrl },
+        dataStatus: 'EXTERNAL',
+        provenance: {
+          source: 'OpenAlex API',
+          retrievedAt: snap.extraRetrievedAt,
+          licence: `OpenAlex metadata, CC0; article ${w.license ? `under ${w.license}` : 'open access'}`,
+          method: 'Open-access articles with an author at NCPOR (OpenAlex I106814784), filtered to polar topics, most cited first',
+          note: 'Metadata only. Read the full text at the link.',
+        },
+      });
+    }
+    // Wikimedia Commons: photographs of Indian polar stations with per-file licence and author.
+    for (const p of snap.commons ?? []) {
+      const title = photoTitle(p);
+      const loc = p.lat && p.lon ? { lat: p.lat, lon: p.lon } : null;
+      const st = stations.find((s) => s.id === p.station);
+      const year = Number(String(p.date ?? '').slice(0, 4)) || null;
+      items.push({
+        id: `WIKI-${p.pageid}`,
+        type: 'photo',
+        title,
+        summary: `${decode(p.description || title).replace(/\.?$/, '.')} Photograph by ${p.author || 'an unnamed author'}, ${p.licence}, via Wikimedia Commons.`,
+        domain: st?.domain || 'ANTARCTICA',
+        stationId: p.station,
+        year,
+        date: p.date,
+        tags: ['open data', 'wikimedia commons', 'photo', p.category],
+        url: p.image,
+        thumbnailUrl: p.image,
+        meta: {
+          author: p.author,
+          license: p.licence,
+          licenseUrl: p.licenceUrl,
+          sourcePage: p.page,
+          registry: 'Wikimedia Commons',
+          openData: true,
+          ...(loc ? { location: loc } : {}),
+        },
+        dataStatus: 'EXTERNAL',
+        provenance: {
+          source: 'Wikimedia Commons',
+          retrievedAt: snap.extraRetrievedAt,
+          licence: `${p.licence}; author ${p.author || 'unknown'}`,
+          method: `Files in the Commons category "${p.category}"`,
+          note: `Credit the author and licence when reusing. File page: ${p.page}`,
+        },
+      });
+    }
     // One real climate record per fixed station: daily ERA5 values since 1981, fetched live on download.
     for (const s of stations.filter(fixedStation)) {
       const id = `CLIMATE-${s.id.toUpperCase()}`;
@@ -179,6 +301,19 @@ export async function loadOpenData(db: Db): Promise<number> {
     }
   }
   const added = await insertItems(db, items);
-  if (added) console.log(`[HIMAKSHA] Loaded ${added} open-data records (Crossref, PANGAEA, NCPOR DSpace)`);
+  if (added) console.log(`[HIMAKSHA] Loaded ${added} open-data records (Crossref, PANGAEA, NCPOR DSpace, NSIDC, OpenAlex, Wikimedia Commons)`);
   return added;
+}
+
+let seaIceCache: Record<string, { year: number; month: number; extent: number; area: number }[]> | null = null;
+
+/** Yearly minimum, maximum and mean sea-ice extent for one hemisphere, from the snapshot. */
+export function seaIceSeries(hemi: 'north' | 'south') {
+  seaIceCache ??= fs.existsSync(SNAPSHOT) ? JSON.parse(fs.readFileSync(SNAPSHOT, 'utf8')).seaIce ?? {} : {};
+  const byYear = new Map<number, number[]>();
+  for (const r of seaIceCache![hemi] ?? []) byYear.set(r.year, [...(byYear.get(r.year) ?? []), r.extent]);
+  const round = (n: number) => Math.round(n * 100) / 100;
+  return [...byYear.entries()]
+    .filter(([, v]) => v.length === 12) // complete years only (skips the 1987-88 gap and the current year)
+    .map(([year, v]) => ({ x: String(year), values: [round(Math.min(...v)), round(Math.max(...v)), round(v.reduce((a, b) => a + b, 0) / v.length)] }));
 }
